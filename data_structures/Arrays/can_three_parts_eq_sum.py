@@ -1,4 +1,4 @@
-def canThreePartsEqualSum(self, arr):
+def canThreePartsEqualSum(arr):
     # time: O(n) | space: O(1)
     totalSum = sum(arr)
     if totalSum % 3 != 0:
