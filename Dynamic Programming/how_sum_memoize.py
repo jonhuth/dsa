@@ -1,9 +1,9 @@
 def howSumMemoize(targetSum, nums, memo={}):
-    # python gotcha: mutable default arg is created when the fn. is defined, not on successive calls
-    # the mutable object is kept for successive fn. calls when no arg is passed
+    # python gotcha: mutable default arg is created when the fn. is defined
+    # not on successive calls; kept for future fn. calls when no arg passed
     # memo of form k: v => targetSum: nums that sum to targetSum
     # T => targetSum can be made by summing any number of ea num
-    # time: O(n*t) | space: O(t)
+    # time: O(n*t) | space: O(t^2)
     # where n = num of nums and t = targetSum size
     if targetSum in memo:
         return memo[targetSum]
