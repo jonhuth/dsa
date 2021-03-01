@@ -1,4 +1,6 @@
-def setBit(num, idx):
+def setBit(num, i):
     # remember: bitwise or to set i-th bit, bitwise and to get i-th bit
-    bitMask = 1 << idx
+    if i < 0:
+        return num
+    bitMask = 1 << i
     return num | bitMask
