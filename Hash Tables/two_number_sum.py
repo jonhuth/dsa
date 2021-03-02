@@ -7,5 +7,5 @@ def twoNumberSum(array, targetSum):
         if complement in s:
             return [complement, e]  # found pair
         else:
-        s.add(e)
+            s.add(e)
     return []  # didn't find pair
