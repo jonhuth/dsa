@@ -18,6 +18,7 @@ This repository holds the solutions to problems I have solved and is organized b
 - Trees
   - Binary Search Trees
 - Heaps
+  - Priority Queues (TODO)
 - Tries
 
 ### Recursion
