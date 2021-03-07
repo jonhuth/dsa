@@ -4,6 +4,7 @@ This repository holds the solutions to problems I have solved and is organized b
 ## Problem Categories
 
 ### Arrays
+- Matrices (TODO)
 
 ### Linked Lists (TODO)
 - Queues
