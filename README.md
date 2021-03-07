@@ -5,6 +5,11 @@ This repository holds the solutions to problems I have solved and is organized b
 
 ### Arrays
 
+### Linked Lists (TODO)
+- Queues
+
+### Stacks (TODO)
+
 ### Hash Tables
 
 ### Graphs
