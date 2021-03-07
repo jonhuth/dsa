@@ -7,7 +7,8 @@ This repository holds the solutions to problems I have solved and is organized b
 - Matrices (TODO)
 
 ### Linked Lists (TODO)
-- Queues
+
+### Queues (TODO)
 
 ### Stacks (TODO)
 
