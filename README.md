@@ -6,7 +6,7 @@ This repository holds the solutions to problems I have solved and is organized b
 ### Strings
 
 ### Arrays
-- Matrices (TODO)
+- Matrices
 
 ### Linked Lists (TODO)
 
