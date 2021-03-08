@@ -6,7 +6,7 @@ class BST:
 
     def insert(self, value):
         # avg: O(logn) worst: O(n) T | avg and worst: O(1) S
-        # worst case time complexity due to case where tree is linked list (only has right children)
+        # worst case time complexity due to case where tree degenerates to linked list
         curr_node = self
         while True:
             if value < curr_node.value:
