@@ -3,6 +3,8 @@ This repository holds the solutions to problems I have solved and is organized b
 
 ## Problem Categories
 
+### Strings
+
 ### Arrays
 - Matrices (TODO)
 
