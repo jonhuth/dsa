@@ -1,4 +1,5 @@
 def findNumOfValidWords(words, puzzles):
+    # time: O(c*w + p) | space: O(w + p)
     wordMaskFreqs = {}
     for word in words:
         mask = getMask(word)
