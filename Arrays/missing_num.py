@@ -9,6 +9,6 @@ def missingNumber(nums):
     #                 return i
 
     # O(n) time | O(1) space - reuse nums arr
+    expectedSum = ((len(nums) + 1) * len(nums)) // 2
     presentSum = sum(nums)
-    expectedSum = sum(list(range(0, len(nums) + 1)))
     return expectedSum - presentSum
