@@ -1,5 +1,6 @@
 def isStrobogrammatic(num: str) -> bool:
     '''
+    description: A strobogrammatic num is one that reads the same flipped upside down
     time: O(d) | space: O(1) where d is num of digits in num
     '''
     strobMapping = {'0': '0', '1': '1', '6': '9', '8': '8', '9': '6'}
