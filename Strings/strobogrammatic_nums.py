@@ -1,5 +1,7 @@
 def isStrobogrammatic(num: str) -> bool:
-    # time: O(d) | space: O(1) where d is num of digits in num
+    '''
+    time: O(d) | space: O(1) where d is num of digits in num
+    '''
     strobMapping = {'0': '0', '1': '1', '6': '9', '8': '8', '9': '6'}
     left, right = 0, len(num) - 1
     while left <= right:
