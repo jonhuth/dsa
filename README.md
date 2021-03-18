@@ -17,11 +17,11 @@ This repository holds the solutions to problems I have solved and is organized b
 ### Hash Tables
 
 ### Graphs
-- Trees
+### Trees
   - Binary Search Trees
-- Heaps
-  - Priority Queues (TODO)
-- Tries
+  - Heaps
+    - Priority Queues (TODO)
+  - Tries
 
 ### Recursion
 
