@@ -21,7 +21,6 @@ def numFactoredBinaryTrees(arr):
             if x % arr[j] == 0:
                 right = x / arr[j]
                 if right in index:
-                    dp[i] += dp[j] * dp[index[right]]
-                    dp[i] %= MOD
+                    dp[i] = (dp[i] + (dp[j] * dp[index[right]])) % MOD
 
     return sum(dp) % MOD
