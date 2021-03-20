@@ -12,7 +12,7 @@ def numFactoredBinaryTrees(arr):
         => there dp(x) * dp(y) to make trees with v as root
         sum all these up across dp arr and that is answer
 
-        time: O(n^2) | space: O(n)
+        time: O(n^(3/2)) | space: O(n)
         '''
     MOD = 10**9 + 7
     arr.sort()
