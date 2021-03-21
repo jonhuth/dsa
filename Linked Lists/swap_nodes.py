@@ -13,11 +13,11 @@ def swapNodes(head: ListNode, k: int) -> ListNode:
         n += 1
 
     left = head
-    for i in range(k - 1):
+    for _ in range(k - 1):
         left = left.next
 
     right = head
-    for i in range(n - k):
+    for _ in range(n - k):
         right = right.next
 
     right.val, left.val = left.val, right.val
