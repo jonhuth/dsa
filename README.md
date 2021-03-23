@@ -33,6 +33,8 @@ This repository holds the solutions to problems I have solved and is organized b
 
 ### Sliding Window (TODO)
 
+### Greedy Algorithms (TODO)
+
 ### Sorting
 
 ### Searching
