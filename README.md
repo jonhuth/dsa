@@ -35,6 +35,8 @@ This repository holds the solutions to problems I have solved and is organized b
 
 ### Greedy Algorithms (TODO)
 
+### Union Find
+
 ### Sorting
 
 ### Searching
@@ -43,6 +45,12 @@ This repository holds the solutions to problems I have solved and is organized b
 
 ## Resources
 1. Books
-2. Practice Sites
-3. Mock Interview Sites
-4. Job Boards
+2. Blogs
+3. Casual Reading
+4. Podcasts
+5. Practice Sites
+6. Mock Interview Sites
+7. Job Boards
+
+
+## Credit
