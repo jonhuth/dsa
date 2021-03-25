@@ -35,5 +35,5 @@ class Queue:
         self.tail = newTail
         if self.is_empty():
             self.head = newTail
-        else:
+        else:  # there is a tail node, this operation is safe
             oldTail.next = newTail
