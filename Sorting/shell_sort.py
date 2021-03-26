@@ -7,7 +7,8 @@ def shell_sort(arr):
     '''
     n = len(arr)
     h = 1
-    while h < n // 3: # increment sequence: 3x + 1
+    # increment sequence: 3x + 1 => log3(n) increment values
+    while h < n // 3:
         h = 3 * h + 1
 
     while h >= 1:
