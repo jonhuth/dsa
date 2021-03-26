@@ -1,5 +1,7 @@
 def insertion_sort(nums):
     # O(n^2) time | O(1) space
+    # best case: input arr in sorted order and does n - 1 compares
+    # insertion sort excels with partial sorts compared to other n^2 sorts
     n = len(nums)
 
     for i in range(1, n):

@@ -1,5 +1,6 @@
 def selection_sort(nums):
     # O(n^2) time | O(1) space
+    # still quadratic even if input arr is sorted
     n = len(nums)
     for i in range(n-1):
         min_idx = i  # min num thus far in unsorted partition
