@@ -1,4 +1,4 @@
-def shell_sort(arr):
+def shuffle_by_sort(arr):
     '''
     move entries more than one position at a time
     by h-sorting the array.
