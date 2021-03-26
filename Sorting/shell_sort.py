@@ -3,11 +3,11 @@ def shell_sort(arr):
     move entries more than one position at a time
     by h-sorting the array.
     like insertion sort but skip by h when looking backwards
-
+    time: O(n^3/2) | space: O(1)
     '''
     n = len(arr)
     h = 1
-    while h < n // 3:
+    while h < n // 3: # increment sequence: 3x + 1
         h = 3 * h + 1
 
     while h >= 1:
