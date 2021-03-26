@@ -1,23 +1,25 @@
+from random import random
+
+
 def shuffle_by_sort(arr):
     '''
-    move entries more than one position at a time
-    by h-sorting the array.
-    like insertion sort but skip by h when looking backwards
-    time: O(n^3/2) | space: O(1)
+    shuffling is kind of like the opposite of sorting
+    input arr must contain unique elements
+    algorithm:
+    1. assign rand num uniformly in range [0, 1) to each ele in arr
+    2. sort those random nums
+    3. map each ele to its correct position using hash table : rand_num => num
+    4. return arr
+
+    shuffle sort produces a uniformly random permutation of the input array, 
+    provided no duplicate values
+
+
     '''
-    n = len(arr)
-    h = 1
-    # increment sequence: 3x + 1 => log3(n) increment values
-    while h < n // 3:
-        h = 3 * h + 1
+    shuffle_keys = [(random(), num) for num in arr]
+    shuffle_keys.sort(key=lambda x: x[0])
 
-    while h >= 1:
-        for i in range(h, n):
-            j = i
-            while j >= h and (arr[j-h] > arr[j]):
-                arr[j-h], arr[j] = arr[j], arr[j-h]
-                j -= h
-
-        h = h // 3
+    for i in range(len(arr)):
+        arr[i] = shuffle_keys[i][1]
 
     return arr
