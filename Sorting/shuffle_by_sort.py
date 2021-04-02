@@ -14,7 +14,7 @@ def shuffle_by_sort(arr):
     shuffle sort produces a uniformly random permutation of the input array, 
     provided no duplicate values
 
-
+    time: O(nlogn) | space: O(n)
     '''
     shuffle_keys = [(random(), num) for num in arr]
     shuffle_keys.sort(key=lambda x: x[0])
