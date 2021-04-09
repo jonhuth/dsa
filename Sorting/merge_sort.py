@@ -13,8 +13,8 @@ def mergeSort(arr):
 
 def merge(temp, arr1, arr2, p1=0, p2=0, k=0):
     '''
-    merge subroutine
-    time: O(m + n) | space: O(m + n)
+    merge subroutine - uses input array to save space instead of copying
+    time: O(m + n) | space: O(1)
     just O(n) time and space assuming len(arr1) = n and len(arr2) = n
     '''
     while p1 < len(arr1) and p2 < len(arr2):
