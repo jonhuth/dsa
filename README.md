@@ -53,4 +53,8 @@ This repository holds the solutions to problems I have solved and is organized b
 7. Job Boards
 
 
+## Todo
+1. Convex Hull
+2. Update merge & merge sort
+
 ## Credit

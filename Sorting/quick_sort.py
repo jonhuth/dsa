@@ -4,7 +4,7 @@ import partition
 
 def quick_sort(arr):
     '''
-    time: O(nlogn) | space: O(logn) - space for call stack
+    time: O(nlogn) - avg time O(n^2) - worst (very rare) | space: O(logn) - space for call stack
     '''
     shuffle(arr)  # shuffling needed for performance guarantee
     _sort(arr, 0, len(arr)-1)
