@@ -1,3 +1,6 @@
+import merge
+
+
 def mergeSort(arr):
     '''
     invented by John von neumann
@@ -8,33 +11,7 @@ def mergeSort(arr):
         left, right = arr[:mid], arr[mid:]
         mergeSort(left)
         mergeSort(right)
-        merge(arr, left, right)
-
-
-def merge(temp, arr1, arr2, p1=0, p2=0, k=0):
-    '''
-    merge subroutine - uses input array to save space instead of copying
-    time: O(m + n) | space: O(1)
-    just O(n) time and space assuming len(arr1) = n and len(arr2) = n
-    '''
-    while p1 < len(arr1) and p2 < len(arr2):
-        if arr1[p1] < arr2[p2]:
-            temp[k] = arr1[p1]
-            p1 += 1
-        else:
-            temp[k] = arr2[p2]
-            p2 += 1
-        k += 1
-
-    while p1 < len(arr1):
-        temp[k] = arr1[p1]
-        p1 += 1
-        k += 1
-
-    while p2 < len(arr2):
-        temp[k] = arr2[p2]
-        p2 += 1
-        k += 1
+        merge.merge(arr, left, right)
 
 
 arr1 = [1, 2, 0, 4, 9, 3]
