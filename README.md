@@ -59,7 +59,8 @@ This repository holds the solutions to problems I have solved and is organized b
 3. 3 way quick sort (djikstra approach) - used to speed up quicksort when there are duplicate keys
 4. Fast Fourier Transform (FFT) - research applications
 5. Topological Sort
-6. standardize doc strings
+6. convert all files with uses of camelCase to snake_case (low priority)
+7. standardize doc strings (low priority)
    1. problem statement
    2. doctests (understanding check)
    3. basic algorithm description
