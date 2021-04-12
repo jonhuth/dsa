@@ -59,5 +59,11 @@ This repository holds the solutions to problems I have solved and is organized b
 3. 3 way quick sort (djikstra approach) - used to speed up quicksort when there are duplicate keys
 4. Fast Fourier Transform (FFT) - research applications
 5. Topological Sort
+6. standardize doc strings
+   1. problem statement
+   2. doctests (understanding check)
+   3. basic algorithm description
+   4. pseudocode (if necessary)
+   5. runtime
 
 ## Credit
