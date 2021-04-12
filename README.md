@@ -56,5 +56,8 @@ This repository holds the solutions to problems I have solved and is organized b
 ## Todo
 1. Convex Hull
 2. Update merge & merge sort
+3. 3 way quick sort (djikstra approach) - used to speed up quicksort when there are duplicate keys
+4. Fast Fourier Transform (FFT) - research applications
+5. Topological Sort
 
 ## Credit
