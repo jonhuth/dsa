@@ -62,9 +62,12 @@ This repository holds the solutions to problems I have solved and is organized b
 6. convert all files with uses of camelCase to snake_case (low priority)
 7. standardize doc strings (low priority)
    1. problem statement
-   2. doctests (understanding check)
+   2. tests (doctests) (understanding check)
    3. basic algorithm description
    4. pseudocode (if necessary)
-   5. runtime
+   5. complexity analysis
+8. build out more robust testing of algorithms (medium priority)
+   1. subfolder in each category
+      1. {algo_name}_test.py
 
 ## Credit
