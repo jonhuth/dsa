@@ -27,3 +27,9 @@ def lowestCommonAncestor(root: 'TreeNode', p: 'TreeNode', q: 'TreeNode') -> 'Tre
 
     recurse(root)
     return ans
+
+
+if __name__ == '__main__':
+    import doctest
+    if doctest.testmod().failed == 0:
+        print("\n*** ALL TESTS PASSED; YOU FOUND SUCCESS! ***\n")
