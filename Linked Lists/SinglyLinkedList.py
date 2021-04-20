@@ -148,6 +148,20 @@ class SinglyLinkedList:
             curr = curr.next
         return _sum / self.length
 
+    def reverse_linked_list(self):
+        '''reverse a singly linked list.
+        time: O(n) | space: O(1)'''
+        if self.head == None:
+            raise Exception('no nodes in LL')
+        l, m, r = None, self.head, self.head.next
+        while r:
+            m.next = l
+            l = m
+            m = r
+            r = m.next
+        m.next = l
+        self.head, self.tail = self.tail, self.head
+
 # testing
 
 
@@ -156,25 +170,41 @@ def print_out_ll():
     while curr:
         print(curr.val)
         curr = curr.next
+    print('--------')
 
 
-l1 = SinglyLinkedList([1, 2, 3])
-curr = l1.head
-print_out_ll()
+# l1 = SinglyLinkedList([1, 2, 3])
+# curr = l1.head
+# print_out_ll()
 
 
-l1.prepend(0)
-curr = l1.head
-print_out_ll()
+# l1.prepend(0)
+# curr = l1.head
+# print_out_ll()
 
-l1.pop()
-curr = l1.head
-print_out_ll()
+# l1.pop()
+# curr = l1.head
+# print_out_ll()
 
 # l2 = SinglyLinkedList([])
 # l2.pop()
 
-l3 = SinglyLinkedList([1])
-l3.pop()
-curr = l3.head
+# l3 = SinglyLinkedList([1])
+# l3.pop()
+# curr = l3.head
+# print_out_ll()
+
+l4 = SinglyLinkedList([1, 2, 3])
+l4.reverse_linked_list()
+curr = l4.head
+print_out_ll()
+
+l5 = SinglyLinkedList([1, 2])
+l5.reverse_linked_list()
+curr = l5.head
+print_out_ll()
+
+l6 = SinglyLinkedList([1])
+l6.reverse_linked_list()
+curr = l6.head
 print_out_ll()
