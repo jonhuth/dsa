@@ -23,21 +23,21 @@ def averageOfLevels(root):
     9. append the lvl avg to output array
     10. repeat until original q is empty then return output arr
 
-    time: O(n) | space: O(w) where n = num nodes and m is max width of tree (bottom level)
+    time: O(n) | space: O(w) where n = num nodes and m is max width of tree
     '''
     avgs = []
     q = deque([root])
     while q:
         lvlSum, lvlCount = 0, 0
-        tempQ = deque([])
+        children = deque([])
         while q:
             curr = q.popleft()
             lvlSum += curr.val
             lvlCount += 1
             if curr.left:
-                tempQ.append(curr.left)
+                children.append(curr.left)
             if curr.right:
-                tempQ.append(curr.right)
-        q = tempQ
+                children.append(curr.right)
+        q = children
         avgs.append(lvlSum / lvlCount)
     return avgs
