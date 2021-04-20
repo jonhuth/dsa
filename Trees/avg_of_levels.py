@@ -29,6 +29,7 @@ def averageOfLevels(root):
     q = deque([root])
     while q:
         lvlSum, lvlCount = 0, 0
+        # temp queue used to store children for nodes currently in main queue
         children = deque([])
         while q:
             curr = q.popleft()
