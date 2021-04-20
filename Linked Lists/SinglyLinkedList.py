@@ -9,7 +9,7 @@ class ListNode:
 
 
 class SinglyLinkedList:
-    def __init__(self, vals=[]) -> None:
+    def __init__(self, vals=[]):
         self.head = None
         self.tail = None
         self.length = 0
