@@ -174,7 +174,7 @@ def print_out_ll():
         curr = curr.next
 
 
-l1 = SinglyLinkedList([1, 2, 3])
+l1 = DoublyLinkedList([1, 2, 3])
 curr = l1.head
 print_out_ll()
 
@@ -187,10 +187,10 @@ l1.pop()
 curr = l1.head
 print_out_ll()
 
-# l2 = SinglyLinkedList([])
+# l2 = DoublyLinkedList([])
 # l2.pop()
 
-l3 = SinglyLinkedList([1])
+l3 = DoublyLinkedList([1])
 l3.pop()
 curr = l3.head
 print_out_ll()
