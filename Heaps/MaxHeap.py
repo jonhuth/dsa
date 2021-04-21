@@ -21,7 +21,7 @@ class MaxHeap:
         n = self.size()
         while 2*k <= n:
             j = 2*k
-            if j < n and self.heap[j] < self.heap[j+1]: # j is larger child idx
+            if j < n and self.heap[j] < self.heap[j+1]:  # j is larger child idx
                 j += 1
             # no need to sink down more; correct place
             if not (self.heap[k] < self.heap[j]):
@@ -57,3 +57,22 @@ class MaxHeap:
 
     def size(self):
         return len(self.heap)
+
+    def sort(self):
+        '''
+        sort input arr in place using the heapsort algorithm.
+        note: ignore idx 1
+        time: O(nlogn) | space: O(n) - heap sort should be in constant space
+        but I setup up heap class differently so I will just make sorted arr output
+        '''
+        copy = self.heap[:]
+        out = []
+        n = self.size()
+        for k in range(n):
+            self.sink(k)
+        while n > 1:
+            out.append(self.del_max())
+            n = self.size()
+        out = out[::-1]  # (largest -> smallest) -> (smallest -> largest)
+        self.heap = copy  # reset heap
+        return out
