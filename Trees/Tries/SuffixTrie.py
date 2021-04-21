@@ -6,8 +6,7 @@ class SuffixTrie:
 
     def populateSuffixTrieFrom(self, string):
         # time: O(n^2) | space: O(n^2) where n is len of string
-        # n suffixes for len n string
-        # babc
+        # note: can construct suffix trie in O(n) using Ukkonen's algorithm
         for i in range(len(string)):
             currentNode = self.root
             for j in range(i, len(string)):
@@ -17,7 +16,7 @@ class SuffixTrie:
             currentNode[self.endSymbol] = True
 
     def contains(self, string):
-        # time: O(n) | space: O(1)
+        # time: O(m) | space: O(1) - m = len(string)
         currentNode = self.root
         for char in string:
             if char not in currentNode:
