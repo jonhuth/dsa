@@ -6,7 +6,7 @@ class SuffixTrie:
 
     def populateSuffixTrieFrom(self, string):
         # time: O(n^2) | space: O(n^2) where n is len of string
-        # note: can construct suffix trie in O(n) using Ukkonen's algorithm
+        # note: can construct suffix trie in O(n) time using Ukkonen's algorithm
         for i in range(len(string)):
             currentNode = self.root
             for j in range(i, len(string)):
