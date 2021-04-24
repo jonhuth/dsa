@@ -7,68 +7,67 @@ class BST:
     def insert(self, value):
         # avg: O(logn) worst: O(n) T | avg and worst: O(1) S
         # worst case time complexity due to case where tree degenerates to linked list
-        curr_node = self
+        curr = self
         while True:
-            if value < curr_node.value:
-                if curr_node.left is None:
-                    curr_node.left = BST(value)
+            if value < curr.value:
+                if curr.left is None:
+                    curr.left = BST(value)
                     break
                 else:
-                    curr_node = curr_node.left
+                    curr = curr.left
             else:
-                if curr_node.right is None:
-                    curr_node.right = BST(value)
+                if curr.right is None:
+                    curr.right = BST(value)
                     break
                 else:
-                    curr_node = curr_node.right
+                    curr = curr.right
         return self
 
     def contains(self, value):
         # avg: O(logn) worst: O(n) T | avg and worst: O(1) S
-        curr_node = self
-        while curr_node is not None:
-            if value < curr_node.value:
-                curr_node = curr_node.left
-            elif value > curr_node.value:
-                curr_node = curr_node.right
+        curr = self
+        while curr is not None:
+            if value < curr.value:
+                curr = curr.left
+            elif value > curr.value:
+                curr = curr.right
             else:
                 return True
         return False
 
-    def remove(self, value, parentNode=None):
+    def remove(self, value, parent=None):
         # avg: O(logn) worst: O(n) T | avg and worst: O(1) S
-        currentNode = self
-        while currentNode is not None:
-            if value < currentNode.value:
-                parentNode = currentNode
-                currentNode = currentNode.left
-            elif value > currentNode.value:
-                parentNode = currentNode
-                currentNode = currentNode.right
+        curr = self
+        while curr is not None:
+            if value < curr.value:
+                parent, curr = curr, curr.left
+            elif value > curr.value:
+                parent, curr = curr, curr.right
             else:
-                if currentNode.left is not None and currentNode.right is not None:
-                    currentNode.value = currentNode.right.getMinValue()
-                    currentNode.right.remove(currentNode.value, currentNode)
-                elif parentNode is None:
-                    if currentNode.left is not None:
-                        currentNode.value = currentNode.left.value
-                        currentNode.right = currentNode.left.right
-                        currentNode.left = currentNode.left.left
-                    elif currentNode.right is not None:
-                        currentNode.value = currentNode.right.value
-                        currentNode.left = currentNode.right.left
-                        currentNode.right = currentNode.right.right
+                if curr.left is not None and curr.right is not None:
+                    curr.value = curr.right.get_min_val()
+                    curr.right.remove(curr.value, curr) # curr = curr.right, parent = curr
+                elif parent is None:
+                    if curr.left is not None:
+                        curr.value = curr.left.value
+                        curr.right = curr.left.right
+                        curr.left = curr.left.left
+                    elif curr.right is not None:
+                        curr.value = curr.right.value
+                        curr.left = curr.right.left
+                        curr.right = curr.right.right
                     else:
                         pass
-                elif parentNode.left == currentNode:
-                    parentNode.left = currentNode.left if currentNode.left is not None else currentNode.right
-                elif parentNode.right == currentNode:
-                    parentNode.right = currentNode.left if currentNode.left is not None else currentNode.right
+                elif parent.left == curr:
+                    parent.left = curr.left if curr.left is not None else curr.right
+                elif parent.right == curr:
+                    parent.right = curr.left if curr.left is not None else curr.right
                 break
         return self
 
-    def getMinValue(self):
-        currentNode = self
-        while currentNode.left is not None:
-            currentNode = currentNode.left
-        return currentNode.value
+    def get_min_val(self):
+        # avg: O(logn) worst: O(n) T | avg and worst: O(1) S
+        curr = self
+        while curr.left is not None:
+            curr = curr.left
+        return curr.value
