@@ -1,9 +1,9 @@
-def twoNumberSum(array, targetSum):
+def two_num_sum(array, target_sum):
     # time: O(n) | space: O(n)
     s = set()
 
     for e in array:
-        complement = targetSum - e
+        complement = target_sum - e
         if complement in s:
             return [complement, e]  # found pair
         else:
