@@ -71,7 +71,7 @@ Much credit must be given to Haseeb Qureshi and [his blog post](https://haseebq.
 ## Todo
 1. Convex Hull
 2. implement dynamic array
-3. update both hash table implementations using dynamic array
+3. update both hash table and hash set implementations using dynamic array
 4. Update merge & merge sort
 5. 3 way quick sort (djikstra approach) - used to speed up quicksort when there are duplicate keys
 6. Topological Sort
