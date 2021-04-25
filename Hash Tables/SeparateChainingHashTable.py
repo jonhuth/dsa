@@ -9,6 +9,7 @@ class SeparateChainingHashTable:
     '''
     separate chaining implementation of hash table.
     each. ele in hash table corresponds to Linked List
+
     arr doubling and halving code omitted
     '''
 
@@ -32,8 +33,8 @@ class SeparateChainingHashTable:
         get val corresponding to key in hash table.
         if key not in hash table, return None
 
-        time: avg: O(1) worst case: O(k) | space: O(1)
-        where k = len of key
+        time: avg: O(1) worst case: O(i) | space: O(1)
+        where i = num nodes in ith linked list
         '''
         i = self.hash(key)
         curr = self.ht[i]
@@ -50,8 +51,8 @@ class SeparateChainingHashTable:
         if another key already hashed to same index,
         make new kvp node head of LL.
 
-        time: avg: O(1) worst case: O(k) | space: O(1)
-        where k = len of key
+        time: avg: O(1) worst case: O(i) | space: O(1)
+        where i = num nodes in ith linked list
         '''
         i = self.hash(key)
         curr = self.ht[i]
