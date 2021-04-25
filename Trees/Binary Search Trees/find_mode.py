@@ -22,10 +22,7 @@ class TreeNode:
             if root is None:
                 return
             inorder(root.left, finding_max)
-            if prev_val is not None and prev_val == root.val:
-                curr_count += 1
-            else:
-                curr_count = 1
+            curr_count = 1 if prev_val != root.val else curr_count + 1
 
             if not finding_max:
                 max_count = max(max_count, curr_count)
