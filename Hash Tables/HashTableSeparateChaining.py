@@ -5,7 +5,7 @@ class Node:
         self.next = next
 
 
-class SeparateChainingHashTable:
+class HashTableSeparateChaining:
     '''
     separate chaining implementation of hash table.
     each. ele in hash table corresponds to Linked List

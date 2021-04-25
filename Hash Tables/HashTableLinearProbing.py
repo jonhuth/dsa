@@ -1,4 +1,4 @@
-class LinearProbingHashTable:
+class HashTableLinearProbing:
     '''
     linear probing implementation of hash table.
     in case of hash collision, look to the right and worst wrap around array
