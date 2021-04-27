@@ -4,7 +4,8 @@ from Graphs.Graph import Graph
 class DepthFirstPaths:
     def __init__(self, G, s):
         self.visited = [False] * G.V  # visited list of nodes
-        self.edge_to = [] * G.V  # edge_to[v] => prev vertex on path from s to v
+        # edge_to[v] => prev vertex on path from s to v
+        self.edge_to = [None] * G.V
         self.s = s  # source node
 
     def dfs(self, G, v):
@@ -12,7 +13,7 @@ class DepthFirstPaths:
         recursive dfs from node v.
         '''
         self.visited[v] = True
-        for w in G.adj():
+        for w in G.adj(v):
             if not self.visited[w]:
                 self.dfs(G, w)
                 self.edge_to[w] = v
