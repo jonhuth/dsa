@@ -29,6 +29,8 @@ class DepthFirstOrder:
     def topological_order(self):
         '''
         returns array of nodes in topological order (reverse dfs postorder)
+
+        time: O(n) | space: O(n)
         '''
         return self.postorder[::-1]
 
@@ -41,5 +43,5 @@ G1.add_edge(2, 3)
 print(G1.adj)
 DFO = DepthFirstOrder(G1)
 DFO.dfs(G1, 0)
-print(DFO._reverse_post())
+print(DFO.post_order())
 print(DFO.topological_order())
