@@ -2,6 +2,10 @@ from Graphs.Digraph import Digraph
 
 
 class DepthFirstOrder:
+    '''
+    reverse dfs postorder of a DAG is a topological order.
+    '''
+
     def __init__(self, G: Digraph):
         self.visited = [False] * G.V()
         for v in range(len(self.visited)):
