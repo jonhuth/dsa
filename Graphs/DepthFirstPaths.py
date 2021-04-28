@@ -2,6 +2,10 @@ from Graphs.Graph import Graph
 
 
 class DepthFirstPaths:
+    '''
+    dfs works the same for digraph and graph.
+    '''
+
     def __init__(self, G, s):
         self.visited = [False] * G.V  # visited list of nodes
         # edge_to[v] => prev vertex on path from s to v
