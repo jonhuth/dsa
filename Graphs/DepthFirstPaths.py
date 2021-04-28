@@ -1,4 +1,4 @@
-from Graphs.Graph import Graph
+import Graph
 
 
 class DepthFirstPaths:
@@ -15,6 +15,7 @@ class DepthFirstPaths:
     def dfs(self, G, v):
         '''
         recursive dfs from node v.
+        time: O(v + e) | space: O(v)
         '''
         self.visited[v] = True
         for w in G.adj(v):

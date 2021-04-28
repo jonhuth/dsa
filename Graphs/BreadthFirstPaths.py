@@ -1,4 +1,4 @@
-from Graphs.Graph import Graph
+import Graph
 from collections import deque
 
 
@@ -10,6 +10,9 @@ class BreadthFirstPaths:
         self.s = s  # source node
 
     def bfs(self, G, s):
+        '''
+        time: O(v+e) | space: O(v)
+        '''
         q = deque([s])
         self.visited[s] = True
         while q:
