@@ -1,15 +1,13 @@
-def invertBinaryTree(tree):
-    # time: O(n) | space: O(d) where n is num nodes
-    # and d is the height of the tree
-    if tree is None:
+def invert_binary_tree(root):
+    # time: O(n) | space: O(h) where n is num nodes
+    # and h = logn (height of tree)
+    if root is None:
         return
-    else:
-        # evaluate left and right children first, then swap 
-        invertBinaryTree(tree.left)
-        invertBinaryTree(tree.right)
-        tree.left, tree.right = tree.right, tree.left
-    return tree
-	
+    # evaluate left and right children first, then swap
+    invert_binary_tree(root.left)
+    invert_binary_tree(root.right)
+    root.left, root.right = root.right, root.left
+    return root
 
 
 # This is the class of the input binary tree.
