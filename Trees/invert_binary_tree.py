@@ -3,12 +3,12 @@ from collections import deque
 
 def invert_binary_tree(root):
     '''
-    prompt:
-    given the root of a binary tree, invert the tree, and return its root.
+    prompt: given the root of a binary tree, invert the tree, and return its
+    root.
 
-    solution:
-    traverse tree dfs style and swap left and right subtrees while backtracking up.
-    swapping is done postorder; after left and right subtrees have been explored.
+    solution: traverse tree dfs style and swap left and right subtrees while
+    backtracking up. swapping is done postorder; after left and right subtrees
+    have been explored.
 
     time: O(n) | space: O(logn) - for recursion call stack
     '''
@@ -23,9 +23,8 @@ def invert_binary_tree(root):
 
 def invert_binary_tree(root):
     '''
-    level order traversal implementation
-    time: O(n) | space: O(w)
-    n = num nodes, w = max width in tree
+    level order traversal implementation time: O(n) | space: O(w) n = num nodes,
+    w = max width in tree
     '''
     if root is None:
         return
