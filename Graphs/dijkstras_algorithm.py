@@ -63,6 +63,6 @@ def find_lowest_cost_path(g: list[dict], s: int, e: int) -> list:
     # find path from e to s then return
     curr = e
     while curr:
-        path.append(e)
-        curr = prev[e]
+        path.append(curr)
+        curr = prev[curr]
     return path.reverse()
