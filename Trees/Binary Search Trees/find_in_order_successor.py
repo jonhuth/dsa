@@ -26,7 +26,7 @@ class BinarySearchTree:
         if curr_node is not None:
             return curr_node
 
-        curr_node = inputNode
+        curr_node = inputNode.parent
         while curr_node and curr_node.parent:
             if curr_node.key > inputNode.key:
                 return curr_node
