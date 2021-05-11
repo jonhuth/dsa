@@ -17,28 +17,41 @@ class BinarySearchTree:
         self.root = None
 
     def find_in_order_successor(self, inputNode):
-        # the smallest node above the inputNode is the leftmost node in the right subtree else traverse up to root of whole tree and check
+        # the smallest node above the inputNode is the leftmost node in the right subtree else first ancestor > inputNode
         # time: O(logn) for balanced tree O(n) for unbalanced tree | space: O(1)
-        leftBound, rightBound = inputNode.key, float('inf')
-        node = inputNode.right
-        successor = node
+        curr_node = inputNode.right
+        while curr_node and curr_node.left:
+            curr_node = curr_node.left
 
-        while node:
-            if leftBound < node.key < rightBound:
-                rightBound, successor = node.key, node
-            node = node.left
+        if curr_node is not None:
+            return curr_node
 
-        if rightBound < float('inf'):
-            return successor
+        curr_node = inputNode
+        while curr_node and curr_node.parent:
+            if curr_node.key > inputNode.key:
+                return curr_node
+            curr_node = curr_node.parent
 
-        node = inputNode
-        successor = node
-        while node:
-            if leftBound < node.key < rightBound:
-                rightBound, successor = node.key, node
-            node = node.parent
-        return successor if rightBound != float('inf') else None
+        if not curr_node:
+            return None
+        return curr_node if curr_node.key > inputNode.key else None
+        # leftBound, rightBound = inputNode.key, float('inf')
+        # node = successor = inputNode.right
 
+        # while node:
+        #     if leftBound < node.key < rightBound:
+        #         rightBound, successor = node.key, node
+        #     node = node.left
+
+        # if rightBound < float('inf'):
+        #     return successor
+
+        # node = successor = inputNode.right
+        # while node:
+        #     if leftBound < node.key < rightBound:
+        #         rightBound, successor = node.key, node
+        #     node = node.parent
+        # return successor if rightBound != float('inf') else None
     # Given a binary search tree and a number, inserts a
     # new node with the given number in the correct place
     # in the tree. Returns the new root pointer which the
@@ -90,6 +103,7 @@ class BinarySearchTree:
                 currentNode = currentNode.right
 
         return None
+
 
 # Create a Binary Search Tree
 bst = BinarySearchTree()
