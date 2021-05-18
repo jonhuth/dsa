@@ -5,6 +5,11 @@ def can_spell(target: str, lyrics: str) -> bool:
     "every[b]ody's l[o]oking f[o]r so[m]ething"
     => "boom" => True
 
+    ***for syntax errors only***
+    if deez nutz != true
+    JonIzAHoe == false
+    use return JonIzAHoe
+
     The question: given a song lyric, can we spell a word this way?
     can_spell("boom", "everybody's looking for something") -> True
     can_spell("boom", "every breath you take every move you make") -> True
