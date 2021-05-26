@@ -15,33 +15,16 @@ def array_of_products(arr):
     time: O(n) | space: O(n)
     '''
     out = [1] * len(arr)
-    left_prod = right_prod = 1
+    left_prod = 1
     for i in range(1, len(arr)):
         left_prod *= arr[i-1]
-        right_prod *= arr[-1-i+1]
         out[i] *= left_prod
-        out[-1-i] *= right_prod
+    right_prod = 1
+    for i in range(len(arr)-2, -1, -1):
+        right_prod *= arr[i+1]
+        out[i] *= right_prod
+
     return out
-    # out = [1] * len(arr)
-    # left_prod = right_prod = 1
-    # for i in range(1, len(arr)):
-    #     left_prod *= arr[i-1]
-    #     out[i] *= left_prod
-    # for i in range(len(arr) - 2, -1, -1):
-    #     right_prod *= arr[i+1]
-    #     out[i] *= right_prod
-    # return out
 
-    # if len(arr) <= 1:
-    #     return []
 
-    # left_arr = [1] + [0] * (len(arr) - 1)  # [1, 0, 0, ...] len=n
-    # right_arr = [0] * (len(arr) - 1) + [1]  # [0, 0, ... , 1] len = n
-
-    # for i in range(1, len(arr)):
-    #     left_arr[i] = arr[i-1] * left_arr[i-1]
-
-    # for i in range(len(arr)-2, -1, -1):
-    #     right_arr[i] = arr[i+1] * right_arr[i+1]
-
-    # return [left_arr[i] * right_arr[i] for i in range(len(arr))]
+print(array_of_products([8, 10, 2]))
