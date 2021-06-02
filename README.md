@@ -86,3 +86,5 @@ of this guide!
 6.  build out more robust testing of algorithms (medium priority)
    6. subfolder in each category
       1. {algo_name}_test.py
+7. remove duplicate classes
+   1. Tree classes (make TreeNode.py)

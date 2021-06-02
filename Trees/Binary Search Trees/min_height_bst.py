@@ -1,7 +1,15 @@
-# time: O(nlogn) | space: O(n)
 
-def minHeightBst(array):
-    def minHeightBstHelper(array, l, r, tree):
+def min_height_bst(array):
+    '''
+    given a sorted (increasing order) array with unique integer elements, write
+    an algorithm to create a binary search tree with minimal height.
+
+    algorithm: divide and conquer inserting middle val into BST while recursing
+    through the array.
+
+    time: O(nlogn) | space: O(n)
+    '''
+    def min_height_bst(array, l, r, tree):
         mid = (l + r) // 2
         if l <= r:
             if tree is None:
@@ -9,11 +17,11 @@ def minHeightBst(array):
 
             else:
                 tree.insert(array[mid])
-            minHeightBstHelper(array, l, mid - 1, tree)
-            minHeightBstHelper(array, mid + 1, r, tree)
+            min_height_bst(array, l, mid - 1, tree)
+            min_height_bst(array, mid + 1, r, tree)
         return tree
 
-    return minHeightBstHelper(array, 0, len(array) - 1, None)
+    return min_height_bst(array, 0, len(array) - 1, None)
 
 
 class BST:
