@@ -162,6 +162,12 @@ class SinglyLinkedList:
         m.next = l
         self.head, self.tail = self.tail, self.head
 
+    def print_out_ll(self):
+        curr = self.head
+        while curr:
+            print(curr.val)
+            curr = curr.next
+
 # testing
 
 
