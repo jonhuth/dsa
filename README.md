@@ -8,7 +8,7 @@ helpful during my interviewing journey.
 ### Strings
 
 ### Arrays
-- Matrices
+   - Matrices
 
 ### Linked Lists (TODO)
 
@@ -31,6 +31,7 @@ helpful during my interviewing journey.
 ### Bit Manipulation
 
 ### Math
+   - Fast Fourier Transform (and inverse)
 
 ### Sliding Window (TODO)
 
@@ -41,7 +42,7 @@ helpful during my interviewing journey.
 ### Sorting
 
 ### Searching
-- Binary Search
+  - Binary Search
   
 
 ## Resources
@@ -74,9 +75,11 @@ of this guide!
 ## Todo
 1. Convex Hull
 2. Update merge & merge sort
-3. 3 way quick sort (djikstra approach) - used to speed up quicksort when there
+3. Shortest Path in Graphs
+   1. Bellman Ford
+   2. A*
+4. 3 way quick sort (djikstra approach) - used to speed up quicksort when there
    are duplicate keys
-4. convert all files with uses of camelCase to snake_case (low priority)
 5. standardize doc strings (low priority)
    1. problem statement
    2. tests (doctests) (understanding check)
@@ -84,7 +87,8 @@ of this guide!
    4. pseudocode (if necessary)
    5. complexity analysis
 6.  build out more robust testing of algorithms (medium priority)
-   6. subfolder in each category
+   6. build out test suite to run all tests at once
+   7. subfolder in each category
       1. {algo_name}_test.py
-7. remove duplicate classes
+7. remove duplicate classes and use imports
    1. Tree classes (make TreeNode.py)
