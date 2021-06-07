@@ -1,38 +1,38 @@
-def spiralTraverse(array):
-    # O(m*n) T & S where m*n is the total number of elements in the 2d array
+def spiral_traverse(array):
+    '''
+    Write a function that takes in an nxm 2d array and returns a 1d array of all
+    the array's elelemnts in spiral order.
+
+    Spiral order starts at the top left corner of the 2d array, goes to the
+    right, and proceeds in a spiral pattern all the way until every element has
+    been visited.
+
+    O(m*n) T & S where m*n is the total number of elements in the 2d array
+    '''
     out = []
-    i, j = 0, 0
-    i_lower_bound, i_upper_bound = 0, len(array) - 1
-    j_lower_bound, j_upper_bound = 0, len(array[i]) - 1
-    size = len(array) * len(array[0])
+    start_row, end_row = 0, len(array) - 1
+    start_col, end_col = 0, len(array[0]) - 1
 
-    while len(out) < size:  # while in bounds
-        while j <= j_upper_bound and len(out) < size:
-            out.append(array[i][j])
-            j += 1
-        j -= 1  # fix col out of bounds
-        i += 1  # go down a row
-        i_lower_bound = i
+    while start_row <= end_row and start_col <= end_col:  # while in bounds
+        for col in range(start_col, end_col + 1):
+            out.append(array[start_row][col])
 
-        while i <= i_upper_bound and len(out) < size:
-            out.append(array[i][j])
-            i += 1
-        i -= 1  # fix row out of bounds
-        j -= 1  # go left a col
-        j_upper_bound = j
+        for row in range(start_row + 1, end_row + 1):
+            out.append(array[row][end_col])
 
-        while j >= j_lower_bound and len(out) < size:
-            out.append(array[i][j])
-            j -= 1
-        j += 1  # fix col out of bounds
-        i -= 1  # go up a row
-        i_upper_bound = i
+        for col in range(end_col - 1, start_col - 1, -1):
+            if start_row == end_row:
+                break
+            out.append(array[end_row][col])
 
-        while i >= i_lower_bound and len(out) < size:
-            out.append(array[i][j])
-            i -= 1
-        i += 1  # fix row out of bounds
-        j += 1  # go right a col
-        j_lower_bound = j
+        for row in range(end_row - 1, start_row, -1):
+            if start_col == end_col:
+                break
+            out.append(array[row][start_col])
+
+        start_row += 1
+        end_row -= 1
+        start_col += 1
+        end_col -= 1
 
     return out
