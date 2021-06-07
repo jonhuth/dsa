@@ -7,10 +7,10 @@ def find_error_nums(nums):
     dup, missing = -1, 1
 
     for x in nums:  # determine duplicate
-        if nums[abs(x) - 1] < 0:
+        if nums[abs(x) - 1] < 0:  # if negative => we've seen already
             dup = abs(x)
         else:
-            nums[abs(x) - 1] *= -1
+            nums[abs(x) - 1] *= -1  # not dupe => make negative
 
     for i in range(1, len(nums)):  # determine missing
         if nums[i] > 0:
