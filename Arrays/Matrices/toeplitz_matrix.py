@@ -1,4 +1,4 @@
-def isToeplitz(arr: list[list[int]]) -> bool:
+def is_toeplitz(arr: list[list[int]]) -> bool:
     """
     given a matrix of integers, return whether matrix is toeplitz or not.
     toeplitz matrix = matrix where each. left to right diagonal in the matrix
@@ -9,7 +9,7 @@ def isToeplitz(arr: list[list[int]]) -> bool:
     5, 1, 2, 3
     6, 5, 1, 2
      => True
-    
+
     notes: 
     for each (i,j) check arr[i][j] == arr[i+1][j+1] while inbounds
 

@@ -1,5 +1,13 @@
 def array_of_products(arr):
     '''
+    Given an array of integers arr, you’re asked to calculate
+    for each index i the product of all integers except the integer at that index 
+    (i.e. except arr[i]). Implement a function arrayOfArrayProducts that takes
+    an array of integers and returns an array of the products.
+
+    Solve without using division and analyze your solution’s time and space
+    complexities.
+
     ex 1: arr = [8, 10, 2] => [20, 16, 80]
     left: [1, 8, 80] left to right
     right: [20, 2, 1] right to left
