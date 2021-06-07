@@ -1,5 +1,9 @@
 def two_num_sum(array, target_sum):
-    # time: O(n) | space: O(n)
+    '''
+    given a non-empty arr of unique ints, return both nums that sum to target
+    sum. else return empty arr.
+    time: O(n) | space: O(n)
+    '''
     s = set()
 
     for e in array:
