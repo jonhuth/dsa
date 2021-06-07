@@ -1,5 +1,9 @@
-def findErrorNums(nums):
-    # time: O(n) | space: O(1)
+def find_error_nums(nums):
+    '''
+    given set of integers originally containing all nums from 1 to n, find the
+    num that was duplicated and the one that went missing.
+    time: O(n) | space: O(1)
+    '''
     dup, missing = -1, 1
 
     for x in nums:  # determine duplicate
