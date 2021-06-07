@@ -3,11 +3,15 @@ class LargerNumKey(str):
         return x+y > y+x
 
 
-def largestNumber(nums):
-    # given array of nums, order them in a way
-    # that makes the largest num when all concatenated
-    # let n = number of nums
-    # time: O(nlogn) | space: O(1)
+def largest_num(nums):
+    '''
+    given array of nums, order them in a way
+    that makes the largest num when all concatenated
+    let n = number of nums
+
+    [1,2,3,4] => '4321'
+    time: O(nlogn) | space: O(1)
+    '''
 
     nums.sort(key=LargerNumKey)
     for i, num in enumerate(nums):  # reuse nums array to save space

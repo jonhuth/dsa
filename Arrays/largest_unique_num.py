@@ -1,6 +1,9 @@
-def largestUniqueNumber(A: list[int]) -> int:
-    # counter based soln: time: O(n) | O(n)
-    # time: O(nlogn) | space: O(1)
+def largest_unique_num(A: list[int]) -> int:
+    '''
+    given array of nums, return the largest unique num in the array.
+    counter based soln: time: O(n) | O(n)
+    time: O(nlogn) | space: O(1)
+    '''
     A.sort()
     A.append('dummy')
 
@@ -12,4 +15,4 @@ def largestUniqueNumber(A: list[int]) -> int:
 
 
 arr1 = [1, 2, 2, 3, 4, 4]
-print(largestUniqueNumber(arr1))
+print(largest_unique_num(arr1))

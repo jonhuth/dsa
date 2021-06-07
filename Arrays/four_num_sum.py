@@ -1,5 +1,9 @@
-def fourNumberSum(array, targetSum):
-    # time : O(n^2) avg O(n^3) worst | space: O(n^2)
+def four_num_sum(array, targetSum):
+    '''
+    given non-empty arr of distinct ints and a int representing the target sum,
+    return the all quadruplets that sum to target. return empty arr if none found
+    time : O(n^2) avg O(n^3) worst | space: O(n^2)
+    '''
     allPairSums = {}
     quadruplets = []
     for i in range(1, len(array) - 1):

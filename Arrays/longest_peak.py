@@ -1,9 +1,18 @@
-def longestPeak(array):
-    # O(n) T | O(1) S
-    # find peaks
-    # find lengths of peaks
-    # if there is a peak, it must be >= len 3
-    # update longest peak if greater than curr > longest thusfar
+def longest_peak(array):
+    '''
+    given arr of ints, find longest peak in the arr
+    peak = adjacent ints in the arr that are strictly increasing until they
+    reach a tip and then are strictly decreasing.
+    >= 3 ints needed to form a peak.
+
+    notes:
+    find peaks
+    find lengths of peaks
+    if there is a peak, it must be >= len 3
+    update longest peak if greater than curr > longest thusfar
+
+    O(n) T | O(1) S
+    '''
     longest_peak_len = 0
     i = 1
     while i < len(array) - 1:
