@@ -1,5 +1,7 @@
-def threeSumMulti(arr, target: int) -> int:
-    # time: O(n^2) | space: O(1)
+def three_sum_multi(arr, target: int) -> int:
+    '''
+    time: O(n^2) | space: O(1)
+    '''
     MOD = 10**9 + 7
     arr.sort()
 
