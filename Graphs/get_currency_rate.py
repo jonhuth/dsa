@@ -53,5 +53,6 @@ rates = [["USD", "JPY", 110], ["JPY", "EUR", 0.01],
 print(f"{get_currency_rate('USD', 'EUR', rates)} should ~ equal 1.1")
 print(f"{get_currency_rate('USD', 'CNY', rates)} should ~ equal 9.9")
 print(f"{get_currency_rate('EUR', 'USD', rates)} should ~ equal 0.909090909")
-print(f"{get_currency_rate('EUR', 'CHF', rates)} should equal None") # no CHF
-print(f"{get_currency_rate('MXD', 'USD', rates)} should equal None") # no path between MXD and USD
+print(f"{get_currency_rate('EUR', 'CHF', rates)} should equal None")  # no CHF
+# no path between MXD and USD
+print(f"{get_currency_rate('MXD', 'USD', rates)} should equal None")

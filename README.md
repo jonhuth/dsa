@@ -33,7 +33,7 @@ helpful during my interviewing journey.
 ### Math
    - Fast Fourier Transform (and inverse)
 
-### Sliding Window (TODO)
+### Sliding Window
 
 ### Greedy Algorithms (TODO)
 
