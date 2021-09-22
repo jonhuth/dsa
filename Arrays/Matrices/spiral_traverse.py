@@ -36,3 +36,39 @@ def spiral_traverse(array):
         end_col -= 1
 
     return out
+    # out = []
+        
+    #     i = j = 0
+    #     iMin, iMax = 0, len(matrix) - 1
+    #     jMin, jMax = 0, len(matrix[0]) - 1
+        
+    #     while len(out) < len(matrix)*len(matrix[0]):
+    #         while j <= jMax and iMin <= i <= iMax: # go right
+    #             out.append(matrix[i][j])
+    #             j += 1
+    #         j -= 1 # offset going one too far to the right
+    #         iMin += 1 # no longer need to visit iMin row
+    #         i = iMin # start on next row
+            
+    #         while i <= iMax and jMin <= j <= jMax: # go down
+    #             out.append(matrix[i][j])
+    #             i += 1
+    #         i -= 1
+    #         jMax -= 1
+    #         j = jMax
+            
+    #         while j >= jMin and iMin <= i <= iMax: # go left
+    #             out.append(matrix[i][j])
+    #             j -= 1
+    #         j += 1
+    #         iMax -= 1
+    #         i = iMax
+            
+    #         while i >= iMin and jMin <= j <= jMax: # go up
+    #             out.append(matrix[i][j])
+    #             i -= 1
+    #         i += 1
+    #         jMin += 1
+    #         j = jMin
+
+    #     return out
