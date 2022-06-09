@@ -10,8 +10,8 @@ class HashTableLinearProbing:
     def __init__(self):
         # n = num of keys, m = num of slots in hash table
         self.M = 30001  # num slots in hash table
-        self.keys = [None] * self.M   # array of linked lists
-        self.vals = [None] * self.M   # array of linked lists
+        self.keys = [None] * self.M   # array of keys
+        self.vals = [None] * self.M   # array of values
 
     def hash(self, key):
         '''
