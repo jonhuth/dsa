@@ -7,6 +7,13 @@ export default function SortingPage() {
       timeComplexity: "O(n²)",
       description: "Simple comparison-based sorting with adjacent element swaps",
     },
+    {
+      id: "quick-sort",
+      name: "Quick Sort",
+      difficulty: "Medium",
+      timeComplexity: "O(n log n)",
+      description: "Efficient divide-and-conquer sorting with in-place partitioning",
+    },
   ];
 
   return (

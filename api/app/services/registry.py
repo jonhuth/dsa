@@ -21,6 +21,7 @@ class AlgorithmRegistry:
         # For now, manually register algorithms
         # TODO: Auto-discover from algorithms directory
         from algorithms.sorting.bubble_sort import BubbleSort
+        from algorithms.sorting.quick_sort import QuickSort
 
         self._algorithms["bubble_sort"] = {
             "id": "bubble_sort",
@@ -28,6 +29,14 @@ class AlgorithmRegistry:
             "category": "sorting",
             "class": BubbleSort,
             "visualizer_type": BubbleSort.visualizer_type.value,
+        }
+
+        self._algorithms["quick_sort"] = {
+            "id": "quick_sort",
+            "name": "Quick Sort",
+            "category": "sorting",
+            "class": QuickSort,
+            "visualizer_type": QuickSort.visualizer_type.value,
         }
 
     def get_algorithm(self, algorithm_id: str) -> dict[str, Any] | None:
@@ -65,7 +74,7 @@ class AlgorithmRegistry:
         instance = algo_class()
 
         # Execute based on algorithm type
-        if algorithm_id == "bubble_sort":
+        if algorithm_id in ["bubble_sort", "quick_sort"]:
             steps = list(instance.sort(input_data))
         else:
             raise ValueError(f"Unknown execution method for algorithm: {algorithm_id}")
