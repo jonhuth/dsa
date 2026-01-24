@@ -31,6 +31,8 @@ class AlgorithmRegistry:
         from algorithms.search.binary_search import BinarySearch
         from algorithms.search.linear_search import LinearSearch
         from algorithms.trees.bst import BST
+        from algorithms.dynamic_programming.fibonacci import Fibonacci
+        from algorithms.dynamic_programming.knapsack import Knapsack
 
         self._algorithms["bubble_sort"] = {
             "id": "bubble_sort",
@@ -128,6 +130,30 @@ class AlgorithmRegistry:
             "visualizer_type": BST.visualizer_type.value,
         }
 
+        self._algorithms["fibonacci_memo"] = {
+            "id": "fibonacci_memo",
+            "name": "Fibonacci (Memoization)",
+            "category": "dynamic_programming",
+            "class": Fibonacci,
+            "visualizer_type": Fibonacci.visualizer_type.value,
+        }
+
+        self._algorithms["fibonacci_tab"] = {
+            "id": "fibonacci_tab",
+            "name": "Fibonacci (Tabulation)",
+            "category": "dynamic_programming",
+            "class": Fibonacci,
+            "visualizer_type": Fibonacci.visualizer_type.value,
+        }
+
+        self._algorithms["knapsack"] = {
+            "id": "knapsack",
+            "name": "0/1 Knapsack",
+            "category": "dynamic_programming",
+            "class": Knapsack,
+            "visualizer_type": Knapsack.visualizer_type.value,
+        }
+
     def get_algorithm(self, algorithm_id: str) -> dict[str, Any] | None:
         """Get algorithm metadata by ID."""
         return self._algorithms.get(algorithm_id)
@@ -192,6 +218,19 @@ class AlgorithmRegistry:
             values = input_data.get("values", [])
             target = input_data.get("target", 0)
             steps = list(instance.search(values, target))
+        elif algorithm_id == "fibonacci_memo":
+            # Fibonacci memoization expects: int or {"n": int}
+            n = input_data if isinstance(input_data, int) else input_data.get("n", 10)
+            steps = list(instance.compute_memoization(n))
+        elif algorithm_id == "fibonacci_tab":
+            # Fibonacci tabulation expects: int or {"n": int}
+            n = input_data if isinstance(input_data, int) else input_data.get("n", 10)
+            steps = list(instance.compute_tabulation(n))
+        elif algorithm_id == "knapsack":
+            # Knapsack expects: {"items": [(weight, value), ...], "capacity": int}
+            items = input_data.get("items", [])
+            capacity = input_data.get("capacity", 10)
+            steps = list(instance.solve(items, capacity))
         else:
             raise ValueError(f"Unknown execution method for algorithm: {algorithm_id}")
 
