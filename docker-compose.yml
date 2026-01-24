@@ -1,0 +1,38 @@
+version: '3.8'
+
+services:
+  frontend:
+    build:
+      context: ./web
+      dockerfile: Dockerfile
+    ports:
+      - "3000:3000"
+    environment:
+      - NEXT_PUBLIC_API_URL=http://localhost:5000
+    volumes:
+      - ./web:/app
+      - /app/node_modules
+      - /app/.next
+    depends_on:
+      - backend
+
+  backend:
+    build:
+      context: ./api
+      dockerfile: Dockerfile
+    ports:
+      - "5000:5000"
+    environment:
+      - FLASK_ENV=development
+      - PYTHONPATH=/app
+    volumes:
+      - ./api:/app/api
+      - ./algorithms:/app/algorithms
+
+  # Optional: Add when implementing suggestions feature
+  # supabase:
+  #   image: supabase/supabase:latest
+  #   ports:
+  #     - "54321:54321"
+  #   environment:
+  #     - POSTGRES_PASSWORD=your-super-secret-and-long-postgres-password
