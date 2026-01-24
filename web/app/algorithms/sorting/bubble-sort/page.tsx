@@ -1,12 +1,29 @@
 "use client";
 
-import { useState } from "react";
+import { useState, useEffect } from "react";
+import { CodeViewer } from "@/components/visualizers/CodeViewer";
 
 export default function BubbleSortPage() {
   const [steps, setSteps] = useState<any[]>([]);
   const [currentStep, setCurrentStep] = useState(0);
   const [isLoading, setIsLoading] = useState(false);
   const [inputArray, setInputArray] = useState("5, 2, 8, 1, 9");
+  const [sourceCode, setSourceCode] = useState<string>("");
+  const [showCode, setShowCode] = useState(true);
+
+  // Fetch source code on mount
+  useEffect(() => {
+    const fetchSource = async () => {
+      try {
+        const response = await fetch("/api/algorithms/bubble_sort/source");
+        const data = await response.json();
+        setSourceCode(data.source || "");
+      } catch (error) {
+        console.error("Failed to fetch source code:", error);
+      }
+    };
+    fetchSource();
+  }, []);
 
   const executeAlgorithm = async () => {
     setIsLoading(true);
@@ -33,10 +50,11 @@ export default function BubbleSortPage() {
   };
 
   const currentStepData = steps[currentStep];
+  const currentLine = currentStepData?.metadata?.source_line;
 
   return (
     <div className="min-h-screen p-8">
-      <div className="max-w-6xl mx-auto space-y-8">
+      <div className="max-w-7xl mx-auto space-y-8">
         {/* Breadcrumb */}
         <div className="text-sm text-muted-foreground">
           <a href="/algorithms" className="hover:underline">
@@ -50,11 +68,21 @@ export default function BubbleSortPage() {
         </div>
 
         {/* Header */}
-        <div>
-          <h1 className="text-4xl font-bold mb-2">Bubble Sort</h1>
-          <p className="text-muted-foreground">
-            Simple comparison-based sorting algorithm that repeatedly swaps adjacent elements
-          </p>
+        <div className="flex items-start justify-between">
+          <div>
+            <h1 className="text-4xl font-bold mb-2">Bubble Sort</h1>
+            <p className="text-muted-foreground">
+              Simple comparison-based sorting algorithm that repeatedly swaps adjacent elements
+            </p>
+          </div>
+          {steps.length > 0 && (
+            <button
+              onClick={() => setShowCode(!showCode)}
+              className="px-4 py-2 border border-border rounded hover:bg-accent text-sm"
+            >
+              {showCode ? "Hide Code" : "Show Code"}
+            </button>
+          )}
         </div>
 
         {/* Input Controls */}
@@ -81,65 +109,105 @@ export default function BubbleSortPage() {
         {/* Visualization */}
         {steps.length > 0 && (
           <div className="space-y-4">
-            {/* Array Visualization */}
-            <div className="p-6 border border-border rounded-lg">
-              <div className="flex items-end justify-center gap-2 h-64">
-                {currentStepData?.state?.values?.map((value: number, idx: number) => {
-                  // Find if this index is highlighted
-                  const highlight = currentStepData.highlights?.find((h: any) =>
-                    h.indices?.includes(idx)
-                  );
-                  const color = highlight?.color || "default";
-
-                  const colorClasses = {
-                    default: "bg-gray-500",
-                    comparing: "bg-yellow-500",
-                    swapped: "bg-green-500",
-                    sorted: "bg-purple-500",
-                    active: "bg-blue-500",
-                  };
-
-                  return (
-                    <div key={idx} className="flex flex-col items-center gap-2">
-                      <div
-                        className={`w-12 ${colorClasses[color as keyof typeof colorClasses]} transition-all duration-300`}
-                        style={{ height: `${value * 20}px` }}
-                      />
-                      <div className="text-xs">{value}</div>
-                    </div>
-                  );
-                })}
-              </div>
-
-              {/* Step Description */}
-              <div className="mt-4 text-center">
-                <p className="text-sm font-medium">{currentStepData?.description}</p>
-                <p className="text-xs text-muted-foreground mt-1">
-                  Step {currentStep + 1} of {steps.length}
-                </p>
-              </div>
-
-              {/* Metadata */}
-              {currentStepData?.metadata && (
-                <div className="mt-4 flex justify-center gap-6 text-xs">
-                  {currentStepData.metadata.comparisons !== undefined && (
-                    <div>
-                      Comparisons:{" "}
-                      <span className="font-mono">{currentStepData.metadata.comparisons}</span>
-                    </div>
-                  )}
-                  {currentStepData.metadata.swaps !== undefined && (
-                    <div>
-                      Swaps: <span className="font-mono">{currentStepData.metadata.swaps}</span>
-                    </div>
-                  )}
-                  {currentStepData.metadata.passes !== undefined && (
-                    <div>
-                      Passes: <span className="font-mono">{currentStepData.metadata.passes}</span>
-                    </div>
-                  )}
+            {/* Split-pane layout: Code + Visualization */}
+            <div className={`grid ${showCode ? "grid-cols-2" : "grid-cols-1"} gap-4`}>
+              {/* Code Viewer */}
+              {showCode && sourceCode && (
+                <div className="border border-border rounded-lg overflow-hidden">
+                  <div className="bg-card p-3 border-b border-border">
+                    <h3 className="font-semibold text-sm">
+                      Live Code Execution
+                      {currentLine && (
+                        <span className="ml-2 text-xs text-muted-foreground">
+                          Line {currentLine}
+                        </span>
+                      )}
+                    </h3>
+                  </div>
+                  <CodeViewer code={sourceCode} highlightedLine={currentLine} />
                 </div>
               )}
+
+              {/* Array Visualization */}
+              <div className="p-6 border border-border rounded-lg">
+                <div className="flex items-end justify-center gap-2 h-64">
+                  {currentStepData?.state?.values?.map((value: number, idx: number) => {
+                    // Find if this index is highlighted
+                    const highlight = currentStepData.highlights?.find((h: any) =>
+                      h.indices?.includes(idx)
+                    );
+                    const color = highlight?.color || "default";
+
+                    const colorClasses = {
+                      default: "bg-gray-500",
+                      comparing: "bg-yellow-500",
+                      swapped: "bg-green-500",
+                      sorted: "bg-purple-500",
+                      active: "bg-blue-500",
+                    };
+
+                    return (
+                      <div key={idx} className="flex flex-col items-center gap-2">
+                        <div
+                          className={`w-12 ${colorClasses[color as keyof typeof colorClasses]} transition-all duration-300`}
+                          style={{ height: `${value * 20}px` }}
+                        />
+                        <div className="text-xs">{value}</div>
+                      </div>
+                    );
+                  })}
+                </div>
+
+                {/* Step Description */}
+                <div className="mt-4 text-center">
+                  <p className="text-sm font-medium">{currentStepData?.description}</p>
+                  <p className="text-xs text-muted-foreground mt-1">
+                    Step {currentStep + 1} of {steps.length}
+                  </p>
+                </div>
+
+                {/* Metadata */}
+                {currentStepData?.metadata && (
+                  <div className="mt-4 flex justify-center gap-6 text-xs">
+                    {currentStepData.metadata.comparisons !== undefined && (
+                      <div>
+                        Comparisons:{" "}
+                        <span className="font-mono">{currentStepData.metadata.comparisons}</span>
+                      </div>
+                    )}
+                    {currentStepData.metadata.swaps !== undefined && (
+                      <div>
+                        Swaps: <span className="font-mono">{currentStepData.metadata.swaps}</span>
+                      </div>
+                    )}
+                    {currentStepData.metadata.passes !== undefined && (
+                      <div>
+                        Passes: <span className="font-mono">{currentStepData.metadata.passes}</span>
+                      </div>
+                    )}
+                  </div>
+                )}
+              </div>
+            </div>
+
+            {/* Color Legend */}
+            <div className="flex items-center justify-center gap-6 text-xs">
+              <div className="flex items-center gap-2">
+                <div className="w-4 h-4 bg-yellow-500 rounded" />
+                <span>Comparing</span>
+              </div>
+              <div className="flex items-center gap-2">
+                <div className="w-4 h-4 bg-green-500 rounded" />
+                <span>Swapped</span>
+              </div>
+              <div className="flex items-center gap-2">
+                <div className="w-4 h-4 bg-purple-500 rounded" />
+                <span>Sorted</span>
+              </div>
+              <div className="flex items-center gap-2">
+                <div className="w-4 h-4 bg-blue-500 rounded" />
+                <span>Active Range</span>
+              </div>
             </div>
 
             {/* Playback Controls */}

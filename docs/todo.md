@@ -2,19 +2,19 @@
 
 ## High Priority Features
 
-### Live Code Execution Viewer
+### ✅ Live Code Execution Viewer (COMPLETED)
 **Impact:** 🔥 High - Major learning enhancement
 **Effort:** ⚡ Medium (2-3 hours)
 
 Add a side-by-side code viewer that highlights the currently executing line as the visualization progresses.
 
 **Implementation:**
-- [ ] Add `source_line_number` to Step metadata in Python (use `inspect.currentframe()`)
-- [ ] Create `<CodeViewer>` component with syntax highlighting (react-syntax-highlighter)
-- [ ] Create split-pane layout option for exhibits
-- [ ] Highlight current line in code as steps progress
-- [ ] Add "Show Code" toggle to exhibit pages
-- [ ] Support collapsible code pane for mobile
+- [x] Add `source_line_number` to Step metadata in Python (use `inspect.currentframe()`)
+- [x] Create `<CodeViewer>` component with syntax highlighting (react-syntax-highlighter)
+- [x] Create split-pane layout option for exhibits
+- [x] Highlight current line in code as steps progress
+- [x] Add "Show Code" toggle to exhibit pages
+- [x] Support collapsible code pane for mobile
 
 **Benefits:**
 - See exactly what code is running at each step
