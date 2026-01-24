@@ -26,6 +26,8 @@ class AlgorithmRegistry:
         from algorithms.sorting.insertion_sort import InsertionSort
         from algorithms.sorting.selection_sort import SelectionSort
         from algorithms.sorting.heap_sort import HeapSort
+        from algorithms.graphs.bfs import BFS
+        from algorithms.graphs.dfs import DFS
 
         self._algorithms["bubble_sort"] = {
             "id": "bubble_sort",
@@ -75,6 +77,22 @@ class AlgorithmRegistry:
             "visualizer_type": HeapSort.visualizer_type.value,
         }
 
+        self._algorithms["bfs"] = {
+            "id": "bfs",
+            "name": "Breadth-First Search",
+            "category": "graphs",
+            "class": BFS,
+            "visualizer_type": BFS.visualizer_type.value,
+        }
+
+        self._algorithms["dfs"] = {
+            "id": "dfs",
+            "name": "Depth-First Search",
+            "category": "graphs",
+            "class": DFS,
+            "visualizer_type": DFS.visualizer_type.value,
+        }
+
     def get_algorithm(self, algorithm_id: str) -> dict[str, Any] | None:
         """Get algorithm metadata by ID."""
         return self._algorithms.get(algorithm_id)
@@ -119,6 +137,12 @@ class AlgorithmRegistry:
             "heap_sort",
         ]:
             steps = list(instance.sort(input_data))
+        elif algorithm_id in ["bfs", "dfs"]:
+            # Graph algorithms expect: {"graph": {}, "start": int, "target": int}
+            graph = input_data.get("graph", {})
+            start = input_data.get("start", 0)
+            target = input_data.get("target")
+            steps = list(instance.search(graph, start, target))
         else:
             raise ValueError(f"Unknown execution method for algorithm: {algorithm_id}")
 
