@@ -68,3 +68,32 @@
     @apply bg-background text-foreground;
   }
 }
+
+/* Command Menu (cmdk) styles */
+[cmdk-root] {
+  @apply overflow-hidden;
+}
+
+[cmdk-list] {
+  @apply overflow-auto;
+}
+
+[cmdk-group-heading] {
+  @apply px-3 py-2 text-xs font-medium text-muted-foreground;
+}
+
+[cmdk-empty] {
+  @apply py-6 text-center text-sm;
+}
+
+[cmdk-item] {
+  @apply relative flex cursor-default select-none items-center rounded-sm px-2 py-1.5 text-sm outline-none;
+}
+
+[cmdk-item][aria-selected="true"] {
+  @apply bg-accent text-accent-foreground;
+}
+
+[cmdk-item][aria-disabled="true"] {
+  @apply pointer-events-none opacity-50;
+}
