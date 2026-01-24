@@ -134,6 +134,15 @@ const algorithms: Algorithm[] = [
     path: "/algorithms/trees/bst-search",
   },
   {
+    id: "fibonacci-memoization",
+    name: "Fibonacci (Memoization)",
+    category: "Dynamic Programming",
+    difficulty: "Easy",
+    timeComplexity: "O(n)",
+    description: "Top-down DP with caching to avoid redundant computations",
+    path: "/algorithms/dynamic-programming/fibonacci-memoization",
+  },
+  {
     id: "fibonacci-tabulation",
     name: "Fibonacci (Tabulation)",
     category: "Dynamic Programming",
@@ -141,6 +150,15 @@ const algorithms: Algorithm[] = [
     timeComplexity: "O(n)",
     description: "Bottom-up DP computing Fibonacci numbers iteratively",
     path: "/algorithms/dynamic-programming/fibonacci-tabulation",
+  },
+  {
+    id: "knapsack",
+    name: "0/1 Knapsack",
+    category: "Dynamic Programming",
+    difficulty: "Medium",
+    timeComplexity: "O(n×W)",
+    description: "Maximize value in capacity-constrained knapsack using DP",
+    path: "/algorithms/dynamic-programming/knapsack",
   },
   {
     id: "lcs",
