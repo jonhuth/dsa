@@ -28,6 +28,9 @@ class AlgorithmRegistry:
         from algorithms.sorting.heap_sort import HeapSort
         from algorithms.graphs.bfs import BFS
         from algorithms.graphs.dfs import DFS
+        from algorithms.search.binary_search import BinarySearch
+        from algorithms.search.linear_search import LinearSearch
+        from algorithms.trees.bst import BST
 
         self._algorithms["bubble_sort"] = {
             "id": "bubble_sort",
@@ -93,6 +96,38 @@ class AlgorithmRegistry:
             "visualizer_type": DFS.visualizer_type.value,
         }
 
+        self._algorithms["binary_search"] = {
+            "id": "binary_search",
+            "name": "Binary Search",
+            "category": "search",
+            "class": BinarySearch,
+            "visualizer_type": BinarySearch.visualizer_type.value,
+        }
+
+        self._algorithms["linear_search"] = {
+            "id": "linear_search",
+            "name": "Linear Search",
+            "category": "search",
+            "class": LinearSearch,
+            "visualizer_type": LinearSearch.visualizer_type.value,
+        }
+
+        self._algorithms["bst_insert"] = {
+            "id": "bst_insert",
+            "name": "BST Insert",
+            "category": "trees",
+            "class": BST,
+            "visualizer_type": BST.visualizer_type.value,
+        }
+
+        self._algorithms["bst_search"] = {
+            "id": "bst_search",
+            "name": "BST Search",
+            "category": "trees",
+            "class": BST,
+            "visualizer_type": BST.visualizer_type.value,
+        }
+
     def get_algorithm(self, algorithm_id: str) -> dict[str, Any] | None:
         """Get algorithm metadata by ID."""
         return self._algorithms.get(algorithm_id)
@@ -143,6 +178,20 @@ class AlgorithmRegistry:
             start = input_data.get("start", 0)
             target = input_data.get("target")
             steps = list(instance.search(graph, start, target))
+        elif algorithm_id in ["binary_search", "linear_search"]:
+            # Search algorithms expect: {"array": [], "target": int}
+            arr = input_data.get("array", input_data if isinstance(input_data, dict) else [])
+            target = input_data.get("target", 0) if isinstance(input_data, dict) else 0
+            steps = list(instance.search(arr, target))
+        elif algorithm_id == "bst_insert":
+            # BST insert expects: list of values
+            values = input_data if isinstance(input_data, list) else input_data.get("values", [])
+            steps = list(instance.insert(values))
+        elif algorithm_id == "bst_search":
+            # BST search expects: {"values": [], "target": int}
+            values = input_data.get("values", [])
+            target = input_data.get("target", 0)
+            steps = list(instance.search(values, target))
         else:
             raise ValueError(f"Unknown execution method for algorithm: {algorithm_id}")
 
