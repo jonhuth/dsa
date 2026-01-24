@@ -35,6 +35,33 @@ export default function HomePage() {
       description: "Stable divide-and-conquer with guaranteed O(n log n) performance",
       path: "/algorithms/sorting/merge-sort",
     },
+    {
+      id: "insertion-sort",
+      name: "Insertion Sort",
+      category: "Sorting",
+      difficulty: "Easy",
+      timeComplexity: "O(n²)",
+      description: "Simple sorting by inserting elements into sorted portion",
+      path: "/algorithms/sorting/insertion-sort",
+    },
+    {
+      id: "selection-sort",
+      name: "Selection Sort",
+      category: "Sorting",
+      difficulty: "Easy",
+      timeComplexity: "O(n²)",
+      description: "Sorting by repeatedly selecting minimum element",
+      path: "/algorithms/sorting/selection-sort",
+    },
+    {
+      id: "heap-sort",
+      name: "Heap Sort",
+      category: "Sorting",
+      difficulty: "Medium",
+      timeComplexity: "O(n log n)",
+      description: "In-place sorting using binary heap data structure",
+      path: "/algorithms/sorting/heap-sort",
+    },
   ];
 
   // Filter algorithms based on search query
