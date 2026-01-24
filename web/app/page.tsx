@@ -62,6 +62,60 @@ export default function HomePage() {
       description: "In-place sorting using binary heap data structure",
       path: "/algorithms/sorting/heap-sort",
     },
+    {
+      id: "bfs",
+      name: "Breadth-First Search",
+      category: "Graphs",
+      difficulty: "Medium",
+      timeComplexity: "O(V + E)",
+      description: "Level-order graph traversal finding shortest paths",
+      path: "/algorithms/graphs/bfs",
+    },
+    {
+      id: "dfs",
+      name: "Depth-First Search",
+      category: "Graphs",
+      difficulty: "Medium",
+      timeComplexity: "O(V + E)",
+      description: "Depth-first graph traversal with backtracking",
+      path: "/algorithms/graphs/dfs",
+    },
+    {
+      id: "binary-search",
+      name: "Binary Search",
+      category: "Search",
+      difficulty: "Easy",
+      timeComplexity: "O(log n)",
+      description: "Efficient divide-and-conquer search in sorted arrays",
+      path: "/algorithms/search/binary-search",
+    },
+    {
+      id: "linear-search",
+      name: "Linear Search",
+      category: "Search",
+      difficulty: "Easy",
+      timeComplexity: "O(n)",
+      description: "Simple sequential search checking each element",
+      path: "/algorithms/search/linear-search",
+    },
+    {
+      id: "bst-insert",
+      name: "BST Insert",
+      category: "Trees",
+      difficulty: "Medium",
+      timeComplexity: "O(log n)",
+      description: "Insert values into Binary Search Tree maintaining BST property",
+      path: "/algorithms/trees/bst-insert",
+    },
+    {
+      id: "bst-search",
+      name: "BST Search",
+      category: "Trees",
+      difficulty: "Medium",
+      timeComplexity: "O(log n)",
+      description: "Search Binary Search Tree leveraging sorted property",
+      path: "/algorithms/trees/bst-search",
+    },
   ];
 
   // Filter algorithms based on search query
@@ -199,7 +253,7 @@ export default function HomePage() {
             <div className="text-sm text-muted-foreground">Algorithms</div>
           </div>
           <div className="text-center">
-            <div className="text-3xl font-bold text-primary">1</div>
+            <div className="text-3xl font-bold text-primary">4</div>
             <div className="text-sm text-muted-foreground">Categories</div>
           </div>
           <div className="text-center">
