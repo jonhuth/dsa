@@ -28,6 +28,7 @@ class AlgorithmRegistry:
         from algorithms.sorting.heap_sort import HeapSort
         from algorithms.graphs.bfs import BFS
         from algorithms.graphs.dfs import DFS
+        from algorithms.graphs.dijkstra import Dijkstra
         from algorithms.search.binary_search import BinarySearch
         from algorithms.search.linear_search import LinearSearch
         from algorithms.trees.bst import BST
@@ -96,6 +97,14 @@ class AlgorithmRegistry:
             "category": "graphs",
             "class": DFS,
             "visualizer_type": DFS.visualizer_type.value,
+        }
+
+        self._algorithms["dijkstra"] = {
+            "id": "dijkstra",
+            "name": "Dijkstra's Algorithm",
+            "category": "graphs",
+            "class": Dijkstra,
+            "visualizer_type": Dijkstra.visualizer_type.value,
         }
 
         self._algorithms["binary_search"] = {
@@ -204,6 +213,12 @@ class AlgorithmRegistry:
             start = input_data.get("start", 0)
             target = input_data.get("target")
             steps = list(instance.search(graph, start, target))
+        elif algorithm_id == "dijkstra":
+            # Dijkstra expects: {"graph": {node: [(neighbor, weight), ...]}, "start": int, "target": int}
+            graph = input_data.get("graph", {})
+            start = input_data.get("start", 0)
+            target = input_data.get("target")
+            steps = list(instance.shortest_path(graph, start, target))
         elif algorithm_id in ["binary_search", "linear_search"]:
             # Search algorithms expect: {"array": [], "target": int}
             arr = input_data.get("array", input_data if isinstance(input_data, dict) else [])
