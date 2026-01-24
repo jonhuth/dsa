@@ -90,6 +90,15 @@ export default function HomePage() {
       path: "/algorithms/graphs/dijkstra",
     },
     {
+      id: "num-islands",
+      name: "Number of Islands",
+      category: "Graphs",
+      difficulty: "Medium",
+      timeComplexity: "O(m×n)",
+      description: "Count connected components in 2D grid using BFS/DFS",
+      path: "/algorithms/graphs/num-islands",
+    },
+    {
       id: "binary-search",
       name: "Binary Search",
       category: "Search",
