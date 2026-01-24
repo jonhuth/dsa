@@ -36,6 +36,7 @@ class AlgorithmRegistry:
         from algorithms.dynamic_programming.knapsack import Knapsack
         from algorithms.dynamic_programming.lcs import LCS
         from algorithms.graphs.num_islands import NumIslands
+        from algorithms.trees.traversals import TreeTraversals
 
         self._algorithms["bubble_sort"] = {
             "id": "bubble_sort",
@@ -181,6 +182,30 @@ class AlgorithmRegistry:
             "visualizer_type": NumIslands.visualizer_type.value,
         }
 
+        self._algorithms["tree_inorder"] = {
+            "id": "tree_inorder",
+            "name": "Tree In-order Traversal",
+            "category": "trees",
+            "class": TreeTraversals,
+            "visualizer_type": TreeTraversals.visualizer_type.value,
+        }
+
+        self._algorithms["tree_preorder"] = {
+            "id": "tree_preorder",
+            "name": "Tree Pre-order Traversal",
+            "category": "trees",
+            "class": TreeTraversals,
+            "visualizer_type": TreeTraversals.visualizer_type.value,
+        }
+
+        self._algorithms["tree_postorder"] = {
+            "id": "tree_postorder",
+            "name": "Tree Post-order Traversal",
+            "category": "trees",
+            "class": TreeTraversals,
+            "visualizer_type": TreeTraversals.visualizer_type.value,
+        }
+
     def get_algorithm(self, algorithm_id: str) -> dict[str, Any] | None:
         """Get algorithm metadata by ID."""
         return self._algorithms.get(algorithm_id)
@@ -273,6 +298,18 @@ class AlgorithmRegistry:
             # Number of Islands expects: {"grid": [["1", "0", ...], ...]}
             grid = input_data.get("grid", [])
             steps = list(instance.count_islands(grid))
+        elif algorithm_id == "tree_inorder":
+            # Tree In-order expects: list of values (level-order)
+            values = input_data if isinstance(input_data, list) else input_data.get("values", [])
+            steps = list(instance.inorder(values))
+        elif algorithm_id == "tree_preorder":
+            # Tree Pre-order expects: list of values (level-order)
+            values = input_data if isinstance(input_data, list) else input_data.get("values", [])
+            steps = list(instance.preorder(values))
+        elif algorithm_id == "tree_postorder":
+            # Tree Post-order expects: list of values (level-order)
+            values = input_data if isinstance(input_data, list) else input_data.get("values", [])
+            steps = list(instance.postorder(values))
         else:
             raise ValueError(f"Unknown execution method for algorithm: {algorithm_id}")
 

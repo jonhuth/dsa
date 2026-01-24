@@ -135,6 +135,15 @@ export default function HomePage() {
       path: "/algorithms/trees/bst-search",
     },
     {
+      id: "tree-traversals",
+      name: "Tree Traversals",
+      category: "Trees",
+      difficulty: "Easy",
+      timeComplexity: "O(n)",
+      description: "In-order, Pre-order, and Post-order tree traversal patterns",
+      path: "/algorithms/trees/traversals",
+    },
+    {
       id: "fibonacci-memoization",
       name: "Fibonacci (Memoization)",
       category: "Dynamic Programming",
