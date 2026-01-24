@@ -14,6 +14,13 @@ export default function SortingPage() {
       timeComplexity: "O(n log n)",
       description: "Efficient divide-and-conquer sorting with in-place partitioning",
     },
+    {
+      id: "merge-sort",
+      name: "Merge Sort",
+      difficulty: "Medium",
+      timeComplexity: "O(n log n)",
+      description: "Stable divide-and-conquer with guaranteed O(n log n) performance",
+    },
   ];
 
   return (
