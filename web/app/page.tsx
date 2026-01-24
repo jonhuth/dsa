@@ -81,6 +81,15 @@ export default function HomePage() {
       path: "/algorithms/graphs/dfs",
     },
     {
+      id: "dijkstra",
+      name: "Dijkstra's Algorithm",
+      category: "Graphs",
+      difficulty: "Medium",
+      timeComplexity: "O((V+E) log V)",
+      description: "Shortest path in weighted graphs using greedy approach",
+      path: "/algorithms/graphs/dijkstra",
+    },
+    {
       id: "binary-search",
       name: "Binary Search",
       category: "Search",
