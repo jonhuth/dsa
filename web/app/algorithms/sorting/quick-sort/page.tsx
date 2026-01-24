@@ -2,6 +2,7 @@
 
 import { useState, useEffect } from "react";
 import { CodeViewer } from "@/components/visualizers/CodeViewer";
+import { ArrayVisualizer } from "@/components/visualizers/ArrayVisualizer";
 
 export default function QuickSortPage() {
   const [steps, setSteps] = useState<any[]>([]);
@@ -131,33 +132,10 @@ export default function QuickSortPage() {
 
               {/* Array Visualization */}
               <div className="p-6 border border-border rounded-lg">
-                <div className="flex items-end justify-center gap-2 h-64">
-                  {currentStepData?.state?.values?.map((value: number, idx: number) => {
-                    // Find if this index is highlighted
-                    const highlight = currentStepData.highlights?.find((h: any) =>
-                      h.indices?.includes(idx)
-                    );
-                    const color = highlight?.color || "default";
-
-                    const colorClasses = {
-                      default: "bg-gray-500",
-                      comparing: "bg-yellow-500",
-                      swapped: "bg-green-500",
-                      sorted: "bg-purple-500",
-                      active: "bg-blue-500",
-                    };
-
-                    return (
-                      <div key={idx} className="flex flex-col items-center gap-2">
-                        <div
-                          className={`w-12 ${colorClasses[color as keyof typeof colorClasses]} transition-all duration-300`}
-                          style={{ height: `${value * 20}px` }}
-                        />
-                        <div className="text-xs">{value}</div>
-                      </div>
-                    );
-                  })}
-                </div>
+                <ArrayVisualizer
+                  values={currentStepData?.state?.values || []}
+                  highlights={currentStepData?.highlights || []}
+                />
 
                 {/* Step Description */}
                 <div className="mt-4 text-center">
