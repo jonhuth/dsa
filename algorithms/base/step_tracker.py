@@ -1,5 +1,6 @@
 """Base class for algorithms that emit visualization steps."""
 
+import inspect
 from typing import Any, Generator
 from pydantic import BaseModel
 
@@ -75,11 +76,27 @@ class StepTracker:
         """
         self._step_count += 1
 
+        # Capture source location for code highlighting
+        caller_frame = inspect.currentframe()
+        if caller_frame and caller_frame.f_back:
+            source_line = caller_frame.f_back.f_lineno
+            source_file = caller_frame.f_back.f_code.co_filename
+        else:
+            source_line = None
+            source_file = None
+
         # Convert highlight dicts to Highlight objects
         highlight_objects = []
         if highlights:
             for h in highlights:
                 highlight_objects.append(Highlight(**h))
+
+        # Merge source location into metadata
+        step_metadata = metadata or {}
+        if source_line is not None:
+            step_metadata["source_line"] = source_line
+        if source_file is not None:
+            step_metadata["source_file"] = source_file
 
         step = Step(
             step_number=self._step_count,
@@ -87,7 +104,7 @@ class StepTracker:
             description=description,
             state=state,
             highlights=highlight_objects,
-            metadata=metadata or {},
+            metadata=step_metadata,
         )
 
         self._steps.append(step)
