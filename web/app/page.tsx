@@ -134,6 +134,15 @@ export default function HomePage() {
       description: "Bottom-up DP computing Fibonacci numbers iteratively",
       path: "/algorithms/dynamic-programming/fibonacci-tabulation",
     },
+    {
+      id: "lcs",
+      name: "Longest Common Subsequence",
+      category: "Dynamic Programming",
+      difficulty: "Medium",
+      timeComplexity: "O(m*n)",
+      description: "Find longest subsequence common to two strings using 2D DP",
+      path: "/algorithms/dynamic-programming/lcs",
+    },
   ];
 
   // Filter algorithms based on search query

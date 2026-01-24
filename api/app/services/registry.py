@@ -34,6 +34,7 @@ class AlgorithmRegistry:
         from algorithms.trees.bst import BST
         from algorithms.dynamic_programming.fibonacci import Fibonacci
         from algorithms.dynamic_programming.knapsack import Knapsack
+        from algorithms.dynamic_programming.lcs import LCS
 
         self._algorithms["bubble_sort"] = {
             "id": "bubble_sort",
@@ -163,6 +164,14 @@ class AlgorithmRegistry:
             "visualizer_type": Knapsack.visualizer_type.value,
         }
 
+        self._algorithms["lcs"] = {
+            "id": "lcs",
+            "name": "Longest Common Subsequence",
+            "category": "dynamic_programming",
+            "class": LCS,
+            "visualizer_type": LCS.visualizer_type.value,
+        }
+
     def get_algorithm(self, algorithm_id: str) -> dict[str, Any] | None:
         """Get algorithm metadata by ID."""
         return self._algorithms.get(algorithm_id)
@@ -246,6 +255,11 @@ class AlgorithmRegistry:
             items = input_data.get("items", [])
             capacity = input_data.get("capacity", 10)
             steps = list(instance.solve(items, capacity))
+        elif algorithm_id == "lcs":
+            # LCS expects: {"str1": str, "str2": str}
+            str1 = input_data.get("str1", "")
+            str2 = input_data.get("str2", "")
+            steps = list(instance.compute(str1, str2))
         else:
             raise ValueError(f"Unknown execution method for algorithm: {algorithm_id}")
 
