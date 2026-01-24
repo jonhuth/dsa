@@ -116,6 +116,15 @@ export default function HomePage() {
       description: "Search Binary Search Tree leveraging sorted property",
       path: "/algorithms/trees/bst-search",
     },
+    {
+      id: "fibonacci-tabulation",
+      name: "Fibonacci (Tabulation)",
+      category: "Dynamic Programming",
+      difficulty: "Easy",
+      timeComplexity: "O(n)",
+      description: "Bottom-up DP computing Fibonacci numbers iteratively",
+      path: "/algorithms/dynamic-programming/fibonacci-tabulation",
+    },
   ];
 
   // Filter algorithms based on search query
@@ -253,7 +262,7 @@ export default function HomePage() {
             <div className="text-sm text-muted-foreground">Algorithms</div>
           </div>
           <div className="text-center">
-            <div className="text-3xl font-bold text-primary">4</div>
+            <div className="text-3xl font-bold text-primary">5</div>
             <div className="text-sm text-muted-foreground">Categories</div>
           </div>
           <div className="text-center">
