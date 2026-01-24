@@ -21,6 +21,27 @@ export default function SortingPage() {
       timeComplexity: "O(n log n)",
       description: "Stable divide-and-conquer with guaranteed O(n log n) performance",
     },
+    {
+      id: "insertion-sort",
+      name: "Insertion Sort",
+      difficulty: "Easy",
+      timeComplexity: "O(n²)",
+      description: "Simple sorting by inserting elements into sorted portion",
+    },
+    {
+      id: "selection-sort",
+      name: "Selection Sort",
+      difficulty: "Easy",
+      timeComplexity: "O(n²)",
+      description: "Sorting by repeatedly selecting minimum element",
+    },
+    {
+      id: "heap-sort",
+      name: "Heap Sort",
+      difficulty: "Medium",
+      timeComplexity: "O(n log n)",
+      description: "In-place sorting using binary heap data structure",
+    },
   ];
 
   return (

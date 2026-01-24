@@ -23,6 +23,9 @@ class AlgorithmRegistry:
         from algorithms.sorting.bubble_sort import BubbleSort
         from algorithms.sorting.quick_sort import QuickSort
         from algorithms.sorting.merge_sort import MergeSort
+        from algorithms.sorting.insertion_sort import InsertionSort
+        from algorithms.sorting.selection_sort import SelectionSort
+        from algorithms.sorting.heap_sort import HeapSort
 
         self._algorithms["bubble_sort"] = {
             "id": "bubble_sort",
@@ -46,6 +49,30 @@ class AlgorithmRegistry:
             "category": "sorting",
             "class": MergeSort,
             "visualizer_type": MergeSort.visualizer_type.value,
+        }
+
+        self._algorithms["insertion_sort"] = {
+            "id": "insertion_sort",
+            "name": "Insertion Sort",
+            "category": "sorting",
+            "class": InsertionSort,
+            "visualizer_type": InsertionSort.visualizer_type.value,
+        }
+
+        self._algorithms["selection_sort"] = {
+            "id": "selection_sort",
+            "name": "Selection Sort",
+            "category": "sorting",
+            "class": SelectionSort,
+            "visualizer_type": SelectionSort.visualizer_type.value,
+        }
+
+        self._algorithms["heap_sort"] = {
+            "id": "heap_sort",
+            "name": "Heap Sort",
+            "category": "sorting",
+            "class": HeapSort,
+            "visualizer_type": HeapSort.visualizer_type.value,
         }
 
     def get_algorithm(self, algorithm_id: str) -> dict[str, Any] | None:
@@ -83,7 +110,14 @@ class AlgorithmRegistry:
         instance = algo_class()
 
         # Execute based on algorithm type
-        if algorithm_id in ["bubble_sort", "quick_sort", "merge_sort"]:
+        if algorithm_id in [
+            "bubble_sort",
+            "quick_sort",
+            "merge_sort",
+            "insertion_sort",
+            "selection_sort",
+            "heap_sort",
+        ]:
             steps = list(instance.sort(input_data))
         else:
             raise ValueError(f"Unknown execution method for algorithm: {algorithm_id}")
