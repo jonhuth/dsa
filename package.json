@@ -1,0 +1,27 @@
+{
+  "name": "dsa-visualizer",
+  "version": "0.1.0",
+  "private": true,
+  "type": "module",
+  "scripts": {
+    "setup": "bun install && cd web && bun install && cd ../api && uv sync",
+    "dev": "concurrently -n \"web,api\" -c \"cyan,magenta\" \"bun run dev:web\" \"bun run dev:api\"",
+    "dev:web": "cd web && bun dev -- --hostname 0.0.0.0",
+    "dev:api": "cd api && PYTHONPATH=/home/jhuth/dev/dsa FLASK_APP=app.main uv run flask run --host 0.0.0.0 --port 5000 --debug",
+    "build": "cd web && bun run build",
+    "test": "bun run test:web && bun run test:api",
+    "test:web": "cd web && bun test",
+    "test:api": "cd api && uv run pytest",
+    "test:e2e": "cd web && bun test:e2e",
+    "lint": "bun run lint:web && bun run lint:api",
+    "lint:web": "cd web && bun run lint",
+    "lint:api": "cd api && uv run ruff check",
+    "format": "bun run format:web && bun run format:api",
+    "format:web": "cd web && bun run format",
+    "format:api": "cd api && uv run ruff format",
+    "typecheck": "cd web && bun run typecheck"
+  },
+  "devDependencies": {
+    "concurrently": "^9.1.0"
+  }
+}

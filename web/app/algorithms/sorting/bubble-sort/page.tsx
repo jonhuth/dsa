@@ -1,0 +1,223 @@
+"use client";
+
+import { useState } from "react";
+
+export default function BubbleSortPage() {
+  const [steps, setSteps] = useState<any[]>([]);
+  const [currentStep, setCurrentStep] = useState(0);
+  const [isLoading, setIsLoading] = useState(false);
+  const [inputArray, setInputArray] = useState("5, 2, 8, 1, 9");
+
+  const executeAlgorithm = async () => {
+    setIsLoading(true);
+    try {
+      // Parse input
+      const arr = inputArray.split(",").map((n) => parseInt(n.trim()));
+
+      const response = await fetch("/api/algorithms/bubble_sort/execute", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({ input: arr }),
+      });
+
+      const data = await response.json();
+      setSteps(data.steps);
+      setCurrentStep(0);
+    } catch (error) {
+      console.error("Failed to execute algorithm:", error);
+    } finally {
+      setIsLoading(false);
+    }
+  };
+
+  const currentStepData = steps[currentStep];
+
+  return (
+    <div className="min-h-screen p-8">
+      <div className="max-w-6xl mx-auto space-y-8">
+        {/* Breadcrumb */}
+        <div className="text-sm text-muted-foreground">
+          <a href="/algorithms" className="hover:underline">
+            Algorithms
+          </a>{" "}
+          /{" "}
+          <a href="/algorithms/sorting" className="hover:underline">
+            Sorting
+          </a>{" "}
+          / Bubble Sort
+        </div>
+
+        {/* Header */}
+        <div>
+          <h1 className="text-4xl font-bold mb-2">Bubble Sort</h1>
+          <p className="text-muted-foreground">
+            Simple comparison-based sorting algorithm that repeatedly swaps adjacent elements
+          </p>
+        </div>
+
+        {/* Input Controls */}
+        <div className="p-6 border border-border rounded-lg space-y-4">
+          <div>
+            <label className="block text-sm font-medium mb-2">Input Array (comma-separated)</label>
+            <input
+              type="text"
+              value={inputArray}
+              onChange={(e) => setInputArray(e.target.value)}
+              className="w-full px-4 py-2 bg-background border border-border rounded"
+              placeholder="5, 2, 8, 1, 9"
+            />
+          </div>
+          <button
+            onClick={executeAlgorithm}
+            disabled={isLoading}
+            className="px-6 py-2 bg-primary text-primary-foreground rounded hover:bg-primary/90 disabled:opacity-50"
+          >
+            {isLoading ? "Running..." : "Run Algorithm"}
+          </button>
+        </div>
+
+        {/* Visualization */}
+        {steps.length > 0 && (
+          <div className="space-y-4">
+            {/* Array Visualization */}
+            <div className="p-6 border border-border rounded-lg">
+              <div className="flex items-end justify-center gap-2 h-64">
+                {currentStepData?.state?.values?.map((value: number, idx: number) => {
+                  // Find if this index is highlighted
+                  const highlight = currentStepData.highlights?.find((h: any) =>
+                    h.indices?.includes(idx)
+                  );
+                  const color = highlight?.color || "default";
+
+                  const colorClasses = {
+                    default: "bg-gray-500",
+                    comparing: "bg-yellow-500",
+                    swapped: "bg-green-500",
+                    sorted: "bg-purple-500",
+                    active: "bg-blue-500",
+                  };
+
+                  return (
+                    <div key={idx} className="flex flex-col items-center gap-2">
+                      <div
+                        className={`w-12 ${colorClasses[color as keyof typeof colorClasses]} transition-all duration-300`}
+                        style={{ height: `${value * 20}px` }}
+                      />
+                      <div className="text-xs">{value}</div>
+                    </div>
+                  );
+                })}
+              </div>
+
+              {/* Step Description */}
+              <div className="mt-4 text-center">
+                <p className="text-sm font-medium">{currentStepData?.description}</p>
+                <p className="text-xs text-muted-foreground mt-1">
+                  Step {currentStep + 1} of {steps.length}
+                </p>
+              </div>
+
+              {/* Metadata */}
+              {currentStepData?.metadata && (
+                <div className="mt-4 flex justify-center gap-6 text-xs">
+                  {currentStepData.metadata.comparisons !== undefined && (
+                    <div>
+                      Comparisons:{" "}
+                      <span className="font-mono">{currentStepData.metadata.comparisons}</span>
+                    </div>
+                  )}
+                  {currentStepData.metadata.swaps !== undefined && (
+                    <div>
+                      Swaps: <span className="font-mono">{currentStepData.metadata.swaps}</span>
+                    </div>
+                  )}
+                  {currentStepData.metadata.passes !== undefined && (
+                    <div>
+                      Passes: <span className="font-mono">{currentStepData.metadata.passes}</span>
+                    </div>
+                  )}
+                </div>
+              )}
+            </div>
+
+            {/* Playback Controls */}
+            <div className="flex items-center justify-center gap-4">
+              <button
+                onClick={() => setCurrentStep(0)}
+                disabled={currentStep === 0}
+                className="px-4 py-2 border border-border rounded hover:bg-accent disabled:opacity-50"
+              >
+                First
+              </button>
+              <button
+                onClick={() => setCurrentStep(Math.max(0, currentStep - 1))}
+                disabled={currentStep === 0}
+                className="px-4 py-2 border border-border rounded hover:bg-accent disabled:opacity-50"
+              >
+                Previous
+              </button>
+              <button
+                onClick={() => setCurrentStep(Math.min(steps.length - 1, currentStep + 1))}
+                disabled={currentStep === steps.length - 1}
+                className="px-4 py-2 border border-border rounded hover:bg-accent disabled:opacity-50"
+              >
+                Next
+              </button>
+              <button
+                onClick={() => setCurrentStep(steps.length - 1)}
+                disabled={currentStep === steps.length - 1}
+                className="px-4 py-2 border border-border rounded hover:bg-accent disabled:opacity-50"
+              >
+                Last
+              </button>
+            </div>
+          </div>
+        )}
+
+        {/* Documentation */}
+        <div className="space-y-6">
+          <div className="p-6 border border-border rounded-lg">
+            <h2 className="text-2xl font-semibold mb-4">Complexity Analysis</h2>
+            <div className="grid grid-cols-2 gap-4">
+              <div>
+                <h3 className="font-medium mb-2">Time Complexity</h3>
+                <ul className="text-sm space-y-1">
+                  <li>Best: O(n) - already sorted</li>
+                  <li>Average: O(n²)</li>
+                  <li>Worst: O(n²) - reverse sorted</li>
+                </ul>
+              </div>
+              <div>
+                <h3 className="font-medium mb-2">Space Complexity</h3>
+                <p className="text-sm">O(1) - in-place sorting</p>
+              </div>
+            </div>
+          </div>
+
+          <div className="p-6 border border-border rounded-lg">
+            <h2 className="text-2xl font-semibold mb-4">How It Works</h2>
+            <ol className="text-sm space-y-2 list-decimal list-inside">
+              <li>Compare adjacent elements in the array</li>
+              <li>Swap them if they are in the wrong order</li>
+              <li>Repeat passes through the array until no swaps are needed</li>
+              <li>Each pass "bubbles" the largest unsorted element to its correct position</li>
+            </ol>
+          </div>
+
+          <div className="p-6 border border-border rounded-lg">
+            <h2 className="text-2xl font-semibold mb-4">Key Insights</h2>
+            <ul className="text-sm space-y-2">
+              <li>✅ Stable: maintains relative order of equal elements</li>
+              <li>✅ In-place: requires no extra space</li>
+              <li>✅ Simple to understand and implement</li>
+              <li>❌ Not efficient for large datasets (O(n²) average case)</li>
+              <li>💡 Can be optimized to stop early if no swaps occur (array is sorted)</li>
+            </ul>
+          </div>
+        </div>
+      </div>
+    </div>
+  );
+}
