@@ -35,6 +35,7 @@ class AlgorithmRegistry:
         from algorithms.dynamic_programming.fibonacci import Fibonacci
         from algorithms.dynamic_programming.knapsack import Knapsack
         from algorithms.dynamic_programming.lcs import LCS
+        from algorithms.graphs.num_islands import NumIslands
 
         self._algorithms["bubble_sort"] = {
             "id": "bubble_sort",
@@ -172,6 +173,14 @@ class AlgorithmRegistry:
             "visualizer_type": LCS.visualizer_type.value,
         }
 
+        self._algorithms["num_islands"] = {
+            "id": "num_islands",
+            "name": "Number of Islands",
+            "category": "graphs",
+            "class": NumIslands,
+            "visualizer_type": NumIslands.visualizer_type.value,
+        }
+
     def get_algorithm(self, algorithm_id: str) -> dict[str, Any] | None:
         """Get algorithm metadata by ID."""
         return self._algorithms.get(algorithm_id)
@@ -260,6 +269,10 @@ class AlgorithmRegistry:
             str1 = input_data.get("str1", "")
             str2 = input_data.get("str2", "")
             steps = list(instance.compute(str1, str2))
+        elif algorithm_id == "num_islands":
+            # Number of Islands expects: {"grid": [["1", "0", ...], ...]}
+            grid = input_data.get("grid", [])
+            steps = list(instance.count_islands(grid))
         else:
             raise ValueError(f"Unknown execution method for algorithm: {algorithm_id}")
 
