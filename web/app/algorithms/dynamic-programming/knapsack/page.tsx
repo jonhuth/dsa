@@ -4,8 +4,27 @@ import { useState, useEffect } from "react";
 import { CodeViewer } from "@/components/visualizers/CodeViewer";
 import { ArrayVisualizer } from "@/components/visualizers/ArrayVisualizer";
 
+interface Step {
+  operation: string;
+  description: string;
+  state: {
+    values?: number[];
+    [key: string]: unknown;
+  };
+  highlights?: Array<{ indices: number[]; color: string }>;
+  metadata?: {
+    source_line?: number;
+    item?: number;
+    capacity?: number;
+    weight?: number;
+    value?: number;
+    max_value?: number;
+    [key: string]: unknown;
+  };
+}
+
 export default function KnapsackPage() {
-  const [steps, setSteps] = useState<any[]>([]);
+  const [steps, setSteps] = useState<Step[]>([]);
   const [currentStep, setCurrentStep] = useState(0);
   const [isLoading, setIsLoading] = useState(false);
   const [itemsInput, setItemsInput] = useState(
@@ -41,7 +60,7 @@ export default function KnapsackPage() {
     setIsLoading(true);
     try {
       const items = JSON.parse(itemsInput);
-      const capacityValue = parseInt(capacity);
+      const capacityValue = Number.parseInt(capacity, 10);
 
       const response = await fetch("/api/algorithms/knapsack/execute", {
         method: "POST",
@@ -95,6 +114,7 @@ export default function KnapsackPage() {
           </div>
           {steps.length > 0 && (
             <button
+              type="button"
               onClick={() => setShowCode(!showCode)}
               className="px-4 py-2 border border-border rounded hover:bg-accent text-sm"
             >
@@ -106,10 +126,11 @@ export default function KnapsackPage() {
         {/* Input Controls */}
         <div className="p-6 border border-border rounded-lg space-y-4">
           <div>
-            <label className="block text-sm font-medium mb-2">
+            <label htmlFor="items-input" className="block text-sm font-medium mb-2">
               Items (Array of [weight, value] pairs)
             </label>
             <textarea
+              id="items-input"
               value={itemsInput}
               onChange={(e) => setItemsInput(e.target.value)}
               className="w-full px-4 py-2 bg-background border border-border rounded font-mono text-sm"
@@ -121,8 +142,11 @@ export default function KnapsackPage() {
             </p>
           </div>
           <div>
-            <label className="block text-sm font-medium mb-2">Knapsack Capacity</label>
+            <label htmlFor="capacity-input" className="block text-sm font-medium mb-2">
+              Knapsack Capacity
+            </label>
             <input
+              id="capacity-input"
               type="number"
               value={capacity}
               onChange={(e) => setCapacity(e.target.value)}
@@ -136,6 +160,7 @@ export default function KnapsackPage() {
             </p>
           </div>
           <button
+            type="button"
             onClick={executeAlgorithm}
             disabled={isLoading}
             className="px-6 py-2 bg-primary text-primary-foreground rounded hover:bg-primary/90 disabled:opacity-50"

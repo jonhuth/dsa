@@ -31,7 +31,18 @@ class AlgorithmRegistry:
         from algorithms.graphs.dijkstra import Dijkstra
         from algorithms.search.binary_search import BinarySearch
         from algorithms.search.linear_search import LinearSearch
-        from algorithms.trees.bst import BST
+
+        # Import BST from the file, not the directory
+        import sys
+        import importlib.util
+
+        spec = importlib.util.spec_from_file_location(
+            "bst_viz",
+            str(Path(__file__).parent.parent.parent.parent / "algorithms" / "trees" / "bst.py"),
+        )
+        bst_module = importlib.util.module_from_spec(spec)
+        spec.loader.exec_module(bst_module)
+        BSTClass = bst_module.BST
         from algorithms.dynamic_programming.fibonacci import Fibonacci
         from algorithms.dynamic_programming.knapsack import Knapsack
         from algorithms.dynamic_programming.lcs import LCS
@@ -130,16 +141,16 @@ class AlgorithmRegistry:
             "id": "bst_insert",
             "name": "BST Insert",
             "category": "trees",
-            "class": BST,
-            "visualizer_type": BST.visualizer_type.value,
+            "class": BSTClass,
+            "visualizer_type": BSTClass.visualizer_type.value,
         }
 
         self._algorithms["bst_search"] = {
             "id": "bst_search",
             "name": "BST Search",
             "category": "trees",
-            "class": BST,
-            "visualizer_type": BST.visualizer_type.value,
+            "class": BSTClass,
+            "visualizer_type": BSTClass.visualizer_type.value,
         }
 
         self._algorithms["fibonacci_memo"] = {
