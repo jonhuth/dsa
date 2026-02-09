@@ -204,6 +204,18 @@ export function SearchDialog({ open, onOpenChange }: SearchDialogProps) {
     }
   }, [open]);
 
+  // Handle ESC key to close dialog
+  useEffect(() => {
+    const handleKeyDown = (e: KeyboardEvent) => {
+      if (e.key === "Escape" && open) {
+        onOpenChange(false);
+      }
+    };
+
+    document.addEventListener("keydown", handleKeyDown);
+    return () => document.removeEventListener("keydown", handleKeyDown);
+  }, [open, onOpenChange]);
+
   // Group algorithms by category
   const categories = Array.from(new Set(algorithms.map((a) => a.category)));
 
