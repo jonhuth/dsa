@@ -1,9 +1,17 @@
 "use client";
 
+import {
+  CommandDialog,
+  CommandEmpty,
+  CommandGroup,
+  CommandInput,
+  CommandItem,
+  CommandList,
+  CommandShortcut,
+} from "@/components/ui/command";
+import { Binary, Calculator, GitBranch, Search, TreePine, TrendingUp } from "lucide-react";
 import { useRouter } from "next/navigation";
-import { useState, useEffect } from "react";
-import { Command } from "cmdk";
-import { Search, TrendingUp, GitBranch, Binary, TreePine, Calculator } from "lucide-react";
+import { useEffect } from "react";
 
 interface Algorithm {
   id: string;
@@ -180,13 +188,16 @@ const algorithms: Algorithm[] = [
   },
 ];
 
-const categoryIcons: Record<string, any> = {
+const categoryIcons: Record<string, React.ComponentType<{ className?: string }>> = {
   Sorting: TrendingUp,
   Graphs: GitBranch,
   Search: Binary,
   Trees: TreePine,
   "Dynamic Programming": Calculator,
 };
+
+// Group algorithms by category
+const categories = Array.from(new Set(algorithms.map((a) => a.category)));
 
 interface SearchDialogProps {
   open: boolean;
@@ -195,168 +206,73 @@ interface SearchDialogProps {
 
 export function SearchDialog({ open, onOpenChange }: SearchDialogProps) {
   const router = useRouter();
-  const [search, setSearch] = useState("");
 
-  // Reset search when dialog closes
+  // Handle keyboard shortcut
   useEffect(() => {
-    if (!open) {
-      setSearch("");
-    }
-  }, [open]);
-
-  // Handle ESC key to close dialog
-  useEffect(() => {
-    const handleKeyDown = (e: KeyboardEvent) => {
-      if (e.key === "Escape" && open) {
-        onOpenChange(false);
+    const down = (e: KeyboardEvent) => {
+      if (e.key === "k" && (e.metaKey || e.ctrlKey)) {
+        e.preventDefault();
+        onOpenChange(!open);
       }
     };
 
-    document.addEventListener("keydown", handleKeyDown);
-    return () => document.removeEventListener("keydown", handleKeyDown);
+    document.addEventListener("keydown", down);
+    return () => document.removeEventListener("keydown", down);
   }, [open, onOpenChange]);
-
-  // Group algorithms by category
-  const categories = Array.from(new Set(algorithms.map((a) => a.category)));
-
-  const filteredAlgorithms = search
-    ? algorithms.filter(
-        (algo) =>
-          algo.name.toLowerCase().includes(search.toLowerCase()) ||
-          algo.category.toLowerCase().includes(search.toLowerCase()) ||
-          algo.description.toLowerCase().includes(search.toLowerCase()) ||
-          algo.timeComplexity.toLowerCase().includes(search.toLowerCase())
-      )
-    : algorithms;
 
   const handleSelect = (path: string) => {
     onOpenChange(false);
     router.push(path);
   };
 
-  if (!open) return null;
-
   return (
-    <div className="fixed inset-0 z-50 bg-background/80 backdrop-blur-sm">
-      <div className="fixed left-[50%] top-[50%] z-50 w-full max-w-3xl translate-x-[-50%] translate-y-[-50%] px-4">
-        <Command className="rounded-lg border border-border bg-background shadow-2xl">
-          <div className="flex items-center border-b border-border px-3">
-            <Search className="mr-2 h-4 w-4 shrink-0 opacity-50" />
-            <Command.Input
-              value={search}
-              onValueChange={setSearch}
-              placeholder="Search algorithms by name, category, or complexity..."
-              className="flex h-14 w-full rounded-md bg-transparent py-3 text-sm outline-none placeholder:text-muted-foreground disabled:cursor-not-allowed disabled:opacity-50"
-            />
-            <kbd className="pointer-events-none ml-2 hidden h-5 select-none items-center gap-1 rounded border border-border bg-muted px-1.5 font-mono text-[10px] font-medium opacity-100 sm:flex">
-              ESC
-            </kbd>
-          </div>
+    <CommandDialog open={open} onOpenChange={onOpenChange}>
+      <CommandInput placeholder="Search algorithms by name, category, or complexity..." />
+      <CommandList className="max-h-[400px]">
+        <CommandEmpty>No algorithms found.</CommandEmpty>
 
-          <Command.List className="max-h-[400px] overflow-y-auto p-2">
-            <Command.Empty className="py-6 text-center text-sm text-muted-foreground">
-              No algorithms found.
-            </Command.Empty>
+        {categories.map((category) => {
+          const categoryAlgos = algorithms.filter((a) => a.category === category);
+          const Icon = categoryIcons[category] || Search;
 
-            {search ? (
-              // Show all filtered results when searching
-              <Command.Group heading="Search Results">
-                {filteredAlgorithms.map((algo) => {
-                  const Icon = categoryIcons[algo.category] || Search;
-                  return (
-                    <Command.Item
-                      key={algo.id}
-                      value={algo.id}
-                      onSelect={() => handleSelect(algo.path)}
-                      className="flex items-start gap-3 rounded-lg px-3 py-3 cursor-pointer hover:bg-accent aria-selected:bg-accent"
-                    >
-                      <div className="flex h-10 w-10 shrink-0 items-center justify-center rounded-lg bg-primary/10">
-                        <Icon className="h-5 w-5 text-primary" />
-                      </div>
-                      <div className="flex-1 space-y-1">
-                        <div className="flex items-center gap-2">
-                          <p className="text-sm font-medium leading-none">{algo.name}</p>
-                          <span className="text-xs text-muted-foreground">{algo.category}</span>
-                        </div>
-                        <p className="text-xs text-muted-foreground line-clamp-1">
-                          {algo.description}
-                        </p>
-                        <div className="flex items-center gap-2 text-xs text-muted-foreground">
-                          <span className="px-2 py-0.5 bg-purple-500/10 text-purple-500 rounded">
-                            {algo.timeComplexity}
-                          </span>
-                          <span
-                            className={`px-2 py-0.5 rounded ${
-                              algo.difficulty === "Easy"
-                                ? "bg-green-500/10 text-green-500"
-                                : algo.difficulty === "Medium"
-                                  ? "bg-yellow-500/10 text-yellow-500"
-                                  : "bg-red-500/10 text-red-500"
-                            }`}
-                          >
-                            {algo.difficulty}
-                          </span>
-                        </div>
-                      </div>
-                    </Command.Item>
-                  );
-                })}
-              </Command.Group>
-            ) : (
-              // Group by category when not searching
-              <>
-                {categories.map((category) => {
-                  const categoryAlgos = algorithms.filter((a) => a.category === category);
-                  const Icon = categoryIcons[category] || Search;
-
-                  return (
-                    <Command.Group key={category} heading={category}>
-                      {categoryAlgos.map((algo) => (
-                        <Command.Item
-                          key={algo.id}
-                          value={algo.id}
-                          onSelect={() => handleSelect(algo.path)}
-                          className="flex items-start gap-3 rounded-lg px-3 py-2 cursor-pointer hover:bg-accent aria-selected:bg-accent"
-                        >
-                          <div className="flex h-8 w-8 shrink-0 items-center justify-center rounded-lg bg-primary/10">
-                            <Icon className="h-4 w-4 text-primary" />
-                          </div>
-                          <div className="flex-1">
-                            <div className="flex items-center gap-2">
-                              <p className="text-sm font-medium leading-none">{algo.name}</p>
-                              <span className="text-xs text-muted-foreground px-2 py-0.5 bg-purple-500/10 text-purple-500 rounded">
-                                {algo.timeComplexity}
-                              </span>
-                            </div>
-                          </div>
-                        </Command.Item>
-                      ))}
-                    </Command.Group>
-                  );
-                })}
-              </>
-            )}
-          </Command.List>
-
-          <div className="flex items-center border-t border-border px-3 py-2 text-xs text-muted-foreground">
-            <kbd className="pointer-events-none mr-1 inline-flex h-5 select-none items-center gap-1 rounded border border-border bg-muted px-1.5 font-mono text-[10px] font-medium opacity-100">
-              ↑↓
-            </kbd>
-            <span className="mr-4">Navigate</span>
-            <kbd className="pointer-events-none mr-1 inline-flex h-5 select-none items-center gap-1 rounded border border-border bg-muted px-1.5 font-mono text-[10px] font-medium opacity-100">
-              ↵
-            </kbd>
-            <span className="mr-4">Select</span>
-            <kbd className="pointer-events-none mr-1 inline-flex h-5 select-none items-center gap-1 rounded border border-border bg-muted px-1.5 font-mono text-[10px] font-medium opacity-100">
-              ESC
-            </kbd>
-            <span>Close</span>
-          </div>
-        </Command>
-      </div>
-
-      {/* Backdrop - close on click */}
-      <div className="fixed inset-0 -z-10" onClick={() => onOpenChange(false)} />
-    </div>
+          return (
+            <CommandGroup key={category} heading={category}>
+              {categoryAlgos.map((algo) => (
+                <CommandItem
+                  key={algo.id}
+                  value={`${algo.name} ${algo.category} ${algo.description} ${algo.timeComplexity}`}
+                  onSelect={() => handleSelect(algo.path)}
+                  className="flex items-start gap-3 py-3"
+                >
+                  <div className="flex h-8 w-8 shrink-0 items-center justify-center rounded-lg bg-primary/10">
+                    <Icon className="h-4 w-4 text-primary" />
+                  </div>
+                  <div className="flex-1 space-y-1">
+                    <div className="flex items-center gap-2">
+                      <span className="text-sm font-medium">{algo.name}</span>
+                      <span className="text-xs px-2 py-0.5 bg-purple-500/10 text-purple-500 rounded">
+                        {algo.timeComplexity}
+                      </span>
+                      <span
+                        className={`text-xs px-2 py-0.5 rounded ${
+                          algo.difficulty === "Easy"
+                            ? "bg-green-500/10 text-green-500"
+                            : algo.difficulty === "Medium"
+                              ? "bg-yellow-500/10 text-yellow-500"
+                              : "bg-red-500/10 text-red-500"
+                        }`}
+                      >
+                        {algo.difficulty}
+                      </span>
+                    </div>
+                    <p className="text-xs text-muted-foreground line-clamp-1">{algo.description}</p>
+                  </div>
+                </CommandItem>
+              ))}
+            </CommandGroup>
+          );
+        })}
+      </CommandList>
+    </CommandDialog>
   );
 }
