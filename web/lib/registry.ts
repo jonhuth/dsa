@@ -1,18 +1,18 @@
 // Central content registry for algorithms, data structures, problems, and mini-systems
 
 import type {
-  AlgorithmMetadata,
-  DataStructureMetadata,
-  ProblemMetadata,
-  MiniSystemMetadata,
+	AlgorithmMetadata,
+	DataStructureMetadata,
+	ProblemMetadata,
+	MiniSystemMetadata,
 } from "./types";
 import {
-  getAlgorithm,
-  getAllAlgorithms,
-  getAlgorithmsByCategory,
-  getAlgorithmsByDifficulty,
-  getAlgorithmsByTag,
-  searchAlgorithms,
+	getAlgorithm,
+	getAllAlgorithms,
+	getAlgorithmsByCategory,
+	getAlgorithmsByDifficulty,
+	getAlgorithmsByTag,
+	searchAlgorithms,
 } from "./algorithms";
 import { getCategory, getAllCategories, getActiveCategories } from "./categories";
 
@@ -23,40 +23,40 @@ import { getCategory, getAllCategories, getActiveCategories } from "./categories
  * problems, and mini-systems throughout the application.
  */
 export const registry = {
-  // Algorithms
-  algorithms: {
-    get: getAlgorithm,
-    getAll: getAllAlgorithms,
-    getByCategory: getAlgorithmsByCategory,
-    getByDifficulty: getAlgorithmsByDifficulty,
-    getByTag: getAlgorithmsByTag,
-    search: searchAlgorithms,
-  },
+	// Algorithms
+	algorithms: {
+		get: getAlgorithm,
+		getAll: getAllAlgorithms,
+		getByCategory: getAlgorithmsByCategory,
+		getByDifficulty: getAlgorithmsByDifficulty,
+		getByTag: getAlgorithmsByTag,
+		search: searchAlgorithms,
+	},
 
-  // Categories
-  categories: {
-    get: getCategory,
-    getAll: getAllCategories,
-    getActive: getActiveCategories,
-  },
+	// Categories
+	categories: {
+		get: getCategory,
+		getAll: getAllCategories,
+		getActive: getActiveCategories,
+	},
 
-  // Data Structures (future)
-  dataStructures: {
-    get: (_id: string): DataStructureMetadata | undefined => undefined,
-    getAll: (): DataStructureMetadata[] => [],
-  },
+	// Data Structures (future)
+	dataStructures: {
+		get: (_id: string): DataStructureMetadata | undefined => undefined,
+		getAll: (): DataStructureMetadata[] => [],
+	},
 
-  // Problems (future)
-  problems: {
-    get: (_id: string): ProblemMetadata | undefined => undefined,
-    getAll: (): ProblemMetadata[] => [],
-  },
+	// Problems (future)
+	problems: {
+		get: (_id: string): ProblemMetadata | undefined => undefined,
+		getAll: (): ProblemMetadata[] => [],
+	},
 
-  // Mini Systems (future)
-  miniSystems: {
-    get: (_id: string): MiniSystemMetadata | undefined => undefined,
-    getAll: (): MiniSystemMetadata[] => [],
-  },
+	// Mini Systems (future)
+	miniSystems: {
+		get: (_id: string): MiniSystemMetadata | undefined => undefined,
+		getAll: (): MiniSystemMetadata[] => [],
+	},
 };
 
 // Export type for the registry
