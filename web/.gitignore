@@ -1,0 +1,12 @@
+# Build outputs
+.next/
+dist/
+build/
+out/
+
+# Dependencies (inherited from parent, but explicit for biome)
+node_modules/
+
+# Cache
+.turbo/
+*.tsbuildinfo

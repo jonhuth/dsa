@@ -1,13 +1,13 @@
 {
-	"$schema": "https://biomejs.dev/schemas/latest/schema.json",
+	"$schema": "https://biomejs.dev/schemas/2.3.14/schema.json",
 	"vcs": {
 		"enabled": true,
 		"clientKind": "git",
-		"useIgnoreFile": false
+		"useIgnoreFile": true
 	},
 	"files": {
-		"ignoreUnknown": false,
-		"includes": ["**", "!.next", "!node_modules", "!dist", "!build"]
+		"ignoreUnknown": true,
+		"includes": ["**/*.ts", "**/*.tsx", "**/*.js", "**/*.jsx", "**/*.json"]
 	},
 	"css": {
 		"parser": {
