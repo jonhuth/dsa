@@ -1,6 +1,6 @@
 "use client";
 
-import React from "react";
+import type React from "react";
 
 interface TreeNode {
 	val: number;
@@ -61,7 +61,7 @@ export function TreeVisualizer({
 	): PositionedNode | null => {
 		if (!node) return null;
 
-		const horizontalSpacing = width / Math.pow(2, level + 1);
+		const horizontalSpacing = width / 2 ** (level + 1);
 		const verticalSpacing = height / (maxLevel + 1);
 
 		const positioned: PositionedNode = {

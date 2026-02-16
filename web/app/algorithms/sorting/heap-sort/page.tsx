@@ -1,8 +1,8 @@
 "use client";
 
-import { useState, useEffect } from "react";
-import { CodeViewer } from "@/components/visualizers/CodeViewer";
+import { useEffect, useState } from "react";
 import { ArrayVisualizer } from "@/components/visualizers/ArrayVisualizer";
+import { CodeViewer } from "@/components/visualizers/CodeViewer";
 
 export default function HeapSortPage() {
 	const [steps, setSteps] = useState<any[]>([]);

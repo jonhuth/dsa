@@ -1,8 +1,8 @@
 // Algorithm metadata registry
 // All algorithms with rich learning content
 
-import type { AlgorithmMetadata } from "./types";
 import { TAGS } from "./tags";
+import type { AlgorithmMetadata } from "./types";
 
 export const ALGORITHMS: Record<string, AlgorithmMetadata> = {
 	// ==================== SORTING ALGORITHMS ====================

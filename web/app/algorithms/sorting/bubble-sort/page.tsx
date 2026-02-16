@@ -1,20 +1,20 @@
 "use client";
 
-import { useState, useEffect } from "react";
 import Link from "next/link";
-import { CodeViewer } from "@/components/visualizers/CodeViewer";
-import { ArrayVisualizer } from "@/components/visualizers/ArrayVisualizer";
+import { useEffect, useState } from "react";
 import {
 	ComplexityChart,
 	EdgeCases,
-	KeyInsights,
-	RelatedLinks,
-	Prerequisites,
-	WhenToUse,
 	InterviewTips,
+	KeyInsights,
+	Prerequisites,
+	RelatedLinks,
+	WhenToUse,
 } from "@/components/learning";
+import { ArrayVisualizer } from "@/components/visualizers/ArrayVisualizer";
+import { CodeViewer } from "@/components/visualizers/CodeViewer";
 import registry from "@/lib/registry";
-import { getRelatedAlgorithms, getPrerequisites } from "@/lib/relationships";
+import { getPrerequisites, getRelatedAlgorithms } from "@/lib/relationships";
 
 export default function BubbleSortPage() {
 	const [steps, setSteps] = useState<any[]>([]);

@@ -1,8 +1,8 @@
 "use client";
 
+import { Github, Search } from "lucide-react";
 import Link from "next/link";
-import { Search, Github } from "lucide-react";
-import { useState, useEffect } from "react";
+import { useEffect, useState } from "react";
 import { SearchDialog } from "./SearchDialog";
 
 export function Header() {

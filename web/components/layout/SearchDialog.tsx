@@ -1,5 +1,8 @@
 "use client";
 
+import { Binary, Calculator, GitBranch, Search, TreePine, TrendingUp } from "lucide-react";
+import { useRouter } from "next/navigation";
+import { useEffect } from "react";
 import {
 	CommandDialog,
 	CommandEmpty,
@@ -9,9 +12,6 @@ import {
 	CommandList,
 	CommandShortcut,
 } from "@/components/ui/command";
-import { Binary, Calculator, GitBranch, Search, TreePine, TrendingUp } from "lucide-react";
-import { useRouter } from "next/navigation";
-import { useEffect } from "react";
 
 interface Algorithm {
 	id: string;

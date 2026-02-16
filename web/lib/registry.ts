@@ -1,20 +1,20 @@
 // Central content registry for algorithms, data structures, problems, and mini-systems
 
-import type {
-	AlgorithmMetadata,
-	DataStructureMetadata,
-	ProblemMetadata,
-	MiniSystemMetadata,
-} from "./types";
 import {
 	getAlgorithm,
-	getAllAlgorithms,
 	getAlgorithmsByCategory,
 	getAlgorithmsByDifficulty,
 	getAlgorithmsByTag,
+	getAllAlgorithms,
 	searchAlgorithms,
 } from "./algorithms";
-import { getCategory, getAllCategories, getActiveCategories } from "./categories";
+import { getActiveCategories, getAllCategories, getCategory } from "./categories";
+import type {
+	AlgorithmMetadata,
+	DataStructureMetadata,
+	MiniSystemMetadata,
+	ProblemMetadata,
+} from "./types";
 
 /**
  * Central registry for all DSA content

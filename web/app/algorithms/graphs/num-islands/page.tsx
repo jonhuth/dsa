@@ -1,6 +1,6 @@
 "use client";
 
-import { useState, useEffect } from "react";
+import { useEffect, useState } from "react";
 import { CodeViewer } from "@/components/visualizers/CodeViewer";
 import { GridVisualizer } from "@/components/visualizers/GridVisualizer";
 

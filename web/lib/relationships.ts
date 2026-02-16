@@ -1,7 +1,7 @@
 // Cross-content relationships for "Related Algorithms" and bidirectional linking
 
-import type { AlgorithmMetadata } from "./types";
 import { getAlgorithm, getAllAlgorithms } from "./algorithms";
+import type { AlgorithmMetadata } from "./types";
 
 /**
  * Get algorithms that are related to the given algorithm
