@@ -28,7 +28,7 @@ export default function FibonacciMemoizationPage() {
 	const executeAlgorithm = async () => {
 		setIsLoading(true);
 		try {
-			const nValue = parseInt(n);
+			const nValue = parseInt(n, 10);
 
 			const response = await fetch("/api/algorithms/fibonacci_memo/execute", {
 				method: "POST",
