@@ -1,7 +1,7 @@
 // Category metadata for organizing algorithms
 
-import type { Category, CategoryMetadata } from "./types";
 import { getAlgorithmsByCategory } from "./algorithms";
+import type { Category, CategoryMetadata } from "./types";
 
 export const CATEGORIES: Record<Category, CategoryMetadata> = {
 	sorting: {
