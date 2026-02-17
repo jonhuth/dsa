@@ -1,7 +1,9 @@
 "use client";
 
+import { useState } from "react";
 import { Prism as SyntaxHighlighter } from "react-syntax-highlighter";
 import { vscDarkPlus } from "react-syntax-highlighter/dist/esm/styles/prism";
+import { Copy, Check } from "lucide-react";
 
 interface CodeViewerProps {
 	code: string;
@@ -16,6 +18,13 @@ export function CodeViewer({
 	highlightedLine,
 	showLineNumbers = true,
 }: CodeViewerProps) {
+	const [copied, setCopied] = useState(false);
+
+	const handleCopy = async () => {
+		await navigator.clipboard.writeText(code);
+		setCopied(true);
+		setTimeout(() => setCopied(false), 2000);
+	};
 	// Custom style to highlight the current line
 	const customStyle = {
 		...vscDarkPlus,
@@ -34,7 +43,25 @@ export function CodeViewer({
 
 	return (
 		<div className="relative">
-			<div className="absolute top-2 right-2 z-10">
+			<div className="absolute top-2 right-2 z-10 flex items-center gap-2">
+				<button
+					type="button"
+					onClick={handleCopy}
+					className="flex items-center gap-1 text-xs text-muted-foreground hover:text-foreground bg-background/50 hover:bg-background/80 px-2 py-1 rounded transition-colors"
+					title="Copy code"
+				>
+					{copied ? (
+						<>
+							<Check className="h-3 w-3" />
+							Copied!
+						</>
+					) : (
+						<>
+							<Copy className="h-3 w-3" />
+							Copy
+						</>
+					)}
+				</button>
 				<span className="text-xs text-muted-foreground bg-background/50 px-2 py-1 rounded">
 					{language}
 				</span>
