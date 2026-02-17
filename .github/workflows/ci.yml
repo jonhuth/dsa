@@ -17,15 +17,19 @@ jobs:
         with:
           bun-version: latest
       
-      - uses: actions/setup-python@v5
+      - name: Install uv
+        uses: astral-sh/setup-uv@v4
         with:
-          python-version: '3.12'
+          version: "latest"
+      
+      - name: Set up Python
+        run: uv python install 3.12
       
       - name: Install web dependencies
         run: cd web && bun install --frozen-lockfile
       
       - name: Install API dependencies
-        run: cd api && pip install -r requirements.txt
+        run: cd api && uv sync
       
       - name: Lint
         run: bun run lint
