@@ -2,6 +2,7 @@
 
 import { useEffect, useState } from "react";
 import { CodeViewer } from "@/components/visualizers/CodeViewer";
+import { PlaybackControls } from "@/components/visualizers/PlaybackControls";
 import { GridVisualizer } from "@/components/visualizers/GridVisualizer";
 
 export default function NumIslandsPage() {
@@ -226,36 +227,11 @@ export default function NumIslandsPage() {
 						</div>
 
 						{/* Playback Controls */}
-						<div className="flex items-center justify-center gap-4">
-							<button
-								onClick={() => setCurrentStep(0)}
-								disabled={currentStep === 0}
-								className="px-4 py-2 border border-border rounded hover:bg-accent disabled:opacity-50"
-							>
-								First
-							</button>
-							<button
-								onClick={() => setCurrentStep(Math.max(0, currentStep - 1))}
-								disabled={currentStep === 0}
-								className="px-4 py-2 border border-border rounded hover:bg-accent disabled:opacity-50"
-							>
-								Previous
-							</button>
-							<button
-								onClick={() => setCurrentStep(Math.min(steps.length - 1, currentStep + 1))}
-								disabled={currentStep === steps.length - 1}
-								className="px-4 py-2 border border-border rounded hover:bg-accent disabled:opacity-50"
-							>
-								Next
-							</button>
-							<button
-								onClick={() => setCurrentStep(steps.length - 1)}
-								disabled={currentStep === steps.length - 1}
-								className="px-4 py-2 border border-border rounded hover:bg-accent disabled:opacity-50"
-							>
-								Last
-							</button>
-						</div>
+						<PlaybackControls
+							currentStep={currentStep}
+							totalSteps={steps.length}
+							onStepChange={setCurrentStep}
+						/>
 					</div>
 				)}
 
