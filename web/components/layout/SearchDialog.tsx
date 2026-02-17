@@ -10,7 +10,6 @@ import {
 	CommandInput,
 	CommandItem,
 	CommandList,
-	CommandShortcut,
 } from "@/components/ui/command";
 
 interface Algorithm {

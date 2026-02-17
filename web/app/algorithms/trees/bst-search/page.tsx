@@ -29,8 +29,8 @@ export default function BSTSearchPage() {
 	const executeAlgorithm = async () => {
 		setIsLoading(true);
 		try {
-			const values = treeValues.split(",").map((n) => parseInt(n.trim()));
-			const target = parseInt(targetValue);
+			const values = treeValues.split(",").map((n) => parseInt(n.trim(), 10));
+			const target = parseInt(targetValue, 10);
 
 			const response = await fetch("/api/algorithms/bst_search/execute", {
 				method: "POST",

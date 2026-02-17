@@ -48,8 +48,8 @@ export default function DijkstraPage() {
 		setIsLoading(true);
 		try {
 			const graph = JSON.parse(graphInput);
-			const start = parseInt(startNode);
-			const target = targetNode ? parseInt(targetNode) : null;
+			const start = parseInt(startNode, 10);
+			const target = targetNode ? parseInt(targetNode, 10) : null;
 
 			const response = await fetch("/api/algorithms/dijkstra/execute", {
 				method: "POST",
@@ -79,12 +79,12 @@ export default function DijkstraPage() {
 	const getNodesAndEdges = () => {
 		try {
 			const graph = JSON.parse(graphInput);
-			const nodes = Object.keys(graph).map((id) => ({ id: parseInt(id) }));
+			const nodes = Object.keys(graph).map((id) => ({ id: parseInt(id, 10) }));
 			const edges: Array<{ from: number; to: number }> = [];
 
 			for (const [from, neighbors] of Object.entries(graph)) {
-				for (const [to, weight] of neighbors as Array<[number, number]>) {
-					edges.push({ from: parseInt(from), to });
+				for (const [to, _weight] of neighbors as Array<[number, number]>) {
+					edges.push({ from: parseInt(from, 10), to });
 				}
 			}
 

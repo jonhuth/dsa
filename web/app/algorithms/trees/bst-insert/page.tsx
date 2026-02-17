@@ -28,7 +28,7 @@ export default function BSTInsertPage() {
 	const executeAlgorithm = async () => {
 		setIsLoading(true);
 		try {
-			const values = inputValues.split(",").map((n) => parseInt(n.trim()));
+			const values = inputValues.split(",").map((n) => parseInt(n.trim(), 10));
 
 			const response = await fetch("/api/algorithms/bst_insert/execute", {
 				method: "POST",
