@@ -47,7 +47,8 @@
    Accent: Electric Violet (hue ~285)
    ======================================== */
 :root {
-	--radius: 0.5rem;
+	/* Design System v2 - More rounded, modern */
+	--radius: 0.75rem;
 
 	/* Deep space background */
 	--background: oklch(0.11 0.015 270);
