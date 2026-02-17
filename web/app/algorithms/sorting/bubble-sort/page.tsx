@@ -13,6 +13,7 @@ import {
 } from "@/components/learning";
 import { ArrayVisualizer } from "@/components/visualizers/ArrayVisualizer";
 import { CodeViewer } from "@/components/visualizers/CodeViewer";
+import { PlaybackControls } from "@/components/visualizers/PlaybackControls";
 import registry from "@/lib/registry";
 import { getPrerequisites, getRelatedAlgorithms } from "@/lib/relationships";
 
@@ -235,40 +236,11 @@ export default function BubbleSortPage() {
 								</div>
 
 								{/* Playback Controls */}
-								<div className="flex items-center justify-center gap-4">
-									<button
-										type="button"
-										onClick={() => setCurrentStep(0)}
-										disabled={currentStep === 0}
-										className="px-4 py-2 border border-border rounded hover:bg-accent disabled:opacity-50"
-									>
-										First
-									</button>
-									<button
-										type="button"
-										onClick={() => setCurrentStep(Math.max(0, currentStep - 1))}
-										disabled={currentStep === 0}
-										className="px-4 py-2 border border-border rounded hover:bg-accent disabled:opacity-50"
-									>
-										Previous
-									</button>
-									<button
-										type="button"
-										onClick={() => setCurrentStep(Math.min(steps.length - 1, currentStep + 1))}
-										disabled={currentStep === steps.length - 1}
-										className="px-4 py-2 border border-border rounded hover:bg-accent disabled:opacity-50"
-									>
-										Next
-									</button>
-									<button
-										type="button"
-										onClick={() => setCurrentStep(steps.length - 1)}
-										disabled={currentStep === steps.length - 1}
-										className="px-4 py-2 border border-border rounded hover:bg-accent disabled:opacity-50"
-									>
-										Last
-									</button>
-								</div>
+								<PlaybackControls
+									currentStep={currentStep}
+									totalSteps={steps.length}
+									onStepChange={setCurrentStep}
+								/>
 							</div>
 						)}
 
