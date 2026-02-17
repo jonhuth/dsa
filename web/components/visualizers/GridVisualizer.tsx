@@ -1,5 +1,3 @@
-import React from "react";
-
 interface GridVisualizerProps {
 	grid: number[][];
 	highlights?: Array<{
@@ -34,8 +32,8 @@ export function GridVisualizer({
 
 	// Calculate cell size based on grid dimensions and available space
 	const cellSize = Math.min(Math.floor((width - 40) / cols), Math.floor((height - 40) / rows), 60);
-	const gridWidth = cols * cellSize;
-	const gridHeight = rows * cellSize;
+	const _gridWidth = cols * cellSize;
+	const _gridHeight = rows * cellSize;
 
 	// Color mapping
 	const colorClasses: Record<string, string> = {

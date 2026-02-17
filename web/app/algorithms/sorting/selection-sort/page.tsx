@@ -30,7 +30,7 @@ export default function SelectionSortPage() {
 		setIsLoading(true);
 		try {
 			// Parse input
-			const arr = inputArray.split(",").map((n) => parseInt(n.trim()));
+			const arr = inputArray.split(",").map((n) => parseInt(n.trim(), 10));
 
 			const response = await fetch("/api/algorithms/selection_sort/execute", {
 				method: "POST",

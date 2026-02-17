@@ -9,12 +9,7 @@ import {
 	searchAlgorithms,
 } from "./algorithms";
 import { getActiveCategories, getAllCategories, getCategory } from "./categories";
-import type {
-	AlgorithmMetadata,
-	DataStructureMetadata,
-	MiniSystemMetadata,
-	ProblemMetadata,
-} from "./types";
+import type { DataStructureMetadata, MiniSystemMetadata, ProblemMetadata } from "./types";
 
 /**
  * Central registry for all DSA content

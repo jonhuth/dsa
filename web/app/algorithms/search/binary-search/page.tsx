@@ -29,8 +29,8 @@ export default function BinarySearchPage() {
 	const executeAlgorithm = async () => {
 		setIsLoading(true);
 		try {
-			const arr = inputArray.split(",").map((n) => parseInt(n.trim()));
-			const targetNum = parseInt(target);
+			const arr = inputArray.split(",").map((n) => parseInt(n.trim(), 10));
+			const targetNum = parseInt(target, 10);
 
 			const response = await fetch("/api/algorithms/binary_search/execute", {
 				method: "POST",

@@ -30,7 +30,7 @@ export default function InsertionSortPage() {
 		setIsLoading(true);
 		try {
 			// Parse input
-			const arr = inputArray.split(",").map((n) => parseInt(n.trim()));
+			const arr = inputArray.split(",").map((n) => parseInt(n.trim(), 10));
 
 			const response = await fetch("/api/algorithms/insertion_sort/execute", {
 				method: "POST",

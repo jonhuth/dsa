@@ -19,9 +19,7 @@ export function getRelatedAlgorithms(algorithmId: string): AlgorithmMetadata[] {
  * Get algorithms that list this algorithm as a prerequisite (inverse relationship)
  */
 export function getAlgorithmsThatRequire(algorithmId: string): AlgorithmMetadata[] {
-	return getAllAlgorithms().filter(
-		(algo) => algo.prerequisites && algo.prerequisites.includes(algorithmId),
-	);
+	return getAllAlgorithms().filter((algo) => algo.prerequisites?.includes(algorithmId));
 }
 
 /**
