@@ -29,7 +29,7 @@ jobs:
         run: cd web && bun install --frozen-lockfile
       
       - name: Install API dependencies
-        run: cd api && uv sync --group dev
+        run: cd api && uv sync --extra dev
       
       - name: Lint
         run: bun run lint
