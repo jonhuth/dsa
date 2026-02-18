@@ -2,8 +2,8 @@
 
 import { useEffect, useState } from "react";
 import { CodeViewer } from "@/components/visualizers/CodeViewer";
-import { PlaybackControls } from "@/components/visualizers/PlaybackControls";
 import { GridVisualizer } from "@/components/visualizers/GridVisualizer";
+import { PlaybackControls } from "@/components/visualizers/PlaybackControls";
 
 export default function NumIslandsPage() {
 	const [steps, setSteps] = useState<any[]>([]);

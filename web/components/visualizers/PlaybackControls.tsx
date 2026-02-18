@@ -1,7 +1,7 @@
 "use client";
 
-import { useCallback, useEffect, useState } from "react";
 import { Pause, Play, SkipBack, SkipForward, StepBack, StepForward } from "lucide-react";
+import { useCallback, useEffect, useState } from "react";
 
 interface PlaybackControlsProps {
 	currentStep: number;

@@ -42,10 +42,19 @@
 		"rules": {
 			"recommended": true,
 			"suspicious": {
-				"noExplicitAny": "warn"
+				"noExplicitAny": "warn",
+				"noArrayIndexKey": "warn"
 			},
 			"style": {
 				"noNonNullAssertion": "off"
+			},
+			"a11y": {
+				"useButtonType": "warn",
+				"noLabelWithoutControl": "warn",
+				"noSvgWithoutTitle": "warn"
+			},
+			"correctness": {
+				"useUniqueElementIds": "warn"
 			}
 		}
 	},

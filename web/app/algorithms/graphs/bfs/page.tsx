@@ -2,8 +2,8 @@
 
 import { useEffect, useState } from "react";
 import { CodeViewer } from "@/components/visualizers/CodeViewer";
-import { PlaybackControls } from "@/components/visualizers/PlaybackControls";
 import { GraphVisualizer } from "@/components/visualizers/GraphVisualizer";
+import { PlaybackControls } from "@/components/visualizers/PlaybackControls";
 
 export default function BFSPage() {
 	const [steps, setSteps] = useState<any[]>([]);
