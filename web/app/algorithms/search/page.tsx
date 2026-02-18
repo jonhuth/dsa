@@ -19,7 +19,7 @@ export default function SearchPage() {
 	};
 
 	return (
-		<div className="min-h-screen p-8">
+		<div className="min-h-screen p-4 sm:p-6 lg:p-8">
 			<div className="max-w-6xl mx-auto space-y-8">
 				<div>
 					<div className="text-sm text-muted-foreground mb-2">
@@ -28,9 +28,9 @@ export default function SearchPage() {
 						</Link>{" "}
 						/ {category.name}
 					</div>
-					<div className="flex items-center gap-3 mb-2">
+					<div className="flex flex-wrap items-center gap-2 sm:gap-3 mb-2">
 						<span className="text-4xl">{category.icon}</span>
-						<h1 className="text-4xl font-bold">{category.name}</h1>
+						<h1 className="text-2xl sm:text-3xl lg:text-4xl font-bold">{category.name}</h1>
 					</div>
 					<p className="text-muted-foreground">{category.description}</p>
 				</div>

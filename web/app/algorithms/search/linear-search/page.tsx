@@ -55,7 +55,7 @@ export default function LinearSearchPage() {
 	const currentLine = currentStepData?.metadata?.source_line;
 
 	return (
-		<div className="min-h-screen p-8">
+		<div className="min-h-screen p-4 sm:p-6 lg:p-8">
 			<div className="max-w-7xl mx-auto space-y-8">
 				{/* Breadcrumb */}
 				<div className="text-sm text-muted-foreground">
@@ -72,7 +72,7 @@ export default function LinearSearchPage() {
 				{/* Header */}
 				<div className="flex items-start justify-between">
 					<div>
-						<h1 className="text-4xl font-bold mb-2">Linear Search</h1>
+						<h1 className="text-2xl sm:text-3xl lg:text-4xl font-bold mb-2">Linear Search</h1>
 						<p className="text-muted-foreground">Simple sequential search checking each element</p>
 					</div>
 					{steps.length > 0 && (

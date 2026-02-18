@@ -5,10 +5,10 @@ export default function AlgorithmsPage() {
 	const categories = registry.categories.getActive();
 
 	return (
-		<div className="min-h-screen p-8">
+		<div className="min-h-screen p-4 sm:p-6 lg:p-8">
 			<div className="max-w-6xl mx-auto space-y-8">
 				<div>
-					<h1 className="text-4xl font-bold mb-2">Algorithms</h1>
+					<h1 className="text-2xl sm:text-3xl lg:text-4xl font-bold mb-2">Algorithms</h1>
 					<p className="text-muted-foreground">Browse and visualize algorithms by category</p>
 				</div>
 
@@ -26,7 +26,7 @@ export default function AlgorithmsPage() {
 								href={`/algorithms/${category.id}`}
 								className="p-6 border border-border rounded-lg hover:bg-accent transition-colors group"
 							>
-								<div className="flex items-center gap-3 mb-2">
+								<div className="flex flex-wrap items-center gap-2 sm:gap-3 mb-2">
 									<span className="text-3xl">{category.icon}</span>
 									<h2 className="text-2xl font-semibold group-hover:text-primary transition-colors">
 										{category.name}

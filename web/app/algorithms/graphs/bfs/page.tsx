@@ -83,7 +83,7 @@ export default function BFSPage() {
 	const { nodes, edges } = getNodesAndEdges();
 
 	return (
-		<div className="min-h-screen p-8">
+		<div className="min-h-screen p-4 sm:p-6 lg:p-8">
 			<div className="max-w-7xl mx-auto space-y-8">
 				{/* Breadcrumb */}
 				<div className="text-sm text-muted-foreground">
@@ -100,7 +100,9 @@ export default function BFSPage() {
 				{/* Header */}
 				<div className="flex items-start justify-between">
 					<div>
-						<h1 className="text-4xl font-bold mb-2">Breadth-First Search (BFS)</h1>
+						<h1 className="text-2xl sm:text-3xl lg:text-4xl font-bold mb-2">
+							Breadth-First Search (BFS)
+						</h1>
 						<p className="text-muted-foreground">
 							Level-order graph traversal that explores nodes layer by layer
 						</p>

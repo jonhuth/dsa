@@ -98,7 +98,7 @@ export default function DijkstraPage() {
 	const { nodes, edges } = getNodesAndEdges();
 
 	return (
-		<div className="min-h-screen p-8">
+		<div className="min-h-screen p-4 sm:p-6 lg:p-8">
 			<div className="max-w-7xl mx-auto space-y-8">
 				{/* Breadcrumb */}
 				<div className="text-sm text-muted-foreground">
@@ -115,7 +115,9 @@ export default function DijkstraPage() {
 				{/* Header */}
 				<div className="flex items-start justify-between">
 					<div>
-						<h1 className="text-4xl font-bold mb-2">Dijkstra's Algorithm</h1>
+						<h1 className="text-2xl sm:text-3xl lg:text-4xl font-bold mb-2">
+							Dijkstra's Algorithm
+						</h1>
 						<p className="text-muted-foreground">
 							Shortest path algorithm for weighted graphs with non-negative edges
 						</p>

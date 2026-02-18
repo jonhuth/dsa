@@ -43,26 +43,26 @@ export function CodeViewer({
 
 	return (
 		<div className="relative">
-			<div className="absolute top-2 right-2 z-10 flex items-center gap-2">
+			<div className="absolute top-1 sm:top-2 right-1 sm:right-2 z-10 flex items-center gap-1 sm:gap-2">
 				<button
 					type="button"
 					onClick={handleCopy}
-					className="flex items-center gap-1 text-xs text-muted-foreground hover:text-foreground bg-background/50 hover:bg-background/80 px-2 py-1 rounded transition-colors"
+					className="flex items-center gap-1 text-[10px] sm:text-xs text-muted-foreground hover:text-foreground bg-background/50 hover:bg-background/80 px-1.5 sm:px-2 py-0.5 sm:py-1 rounded transition-colors touch-manipulation"
 					title="Copy code"
 				>
 					{copied ? (
 						<>
 							<Check className="h-3 w-3" />
-							Copied!
+							<span className="hidden sm:inline">Copied!</span>
 						</>
 					) : (
 						<>
 							<Copy className="h-3 w-3" />
-							Copy
+							<span className="hidden sm:inline">Copy</span>
 						</>
 					)}
 				</button>
-				<span className="text-xs text-muted-foreground bg-background/50 px-2 py-1 rounded">
+				<span className="text-[10px] sm:text-xs text-muted-foreground bg-background/50 px-1.5 sm:px-2 py-0.5 sm:py-1 rounded">
 					{language}
 				</span>
 			</div>
@@ -85,8 +85,8 @@ export function CodeViewer({
 					};
 				}}
 				customStyle={{
-					fontSize: "0.875rem",
-					maxHeight: "calc(100vh - 16rem)",
+					fontSize: "0.75rem",
+					maxHeight: "300px",
 					overflow: "auto",
 				}}
 			>

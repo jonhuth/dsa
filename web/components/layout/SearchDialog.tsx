@@ -226,8 +226,8 @@ export function SearchDialog({ open, onOpenChange }: SearchDialogProps) {
 
 	return (
 		<CommandDialog open={open} onOpenChange={onOpenChange}>
-			<CommandInput placeholder="Search algorithms by name, category, or complexity..." />
-			<CommandList className="max-h-[400px]">
+			<CommandInput placeholder="Search algorithms..." />
+			<CommandList className="max-h-[60vh] sm:max-h-[400px]">
 				<CommandEmpty>No algorithms found.</CommandEmpty>
 
 				{categories.map((category) => {
@@ -241,19 +241,19 @@ export function SearchDialog({ open, onOpenChange }: SearchDialogProps) {
 									key={algo.id}
 									value={`${algo.name} ${algo.category} ${algo.description} ${algo.timeComplexity}`}
 									onSelect={() => handleSelect(algo.path)}
-									className="flex items-start gap-3 py-3"
+									className="flex items-start gap-2 sm:gap-3 py-3 px-2 sm:px-3"
 								>
-									<div className="flex h-8 w-8 shrink-0 items-center justify-center rounded-lg bg-primary/10">
-										<Icon className="h-4 w-4 text-primary" />
+									<div className="flex h-7 w-7 sm:h-8 sm:w-8 shrink-0 items-center justify-center rounded-lg bg-primary/10">
+										<Icon className="h-3.5 w-3.5 sm:h-4 sm:w-4 text-primary" />
 									</div>
-									<div className="flex-1 space-y-1">
-										<div className="flex items-center gap-2">
+									<div className="flex-1 min-w-0 space-y-1">
+										<div className="flex flex-wrap items-center gap-1.5 sm:gap-2">
 											<span className="text-sm font-medium">{algo.name}</span>
-											<span className="text-xs px-2 py-0.5 bg-purple-500/10 text-purple-500 rounded">
+											<span className="text-[10px] sm:text-xs px-1.5 sm:px-2 py-0.5 bg-purple-500/10 text-purple-500 rounded">
 												{algo.timeComplexity}
 											</span>
 											<span
-												className={`text-xs px-2 py-0.5 rounded ${
+												className={`text-[10px] sm:text-xs px-1.5 sm:px-2 py-0.5 rounded ${
 													algo.difficulty === "Easy"
 														? "bg-green-500/10 text-green-500"
 														: algo.difficulty === "Medium"
@@ -264,7 +264,9 @@ export function SearchDialog({ open, onOpenChange }: SearchDialogProps) {
 												{algo.difficulty}
 											</span>
 										</div>
-										<p className="text-xs text-muted-foreground line-clamp-1">{algo.description}</p>
+										<p className="text-xs text-muted-foreground line-clamp-2 sm:line-clamp-1">
+											{algo.description}
+										</p>
 									</div>
 								</CommandItem>
 							))}

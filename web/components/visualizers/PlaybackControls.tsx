@@ -119,31 +119,31 @@ export function PlaybackControls({
 	}, [togglePlay, goToFirst, goToPrevious, goToNext, goToLast]);
 
 	return (
-		<div className="space-y-4">
+		<div className="space-y-3 sm:space-y-4">
 			{/* Main Controls */}
-			<div className="flex items-center justify-center gap-2">
+			<div className="flex items-center justify-center gap-1 sm:gap-2">
 				<button
 					type="button"
 					onClick={goToFirst}
 					disabled={isAtStart}
-					className="p-2 border border-border rounded hover:bg-accent disabled:opacity-50 transition-colors"
+					className="p-2 sm:p-2 border border-border rounded hover:bg-accent disabled:opacity-50 transition-colors touch-manipulation"
 					title="First (Shift+←)"
 				>
-					<SkipBack className="h-4 w-4" />
+					<SkipBack className="h-4 w-4 sm:h-4 sm:w-4" />
 				</button>
 				<button
 					type="button"
 					onClick={goToPrevious}
 					disabled={isAtStart}
-					className="p-2 border border-border rounded hover:bg-accent disabled:opacity-50 transition-colors"
+					className="p-2 sm:p-2 border border-border rounded hover:bg-accent disabled:opacity-50 transition-colors touch-manipulation"
 					title="Previous (←)"
 				>
-					<StepBack className="h-4 w-4" />
+					<StepBack className="h-4 w-4 sm:h-4 sm:w-4" />
 				</button>
 				<button
 					type="button"
 					onClick={togglePlay}
-					className="p-3 bg-primary text-primary-foreground rounded-full hover:bg-primary/90 transition-colors"
+					className="p-3 sm:p-3 bg-primary text-primary-foreground rounded-full hover:bg-primary/90 transition-colors touch-manipulation"
 					title={isPlaying ? "Pause (Space)" : "Play (Space)"}
 				>
 					{isPlaying ? <Pause className="h-5 w-5" /> : <Play className="h-5 w-5" />}
@@ -152,24 +152,24 @@ export function PlaybackControls({
 					type="button"
 					onClick={goToNext}
 					disabled={isAtEnd}
-					className="p-2 border border-border rounded hover:bg-accent disabled:opacity-50 transition-colors"
+					className="p-2 sm:p-2 border border-border rounded hover:bg-accent disabled:opacity-50 transition-colors touch-manipulation"
 					title="Next (→)"
 				>
-					<StepForward className="h-4 w-4" />
+					<StepForward className="h-4 w-4 sm:h-4 sm:w-4" />
 				</button>
 				<button
 					type="button"
 					onClick={goToLast}
 					disabled={isAtEnd}
-					className="p-2 border border-border rounded hover:bg-accent disabled:opacity-50 transition-colors"
+					className="p-2 sm:p-2 border border-border rounded hover:bg-accent disabled:opacity-50 transition-colors touch-manipulation"
 					title="Last (Shift+→)"
 				>
-					<SkipForward className="h-4 w-4" />
+					<SkipForward className="h-4 w-4 sm:h-4 sm:w-4" />
 				</button>
 			</div>
 
 			{/* Speed Control */}
-			<div className="flex items-center justify-center gap-3">
+			<div className="flex items-center justify-center gap-2 sm:gap-3">
 				<span className="text-xs text-muted-foreground">Speed:</span>
 				<input
 					type="range"
@@ -178,15 +178,15 @@ export function PlaybackControls({
 					step="100"
 					value={2100 - speed}
 					onChange={(e) => setSpeed(2100 - Number(e.target.value))}
-					className="w-32 h-2 bg-border rounded-lg appearance-none cursor-pointer"
+					className="w-24 sm:w-32 h-2 bg-border rounded-lg appearance-none cursor-pointer touch-manipulation"
 					title="Speed (↑/↓)"
 				/>
-				<span className="text-xs text-muted-foreground w-16">{speed}ms</span>
+				<span className="text-xs text-muted-foreground w-12 sm:w-16">{speed}ms</span>
 			</div>
 
 			{/* Progress */}
 			<div className="flex items-center justify-center gap-2">
-				<div className="w-48 h-1 bg-border rounded-full overflow-hidden">
+				<div className="w-32 sm:w-48 h-1 bg-border rounded-full overflow-hidden">
 					<div
 						className="h-full bg-primary transition-all duration-200"
 						style={{ width: `${((currentStep + 1) / totalSteps) * 100}%` }}
@@ -197,8 +197,8 @@ export function PlaybackControls({
 				</span>
 			</div>
 
-			{/* Keyboard Hints */}
-			<div className="flex items-center justify-center gap-4 text-[10px] text-muted-foreground">
+			{/* Keyboard Hints - Hidden on mobile */}
+			<div className="hidden sm:flex items-center justify-center gap-4 text-[10px] text-muted-foreground">
 				<span>
 					<kbd className="px-1 py-0.5 bg-muted rounded text-[10px]">Space</kbd> Play/Pause
 				</span>
