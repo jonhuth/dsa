@@ -1,7 +1,9 @@
 """Algorithm execution API routes."""
 
 import json
-from flask import Blueprint, Response, request, jsonify
+
+from flask import Blueprint, Response, jsonify, request
+
 from app.services.registry import registry
 
 bp = Blueprint("algorithms", __name__, url_prefix="/api/algorithms")

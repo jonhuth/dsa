@@ -20,21 +20,20 @@ class AlgorithmRegistry:
         """Discover available algorithms."""
         # For now, manually register algorithms
         # TODO: Auto-discover from algorithms directory
-        from algorithms.sorting.bubble_sort import BubbleSort
-        from algorithms.sorting.quick_sort import QuickSort
-        from algorithms.sorting.merge_sort import MergeSort
-        from algorithms.sorting.insertion_sort import InsertionSort
-        from algorithms.sorting.selection_sort import SelectionSort
-        from algorithms.sorting.heap_sort import HeapSort
+        import importlib.util
+
+        # Import BST from the file, not the directory
         from algorithms.graphs.bfs import BFS
         from algorithms.graphs.dfs import DFS
         from algorithms.graphs.dijkstra import Dijkstra
         from algorithms.search.binary_search import BinarySearch
         from algorithms.search.linear_search import LinearSearch
-
-        # Import BST from the file, not the directory
-        import sys
-        import importlib.util
+        from algorithms.sorting.bubble_sort import BubbleSort
+        from algorithms.sorting.heap_sort import HeapSort
+        from algorithms.sorting.insertion_sort import InsertionSort
+        from algorithms.sorting.merge_sort import MergeSort
+        from algorithms.sorting.quick_sort import QuickSort
+        from algorithms.sorting.selection_sort import SelectionSort
 
         spec = importlib.util.spec_from_file_location(
             "bst_viz",
