@@ -136,6 +136,8 @@ Use these skills from `~/dev/dotfiles/ai/claude/skills/`:
 - [x] Fix test config (vitest via bun run test)
 - [x] Fix lint errors (downgrade non-critical a11y rules to warnings)
 - [x] Add BFS/DFS comprehensive tests (45 tests)
+- [x] Fix type safety (AlgorithmStep interface, remove any casts)
+- [x] Fix a11y issues (button types, label associations)
 - [ ] Add tests for Dijkstra algorithm
 - [ ] Add tests for dynamic programming algorithms (fibonacci, knapsack, lcs)
 - [ ] Add tests for tree algorithms (BST, traversals)
@@ -148,5 +150,5 @@ Use these skills from `~/dev/dotfiles/ai/claude/skills/`:
 <!-- /AUTOGEN:BACKLOG -->
 
 ---
-*Last scanned: 2026-02-18*
-*Last improved: 2026-02-18 (lint fixes, BFS/DFS tests)*
+*Last scanned: 2026-02-19*
+*Last improved: 2026-02-19 (type safety, a11y fixes)*
