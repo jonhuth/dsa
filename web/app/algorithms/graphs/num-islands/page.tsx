@@ -4,9 +4,10 @@ import { useEffect, useState } from "react";
 import { CodeViewer } from "@/components/visualizers/CodeViewer";
 import { GridVisualizer } from "@/components/visualizers/GridVisualizer";
 import { PlaybackControls } from "@/components/visualizers/PlaybackControls";
+import type { AlgorithmStep } from "@/lib/types";
 
 export default function NumIslandsPage() {
-	const [steps, setSteps] = useState<any[]>([]);
+	const [steps, setSteps] = useState<AlgorithmStep[]>([]);
 	const [currentStep, setCurrentStep] = useState(0);
 	const [isLoading, setIsLoading] = useState(false);
 	const [gridInput, setGridInput] = useState(
@@ -91,6 +92,7 @@ export default function NumIslandsPage() {
 					</div>
 					{steps.length > 0 && (
 						<button
+							type="button"
 							onClick={() => setShowCode(!showCode)}
 							className="px-4 py-2 border border-border rounded hover:bg-accent text-sm"
 						>
@@ -118,6 +120,7 @@ export default function NumIslandsPage() {
 						</p>
 					</div>
 					<button
+						type="button"
 						onClick={executeAlgorithm}
 						disabled={isLoading}
 						className="px-6 py-2 bg-primary text-primary-foreground rounded hover:bg-primary/90 disabled:opacity-50"

@@ -4,9 +4,10 @@ import { useEffect, useState } from "react";
 import { ArrayVisualizer } from "@/components/visualizers/ArrayVisualizer";
 import { CodeViewer } from "@/components/visualizers/CodeViewer";
 import { PlaybackControls } from "@/components/visualizers/PlaybackControls";
+import type { AlgorithmStep } from "@/lib/types";
 
 export default function FibonacciTabulationPage() {
-	const [steps, setSteps] = useState<any[]>([]);
+	const [steps, setSteps] = useState<AlgorithmStep[]>([]);
 	const [currentStep, setCurrentStep] = useState(0);
 	const [isLoading, setIsLoading] = useState(false);
 	const [n, setN] = useState("10");
@@ -79,6 +80,7 @@ export default function FibonacciTabulationPage() {
 					</div>
 					{steps.length > 0 && (
 						<button
+							type="button"
 							onClick={() => setShowCode(!showCode)}
 							className="px-4 py-2 border border-border rounded hover:bg-accent text-sm"
 						>
@@ -89,8 +91,8 @@ export default function FibonacciTabulationPage() {
 
 				{/* Input Controls */}
 				<div className="p-6 border border-border rounded-lg space-y-4">
-					<div>
-						<label className="block text-sm font-medium mb-2">Compute Fibonacci(n) where n =</label>
+					<label className="block">
+						<span className="block text-sm font-medium mb-2">Compute Fibonacci(n) where n =</span>
 						<input
 							type="number"
 							value={n}
@@ -103,8 +105,9 @@ export default function FibonacciTabulationPage() {
 						<p className="text-xs text-muted-foreground mt-1">
 							Range: 0-20 (larger values create too many visualization steps)
 						</p>
-					</div>
+					</label>
 					<button
+						type="button"
 						onClick={executeAlgorithm}
 						disabled={isLoading}
 						className="px-6 py-2 bg-primary text-primary-foreground rounded hover:bg-primary/90 disabled:opacity-50"

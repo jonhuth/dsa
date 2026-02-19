@@ -1,5 +1,6 @@
 import Link from "next/link";
 import registry from "@/lib/registry";
+import type { Category } from "@/lib/types";
 
 export default function HomePage() {
 	// Get all algorithms from registry
@@ -21,8 +22,8 @@ export default function HomePage() {
 		}
 	};
 
-	const categoryDisplayName = (category: string) => {
-		return registry.categories.get(category as any)?.name || category;
+	const categoryDisplayName = (category: Category) => {
+		return registry.categories.get(category)?.name || category;
 	};
 
 	return (

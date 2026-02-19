@@ -2,6 +2,23 @@
 
 export type Difficulty = "easy" | "medium" | "hard";
 
+// Algorithm execution step from Python backend
+export interface Highlight {
+	indices?: number[];
+	nodes?: (string | number)[];
+	edges?: [string | number, string | number][];
+	color?: string;
+}
+
+export interface AlgorithmStep {
+	step_number: number;
+	operation: string;
+	description: string;
+	state: Record<string, unknown>;
+	highlights?: Highlight[];
+	metadata?: Record<string, unknown>;
+}
+
 export type Category =
 	| "sorting"
 	| "searching"

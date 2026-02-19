@@ -16,9 +16,10 @@ import { CodeViewer } from "@/components/visualizers/CodeViewer";
 import { PlaybackControls } from "@/components/visualizers/PlaybackControls";
 import registry from "@/lib/registry";
 import { getPrerequisites, getRelatedAlgorithms } from "@/lib/relationships";
+import type { AlgorithmStep } from "@/lib/types";
 
 export default function BubbleSortPage() {
-	const [steps, setSteps] = useState<any[]>([]);
+	const [steps, setSteps] = useState<AlgorithmStep[]>([]);
 	const [currentStep, setCurrentStep] = useState(0);
 	const [isLoading, setIsLoading] = useState(false);
 	const [inputArray, setInputArray] = useState("5, 2, 8, 1, 9");
@@ -128,19 +129,18 @@ export default function BubbleSortPage() {
 
 						{/* Input Controls */}
 						<div className="p-4 sm:p-6 border border-border rounded-lg space-y-3 sm:space-y-4">
-							<div>
-								<label htmlFor="input-array" className="block text-sm font-medium mb-2">
+							<label className="block">
+								<span className="block text-sm font-medium mb-2">
 									Input Array (comma-separated)
-								</label>
+								</span>
 								<input
-									id="input-array"
 									type="text"
 									value={inputArray}
 									onChange={(e) => setInputArray(e.target.value)}
 									className="w-full px-3 sm:px-4 py-2 bg-background border border-border rounded text-sm sm:text-base"
 									placeholder="5, 2, 8, 1, 9"
 								/>
-							</div>
+							</label>
 							<div className="flex flex-wrap gap-2">
 								<button
 									type="button"

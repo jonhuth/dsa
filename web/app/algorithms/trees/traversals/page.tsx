@@ -4,11 +4,12 @@ import { useEffect, useState } from "react";
 import { CodeViewer } from "@/components/visualizers/CodeViewer";
 import { PlaybackControls } from "@/components/visualizers/PlaybackControls";
 import { TreeVisualizer } from "@/components/visualizers/TreeVisualizer";
+import type { AlgorithmStep } from "@/lib/types";
 
 type TraversalType = "inorder" | "preorder" | "postorder";
 
 export default function TreeTraversalsPage() {
-	const [steps, setSteps] = useState<any[]>([]);
+	const [steps, setSteps] = useState<AlgorithmStep[]>([]);
 	const [currentStep, setCurrentStep] = useState(0);
 	const [isLoading, setIsLoading] = useState(false);
 	const [traversalType, setTraversalType] = useState<TraversalType>("inorder");
@@ -91,6 +92,7 @@ export default function TreeTraversalsPage() {
 					</div>
 					{steps.length > 0 && (
 						<button
+							type="button"
 							onClick={() => setShowCode(!showCode)}
 							className="px-4 py-2 border border-border rounded hover:bg-accent text-sm"
 						>
@@ -105,6 +107,7 @@ export default function TreeTraversalsPage() {
 						<label className="block text-sm font-medium mb-2">Traversal Type</label>
 						<div className="flex gap-2">
 							<button
+								type="button"
 								onClick={() => setTraversalType("inorder")}
 								className={`px-4 py-2 rounded border ${
 									traversalType === "inorder"
@@ -115,6 +118,7 @@ export default function TreeTraversalsPage() {
 								In-order
 							</button>
 							<button
+								type="button"
 								onClick={() => setTraversalType("preorder")}
 								className={`px-4 py-2 rounded border ${
 									traversalType === "preorder"
@@ -125,6 +129,7 @@ export default function TreeTraversalsPage() {
 								Pre-order
 							</button>
 							<button
+								type="button"
 								onClick={() => setTraversalType("postorder")}
 								className={`px-4 py-2 rounded border ${
 									traversalType === "postorder"
@@ -158,6 +163,7 @@ export default function TreeTraversalsPage() {
 					</div>
 
 					<button
+						type="button"
 						onClick={executeAlgorithm}
 						disabled={isLoading}
 						className="px-6 py-2 bg-primary text-primary-foreground rounded hover:bg-primary/90 disabled:opacity-50"

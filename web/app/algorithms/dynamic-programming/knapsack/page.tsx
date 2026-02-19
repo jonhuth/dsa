@@ -128,12 +128,11 @@ export default function KnapsackPage() {
 
 				{/* Input Controls */}
 				<div className="p-6 border border-border rounded-lg space-y-4">
-					<div>
-						<label htmlFor="items-input" className="block text-sm font-medium mb-2">
+					<label className="block">
+						<span className="block text-sm font-medium mb-2">
 							Items (Array of [weight, value] pairs)
-						</label>
+						</span>
 						<textarea
-							id="items-input"
 							value={itemsInput}
 							onChange={(e) => setItemsInput(e.target.value)}
 							className="w-full px-4 py-2 bg-background border border-border rounded font-mono text-sm"
@@ -143,13 +142,10 @@ export default function KnapsackPage() {
 						<p className="text-xs text-muted-foreground mt-1">
 							Format: [[weight, value], ...] - each item has a weight and value
 						</p>
-					</div>
-					<div>
-						<label htmlFor="capacity-input" className="block text-sm font-medium mb-2">
-							Knapsack Capacity
-						</label>
+					</label>
+					<label className="block">
+						<span className="block text-sm font-medium mb-2">Knapsack Capacity</span>
 						<input
-							id="capacity-input"
 							type="number"
 							value={capacity}
 							onChange={(e) => setCapacity(e.target.value)}
@@ -161,7 +157,7 @@ export default function KnapsackPage() {
 						<p className="text-xs text-muted-foreground mt-1">
 							Maximum weight the knapsack can hold
 						</p>
-					</div>
+					</label>
 					<button
 						type="button"
 						onClick={executeAlgorithm}
