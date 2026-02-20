@@ -37,6 +37,34 @@ deployment: none       # Not deployed yet
 content: careful       # Learning accuracy matters
 ```
 
+## Guardrails
+```yaml
+# Iteration Limits
+max_attempts_per_issue: 2
+max_changes_per_day: 5
+cooldown_after_failure: 12h
+
+# Quality Gates
+tests_must_pass: true           # Algorithm correctness critical
+lint_must_pass: true
+type_check_must_pass: true
+build_must_succeed: true
+
+# Regression Prevention
+algorithm_tests_required: true  # New algos need tests
+no_new_lint_warnings: true
+bundle_size_max_increase: 10%
+
+# Escalation Triggers
+escalate_after_failures: 2
+escalate_on_regression: immediate
+escalate_if_blocked_days: 3
+
+# Content Protection
+verify_algorithm_correctness: true  # Must pass test suite
+learning_content_needs_review: true # Don't auto-change explanations
+```
+
 ## Autonomous Action Policy
 
 | Action | Policy |
