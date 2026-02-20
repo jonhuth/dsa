@@ -4,13 +4,9 @@ import type { ComplexityAnalysis } from "@/lib/types";
 
 interface ComplexityChartProps {
 	complexity: ComplexityAnalysis;
-	algorithmName: string;
 }
 
-export function ComplexityChart({
-	complexity,
-	algorithmName: _algorithmName,
-}: ComplexityChartProps) {
+export function ComplexityChart({ complexity }: ComplexityChartProps) {
 	return (
 		<div className="space-y-4">
 			<h3 className="text-lg font-semibold">Time Complexity</h3>

@@ -2,10 +2,9 @@ import type { EdgeCase } from "@/lib/types";
 
 interface EdgeCasesProps {
 	edgeCases: EdgeCase[];
-	algorithmName: string;
 }
 
-export function EdgeCases({ edgeCases, algorithmName: _algorithmName }: EdgeCasesProps) {
+export function EdgeCases({ edgeCases }: EdgeCasesProps) {
 	if (!edgeCases || edgeCases.length === 0) {
 		return null;
 	}

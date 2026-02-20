@@ -254,7 +254,7 @@ export default function BubbleSortPage() {
 						<div className="space-y-4 sm:space-y-6">
 							{/* Complexity Chart */}
 							<div className="p-4 sm:p-6 border border-border rounded-lg">
-								<ComplexityChart complexity={algorithm.complexity} algorithmName={algorithm.name} />
+								<ComplexityChart complexity={algorithm.complexity} />
 							</div>
 
 							{/* How It Works */}
@@ -268,28 +268,28 @@ export default function BubbleSortPage() {
 							{/* Key Insights */}
 							{algorithm.keyInsights && algorithm.keyInsights.length > 0 && (
 								<div className="p-4 sm:p-6 border border-border rounded-lg">
-									<KeyInsights insights={algorithm.keyInsights} algorithmName={algorithm.name} />
+									<KeyInsights insights={algorithm.keyInsights} />
 								</div>
 							)}
 
 							{/* Edge Cases */}
 							{algorithm.edgeCases && algorithm.edgeCases.length > 0 && (
 								<div className="p-4 sm:p-6 border border-border rounded-lg">
-									<EdgeCases edgeCases={algorithm.edgeCases} algorithmName={algorithm.name} />
+									<EdgeCases edgeCases={algorithm.edgeCases} />
 								</div>
 							)}
 
 							{/* When to Use */}
 							{algorithm.whenToUse && algorithm.whenToUse.length > 0 && (
 								<div className="p-4 sm:p-6 border border-border rounded-lg">
-									<WhenToUse useCases={algorithm.whenToUse} algorithmName={algorithm.name} />
+									<WhenToUse useCases={algorithm.whenToUse} />
 								</div>
 							)}
 
 							{/* Interview Tips */}
 							{algorithm.interviewTips && algorithm.interviewTips.length > 0 && (
 								<div className="p-4 sm:p-6 border border-border rounded-lg">
-									<InterviewTips tips={algorithm.interviewTips} algorithmName={algorithm.name} />
+									<InterviewTips tips={algorithm.interviewTips} />
 								</div>
 							)}
 						</div>
@@ -299,7 +299,7 @@ export default function BubbleSortPage() {
 					<div className="space-y-4 sm:space-y-6">
 						{/* Prerequisites */}
 						<div className="p-3 sm:p-4 border border-border rounded-lg">
-							<Prerequisites prerequisites={prerequisites} algorithmName={algorithm.name} />
+							<Prerequisites prerequisites={prerequisites} />
 						</div>
 
 						{/* Related Algorithms */}

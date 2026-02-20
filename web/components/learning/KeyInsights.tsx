@@ -1,9 +1,8 @@
 interface KeyInsightsProps {
 	insights: string[];
-	algorithmName: string;
 }
 
-export function KeyInsights({ insights, algorithmName: _algorithmName }: KeyInsightsProps) {
+export function KeyInsights({ insights }: KeyInsightsProps) {
 	if (!insights || insights.length === 0) {
 		return null;
 	}

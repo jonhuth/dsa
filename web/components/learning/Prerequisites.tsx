@@ -3,13 +3,9 @@ import type { AlgorithmMetadata } from "@/lib/types";
 
 interface PrerequisitesProps {
 	prerequisites: AlgorithmMetadata[];
-	algorithmName: string;
 }
 
-export function Prerequisites({
-	prerequisites,
-	algorithmName: _algorithmName,
-}: PrerequisitesProps) {
+export function Prerequisites({ prerequisites }: PrerequisitesProps) {
 	if (!prerequisites || prerequisites.length === 0) {
 		return (
 			<div className="p-4 bg-green-500/5 border border-green-500/20 rounded-lg">

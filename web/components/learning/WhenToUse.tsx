@@ -1,9 +1,8 @@
 interface WhenToUseProps {
 	useCases: string[];
-	algorithmName: string;
 }
 
-export function WhenToUse({ useCases, algorithmName: _algorithmName }: WhenToUseProps) {
+export function WhenToUse({ useCases }: WhenToUseProps) {
 	if (!useCases || useCases.length === 0) {
 		return null;
 	}

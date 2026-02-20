@@ -1,9 +1,8 @@
 interface InterviewTipsProps {
 	tips: string[];
-	algorithmName: string;
 }
 
-export function InterviewTips({ tips, algorithmName: _algorithmName }: InterviewTipsProps) {
+export function InterviewTips({ tips }: InterviewTipsProps) {
 	if (!tips || tips.length === 0) {
 		return null;
 	}

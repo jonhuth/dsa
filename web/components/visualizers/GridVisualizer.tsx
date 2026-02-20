@@ -68,6 +68,7 @@ export function GridVisualizer({
 				{grid.map((row, rowIdx) =>
 					row.map((cell, colIdx) => (
 						<div
+							// biome-ignore lint/suspicious/noArrayIndexKey: Grid cells are identified by position - row/col indices ARE the stable identifiers
 							key={`${rowIdx}-${colIdx}`}
 							className={`border flex items-center justify-center text-xs font-mono transition-colors duration-300 ${getCellColor(rowIdx, colIdx)}`}
 							style={{
