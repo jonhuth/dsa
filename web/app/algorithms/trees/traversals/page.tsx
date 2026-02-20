@@ -104,8 +104,8 @@ export default function TreeTraversalsPage() {
 				{/* Input Controls */}
 				<div className="p-6 border border-border rounded-lg space-y-4">
 					<div>
-						<label className="block text-sm font-medium mb-2">Traversal Type</label>
-						<div className="flex gap-2">
+						<span className="block text-sm font-medium mb-2">Traversal Type</span>
+						<div className="flex gap-2" role="group" aria-label="Traversal type selection">
 							<button
 								type="button"
 								onClick={() => setTraversalType("inorder")}
@@ -145,10 +145,8 @@ export default function TreeTraversalsPage() {
 						</p>
 					</div>
 
-					<div>
-						<label className="block text-sm font-medium mb-2">
-							Tree Values (level-order array)
-						</label>
+					<label className="block">
+						<span className="block text-sm font-medium mb-2">Tree Values (level-order array)</span>
 						<input
 							type="text"
 							value={treeInput}
@@ -160,7 +158,7 @@ export default function TreeTraversalsPage() {
 							Format: Array in level-order - [root, left child of root, right child of root, ...].
 							Use null for missing nodes.
 						</p>
-					</div>
+					</label>
 
 					<button
 						type="button"

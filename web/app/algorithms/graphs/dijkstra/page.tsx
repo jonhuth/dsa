@@ -136,10 +136,10 @@ export default function DijkstraPage() {
 
 				{/* Input Controls */}
 				<div className="p-6 border border-border rounded-lg space-y-4">
-					<div>
-						<label className="block text-sm font-medium mb-2">
+					<label className="block">
+						<span className="block text-sm font-medium mb-2">
 							Weighted Graph (JSON adjacency list)
-						</label>
+						</span>
 						<textarea
 							value={graphInput}
 							onChange={(e) => setGraphInput(e.target.value)}
@@ -150,10 +150,10 @@ export default function DijkstraPage() {
 						<p className="text-xs text-muted-foreground mt-1">
 							Format: {`{node: [[neighbor, weight], ...], ...}`}
 						</p>
-					</div>
+					</label>
 					<div className="grid grid-cols-2 gap-4">
-						<div>
-							<label className="block text-sm font-medium mb-2">Start Node</label>
+						<label className="block">
+							<span className="block text-sm font-medium mb-2">Start Node</span>
 							<input
 								type="text"
 								value={startNode}
@@ -161,9 +161,9 @@ export default function DijkstraPage() {
 								className="w-full px-4 py-2 bg-background border border-border rounded"
 								placeholder="0"
 							/>
-						</div>
-						<div>
-							<label className="block text-sm font-medium mb-2">Target Node (optional)</label>
+						</label>
+						<label className="block">
+							<span className="block text-sm font-medium mb-2">Target Node (optional)</span>
 							<input
 								type="text"
 								value={targetNode}
@@ -171,7 +171,7 @@ export default function DijkstraPage() {
 								className="w-full px-4 py-2 bg-background border border-border rounded"
 								placeholder="3"
 							/>
-						</div>
+						</label>
 					</div>
 					<button
 						type="button"

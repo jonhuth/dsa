@@ -95,8 +95,8 @@ export default function LCSPage() {
 
 				{/* Input Controls */}
 				<div className="p-6 border border-border rounded-lg space-y-4">
-					<div>
-						<label className="block text-sm font-medium mb-2">First String</label>
+					<label className="block">
+						<span className="block text-sm font-medium mb-2">First String</span>
 						<input
 							type="text"
 							value={str1}
@@ -104,9 +104,9 @@ export default function LCSPage() {
 							className="w-full px-4 py-2 bg-background border border-border rounded font-mono"
 							placeholder="ABCDGH"
 						/>
-					</div>
-					<div>
-						<label className="block text-sm font-medium mb-2">Second String</label>
+					</label>
+					<label className="block">
+						<span className="block text-sm font-medium mb-2">Second String</span>
 						<input
 							type="text"
 							value={str2}
@@ -114,7 +114,7 @@ export default function LCSPage() {
 							className="w-full px-4 py-2 bg-background border border-border rounded font-mono"
 							placeholder="AEDFHR"
 						/>
-					</div>
+					</label>
 					<p className="text-xs text-muted-foreground">
 						Example: "ABCDGH" and "AEDFHR" → LCS is "ADH" (length 3)
 					</p>

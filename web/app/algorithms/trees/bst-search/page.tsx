@@ -95,8 +95,8 @@ export default function BSTSearchPage() {
 
 				{/* Input Controls */}
 				<div className="p-6 border border-border rounded-lg space-y-4">
-					<div>
-						<label className="block text-sm font-medium mb-2">Tree Values (comma-separated)</label>
+					<label className="block">
+						<span className="block text-sm font-medium mb-2">Tree Values (comma-separated)</span>
 						<input
 							type="text"
 							value={treeValues}
@@ -107,9 +107,9 @@ export default function BSTSearchPage() {
 						<p className="text-xs text-muted-foreground mt-1">
 							Tree will be built from these values before searching
 						</p>
-					</div>
-					<div>
-						<label className="block text-sm font-medium mb-2">Target Value to Search</label>
+					</label>
+					<label className="block">
+						<span className="block text-sm font-medium mb-2">Target Value to Search</span>
 						<input
 							type="text"
 							value={targetValue}
@@ -117,7 +117,7 @@ export default function BSTSearchPage() {
 							className="w-full px-4 py-2 bg-background border border-border rounded"
 							placeholder="40"
 						/>
-					</div>
+					</label>
 					<button
 						type="button"
 						onClick={executeAlgorithm}

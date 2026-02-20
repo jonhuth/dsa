@@ -121,8 +121,8 @@ export default function BFSPage() {
 
 				{/* Input Controls */}
 				<div className="p-6 border border-border rounded-lg space-y-4">
-					<div>
-						<label className="block text-sm font-medium mb-2">Graph (JSON adjacency list)</label>
+					<label className="block">
+						<span className="block text-sm font-medium mb-2">Graph (JSON adjacency list)</span>
 						<textarea
 							value={graphInput}
 							onChange={(e) => setGraphInput(e.target.value)}
@@ -130,10 +130,10 @@ export default function BFSPage() {
 							rows={8}
 							placeholder='{"0": [1, 2], "1": [3], "2": [4], "3": [], "4": []}'
 						/>
-					</div>
+					</label>
 					<div className="grid grid-cols-2 gap-4">
-						<div>
-							<label className="block text-sm font-medium mb-2">Start Node</label>
+						<label className="block">
+							<span className="block text-sm font-medium mb-2">Start Node</span>
 							<input
 								type="text"
 								value={startNode}
@@ -141,9 +141,9 @@ export default function BFSPage() {
 								className="w-full px-4 py-2 bg-background border border-border rounded"
 								placeholder="0"
 							/>
-						</div>
-						<div>
-							<label className="block text-sm font-medium mb-2">Target Node (optional)</label>
+						</label>
+						<label className="block">
+							<span className="block text-sm font-medium mb-2">Target Node (optional)</span>
 							<input
 								type="text"
 								value={targetNode}
@@ -151,7 +151,7 @@ export default function BFSPage() {
 								className="w-full px-4 py-2 bg-background border border-border rounded"
 								placeholder="5"
 							/>
-						</div>
+						</label>
 					</div>
 					<button
 						type="button"

@@ -39,6 +39,7 @@ export function Header() {
 
 					{/* Centered Search Button */}
 					<button
+						type="button"
 						onClick={() => setSearchOpen(true)}
 						className="flex items-center gap-2 px-3 sm:px-4 py-2 text-sm text-muted-foreground border border-border rounded-lg hover:bg-accent transition-colors flex-1 max-w-md mx-auto touch-manipulation"
 					>

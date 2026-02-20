@@ -91,8 +91,8 @@ export default function BinarySearchPage() {
 
 				{/* Input Controls */}
 				<div className="p-6 border border-border rounded-lg space-y-4">
-					<div>
-						<label className="block text-sm font-medium mb-2">Sorted Array (comma-separated)</label>
+					<label className="block">
+						<span className="block text-sm font-medium mb-2">Sorted Array (comma-separated)</span>
 						<input
 							type="text"
 							value={inputArray}
@@ -100,9 +100,9 @@ export default function BinarySearchPage() {
 							className="w-full px-4 py-2 bg-background border border-border rounded"
 							placeholder="1, 3, 5, 7, 9"
 						/>
-					</div>
-					<div>
-						<label className="block text-sm font-medium mb-2">Target Value</label>
+					</label>
+					<label className="block">
+						<span className="block text-sm font-medium mb-2">Target Value</span>
 						<input
 							type="text"
 							value={target}
@@ -110,7 +110,7 @@ export default function BinarySearchPage() {
 							className="w-full px-4 py-2 bg-background border border-border rounded"
 							placeholder="13"
 						/>
-					</div>
+					</label>
 					<button
 						type="button"
 						onClick={executeAlgorithm}

@@ -89,10 +89,10 @@ export default function LinearSearchPage() {
 
 				{/* Input Controls */}
 				<div className="p-6 border border-border rounded-lg space-y-4">
-					<div>
-						<label className="block text-sm font-medium mb-2">
+					<label className="block">
+						<span className="block text-sm font-medium mb-2">
 							Array (comma-separated, can be unsorted)
-						</label>
+						</span>
 						<input
 							type="text"
 							value={inputArray}
@@ -100,9 +100,9 @@ export default function LinearSearchPage() {
 							className="w-full px-4 py-2 bg-background border border-border rounded"
 							placeholder="8, 3, 15, 2, 9"
 						/>
-					</div>
-					<div>
-						<label className="block text-sm font-medium mb-2">Target Value</label>
+					</label>
+					<label className="block">
+						<span className="block text-sm font-medium mb-2">Target Value</span>
 						<input
 							type="text"
 							value={target}
@@ -110,7 +110,7 @@ export default function LinearSearchPage() {
 							className="w-full px-4 py-2 bg-background border border-border rounded"
 							placeholder="9"
 						/>
-					</div>
+					</label>
 					<button
 						type="button"
 						onClick={executeAlgorithm}

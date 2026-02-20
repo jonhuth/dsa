@@ -92,8 +92,8 @@ export default function QuickSortPage() {
 
 				{/* Input Controls */}
 				<div className="p-6 border border-border rounded-lg space-y-4">
-					<div>
-						<label className="block text-sm font-medium mb-2">Input Array (comma-separated)</label>
+					<label className="block">
+						<span className="block text-sm font-medium mb-2">Input Array (comma-separated)</span>
 						<input
 							type="text"
 							value={inputArray}
@@ -101,7 +101,7 @@ export default function QuickSortPage() {
 							className="w-full px-4 py-2 bg-background border border-border rounded"
 							placeholder="5, 2, 8, 1, 9"
 						/>
-					</div>
+					</label>
 					<button
 						type="button"
 						onClick={executeAlgorithm}

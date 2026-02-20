@@ -103,10 +103,10 @@ export default function NumIslandsPage() {
 
 				{/* Input Controls */}
 				<div className="p-6 border border-border rounded-lg space-y-4">
-					<div>
-						<label className="block text-sm font-medium mb-2">
+					<label className="block">
+						<span className="block text-sm font-medium mb-2">
 							Grid (2D array where "1" = land, "0" = water)
-						</label>
+						</span>
 						<textarea
 							value={gridInput}
 							onChange={(e) => setGridInput(e.target.value)}
@@ -118,7 +118,7 @@ export default function NumIslandsPage() {
 							Format: 2D array of strings - "1" for land, "0" for water. An island is formed by
 							connecting adjacent lands horizontally or vertically.
 						</p>
-					</div>
+					</label>
 					<button
 						type="button"
 						onClick={executeAlgorithm}

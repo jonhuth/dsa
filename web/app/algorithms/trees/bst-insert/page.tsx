@@ -91,10 +91,10 @@ export default function BSTInsertPage() {
 
 				{/* Input Controls */}
 				<div className="p-6 border border-border rounded-lg space-y-4">
-					<div>
-						<label className="block text-sm font-medium mb-2">
+					<label className="block">
+						<span className="block text-sm font-medium mb-2">
 							Values to Insert (comma-separated)
-						</label>
+						</span>
 						<input
 							type="text"
 							value={inputValues}
@@ -105,7 +105,7 @@ export default function BSTInsertPage() {
 						<p className="text-xs text-muted-foreground mt-1">
 							First value becomes root, subsequent values are inserted according to BST rules
 						</p>
-					</div>
+					</label>
 					<button
 						type="button"
 						onClick={executeAlgorithm}
