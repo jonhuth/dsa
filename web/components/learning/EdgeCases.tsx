@@ -5,7 +5,7 @@ interface EdgeCasesProps {
 	algorithmName: string;
 }
 
-export function EdgeCases({ edgeCases, algorithmName }: EdgeCasesProps) {
+export function EdgeCases({ edgeCases, algorithmName: _algorithmName }: EdgeCasesProps) {
 	if (!edgeCases || edgeCases.length === 0) {
 		return null;
 	}
@@ -14,8 +14,8 @@ export function EdgeCases({ edgeCases, algorithmName }: EdgeCasesProps) {
 		<div className="space-y-4">
 			<h3 className="text-lg font-semibold">Edge Cases & Pitfalls</h3>
 			<div className="space-y-3">
-				{edgeCases.map((edgeCase, index) => (
-					<div key={index} className="p-4 bg-card border border-border rounded-lg">
+				{edgeCases.map((edgeCase) => (
+					<div key={edgeCase.name} className="p-4 bg-card border border-border rounded-lg">
 						<h4 className="font-semibold mb-2 text-sm">{edgeCase.name}</h4>
 						<p className="text-sm text-muted-foreground mb-2">{edgeCase.description}</p>
 						{edgeCase.input !== undefined && (

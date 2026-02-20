@@ -34,6 +34,7 @@ export function ArrayVisualizer({ values, highlights = [], height = 200 }: Array
 				const color = highlight?.color || "default";
 
 				return (
+					// biome-ignore lint/suspicious/noArrayIndexKey: Index-based keys are correct for sorting visualizations where positions change
 					<div key={idx} className="flex flex-col items-center gap-1 sm:gap-2 shrink-0">
 						<div
 							className={`${barWidth} ${colorClasses[color as keyof typeof colorClasses]} transition-all duration-300 rounded-t-sm`}

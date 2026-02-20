@@ -7,7 +7,10 @@ interface ComplexityChartProps {
 	algorithmName: string;
 }
 
-export function ComplexityChart({ complexity, algorithmName }: ComplexityChartProps) {
+export function ComplexityChart({
+	complexity,
+	algorithmName: _algorithmName,
+}: ComplexityChartProps) {
 	return (
 		<div className="space-y-4">
 			<h3 className="text-lg font-semibold">Time Complexity</h3>

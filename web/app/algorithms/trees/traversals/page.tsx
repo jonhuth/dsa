@@ -103,9 +103,9 @@ export default function TreeTraversalsPage() {
 
 				{/* Input Controls */}
 				<div className="p-6 border border-border rounded-lg space-y-4">
-					<div>
-						<span className="block text-sm font-medium mb-2">Traversal Type</span>
-						<div className="flex gap-2" role="group" aria-label="Traversal type selection">
+					<fieldset>
+						<legend className="block text-sm font-medium mb-2">Traversal Type</legend>
+						<div className="flex gap-2">
 							<button
 								type="button"
 								onClick={() => setTraversalType("inorder")}
@@ -143,7 +143,7 @@ export default function TreeTraversalsPage() {
 						<p className="text-xs text-muted-foreground mt-2">
 							{traversalDescriptions[traversalType]}
 						</p>
-					</div>
+					</fieldset>
 
 					<label className="block">
 						<span className="block text-sm font-medium mb-2">Tree Values (level-order array)</span>

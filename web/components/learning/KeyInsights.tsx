@@ -3,7 +3,7 @@ interface KeyInsightsProps {
 	algorithmName: string;
 }
 
-export function KeyInsights({ insights, algorithmName }: KeyInsightsProps) {
+export function KeyInsights({ insights, algorithmName: _algorithmName }: KeyInsightsProps) {
 	if (!insights || insights.length === 0) {
 		return null;
 	}
@@ -12,9 +12,9 @@ export function KeyInsights({ insights, algorithmName }: KeyInsightsProps) {
 		<div className="space-y-4">
 			<h3 className="text-lg font-semibold">💡 Key Insights</h3>
 			<div className="space-y-2">
-				{insights.map((insight, index) => (
+				{insights.map((insight) => (
 					<div
-						key={index}
+						key={insight}
 						className="flex items-start gap-3 p-3 bg-primary/5 border border-primary/20 rounded-lg"
 					>
 						<span className="text-primary mt-0.5 flex-shrink-0">•</span>

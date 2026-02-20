@@ -1,6 +1,7 @@
 "use client";
 
 import type React from "react";
+import { useId } from "react";
 
 interface TreeNode {
 	val: number;
@@ -33,6 +34,7 @@ export function TreeVisualizer({
 	width = 800,
 	height = 500,
 }: TreeVisualizerProps) {
+	const titleId = useId();
 	const colorClasses = {
 		default: "fill-gray-500 stroke-gray-700",
 		active: "fill-blue-500 stroke-blue-700",
@@ -184,7 +186,13 @@ export function TreeVisualizer({
 	}
 
 	return (
-		<svg width={width} height={height} className="border border-border rounded-lg bg-background">
+		<svg
+			width={width}
+			height={height}
+			className="border border-border rounded-lg bg-background"
+			aria-labelledby={titleId}
+		>
+			<title id={titleId}>Binary tree visualization</title>
 			{/* Edges */}
 			<g>{renderEdges(positionedTree)}</g>
 

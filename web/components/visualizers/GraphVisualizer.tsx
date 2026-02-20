@@ -1,5 +1,7 @@
 "use client";
 
+import { useId } from "react";
+
 interface GraphNode {
 	id: number;
 	label?: string;
@@ -29,6 +31,7 @@ export function GraphVisualizer({
 	width = 600,
 	height = 400,
 }: GraphVisualizerProps) {
+	const markerId = useId();
 	const colorClasses = {
 		default: "fill-gray-500 stroke-gray-700",
 		active: "fill-blue-500 stroke-blue-700",
@@ -64,36 +67,11 @@ export function GraphVisualizer({
 
 	return (
 		<svg width={width} height={height} className="border border-border rounded-lg bg-background">
-			{/* Edges */}
-			<g>
-				{edges.map((edge, idx) => {
-					const from = nodePositions[edge.from];
-					const to = nodePositions[edge.to];
-					if (!from || !to) return null;
-
-					const edgeId = `${edge.from}-${edge.to}`;
-					const highlight = highlights.find((h) => h.type === "edge" && h.id === edgeId);
-					const color = highlight?.color || "default";
-
-					return (
-						<line
-							key={idx}
-							x1={from.x}
-							y1={from.y}
-							x2={to.x}
-							y2={to.y}
-							className={`${edgeColorClasses[color as keyof typeof edgeColorClasses]} transition-all duration-300`}
-							strokeWidth={2}
-							markerEnd="url(#arrowhead)"
-						/>
-					);
-				})}
-			</g>
-
+			<title>Graph visualization</title>
 			{/* Arrowhead marker */}
 			<defs>
 				<marker
-					id="arrowhead"
+					id={markerId}
 					markerWidth="10"
 					markerHeight="10"
 					refX="9"
@@ -104,6 +82,32 @@ export function GraphVisualizer({
 					<path d="M0,0 L0,6 L9,3 z" fill="currentColor" />
 				</marker>
 			</defs>
+
+			{/* Edges */}
+			<g>
+				{edges.map((edge) => {
+					const from = nodePositions[edge.from];
+					const to = nodePositions[edge.to];
+					if (!from || !to) return null;
+
+					const edgeId = `${edge.from}-${edge.to}`;
+					const highlight = highlights.find((h) => h.type === "edge" && h.id === edgeId);
+					const color = highlight?.color || "default";
+
+					return (
+						<line
+							key={edgeId}
+							x1={from.x}
+							y1={from.y}
+							x2={to.x}
+							y2={to.y}
+							className={`${edgeColorClasses[color as keyof typeof edgeColorClasses]} transition-all duration-300`}
+							strokeWidth={2}
+							markerEnd={`url(#${markerId})`}
+						/>
+					);
+				})}
+			</g>
 
 			{/* Nodes */}
 			<g>

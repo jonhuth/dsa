@@ -6,7 +6,10 @@ interface PrerequisitesProps {
 	algorithmName: string;
 }
 
-export function Prerequisites({ prerequisites, algorithmName }: PrerequisitesProps) {
+export function Prerequisites({
+	prerequisites,
+	algorithmName: _algorithmName,
+}: PrerequisitesProps) {
 	if (!prerequisites || prerequisites.length === 0) {
 		return (
 			<div className="p-4 bg-green-500/5 border border-green-500/20 rounded-lg">

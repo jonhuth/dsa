@@ -3,7 +3,7 @@ interface WhenToUseProps {
 	algorithmName: string;
 }
 
-export function WhenToUse({ useCases, algorithmName }: WhenToUseProps) {
+export function WhenToUse({ useCases, algorithmName: _algorithmName }: WhenToUseProps) {
 	if (!useCases || useCases.length === 0) {
 		return null;
 	}
@@ -12,9 +12,9 @@ export function WhenToUse({ useCases, algorithmName }: WhenToUseProps) {
 		<div className="space-y-4">
 			<h3 className="text-lg font-semibold">When to Use</h3>
 			<div className="space-y-2">
-				{useCases.map((useCase, index) => (
+				{useCases.map((useCase) => (
 					<div
-						key={index}
+						key={useCase}
 						className="flex items-start gap-3 p-3 bg-card border border-border rounded-lg"
 					>
 						<span className="text-primary mt-0.5">✓</span>
