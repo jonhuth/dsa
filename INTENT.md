@@ -19,10 +19,10 @@ The best way to learn algorithms — see every step, understand the why, ace the
 ## Success Criteria
 
 ### Code Quality (auto-enforceable)
-- [ ] `bun run lint` — minimal warnings
-- [ ] `bun run typecheck` — 0 errors
-- [ ] `bun run build` — succeeds
-- [ ] Algorithm tests pass
+- [x] `bun run lint` — 0 errors ✅
+- [x] `bun run typecheck` — 0 errors ✅
+- [x] `bun run build` — succeeds ✅
+- [ ] Algorithm tests pass (vitest configured but minimal tests)
 
 ### Functional (manual verification)
 - [ ] Visualizations render correctly
@@ -87,28 +87,36 @@ learning_content_needs_review: true # Don't auto-change explanations
 3. For new algorithms: verify correctness manually
 4. For UI changes: screenshot before/after
 
+## What Already Exists
+- ✅ Search dialog with Cmd+K (`components/layout/SearchDialog.tsx`) — algorithms searchable
+- ✅ Algorithm registry with categories, tags, relationships (`lib/registry.ts`)
+- ✅ Visualizers: Array, Tree, Graph, Grid, PlaybackControls
+- ✅ Learning components: InterviewTips, ComplexityChart, Prerequisites, EdgeCases, KeyInsights, RelatedLinks, WhenToUse
+- ✅ Algorithm pages: 7 sorting, 2 search, 3 graphs, 4 trees, 4 dynamic programming (20 total)
+- ✅ E2E smoke tests
+- ✅ Lint passes (0 errors)
+
 ## Backlog
 
 ### 🟢 Quick Wins (< 1hr, low risk)
-- [ ] Complexity cheat sheet — O(1) to O(n!) with examples, always visible
-- [ ] Mobile touch controls — tap sides to step forward/back
-- [ ] Better loading states — skeleton UI while algorithms load
-- [ ] Algorithm search — cmd+k to find algorithms quickly
-- [ ] Copy code button — one-click copy for algorithm implementations
+- [ ] **Add error.tsx** — Create `web/app/error.tsx` for graceful error handling
+- [ ] **Add loading.tsx** — Create `web/app/loading.tsx` with algorithm-themed skeleton
+- [ ] **Complexity cheat sheet** — Add always-visible O(1) to O(n!) reference card
+- [ ] **Copy code button** — Add one-click copy to algorithm implementations in CodeViewer
+- [ ] **Mobile touch controls** — Add tap sides to step forward/back in PlaybackControls
 
 ### 🟡 Medium (few hours, moderate)
-- [ ] Code walkthrough sync — highlight current line as visualization steps
-- [ ] Related problems links — "Practice this pattern" links to LeetCode/HackerRank
-- [ ] Spaced repetition quiz — test understanding, schedule reviews
-- [ ] Custom input support — let users input their own arrays/graphs
-- [ ] Step explanations — detailed prose explaining each visualization step
+- [ ] **Code walkthrough sync** — Highlight current line in CodeViewer as visualization steps
+- [ ] **Related problems links** — Add "Practice this pattern" links to LeetCode/HackerRank in learning components
+- [ ] **Custom input support** — Let users input their own arrays/graphs for visualization
+- [ ] **Step explanations** — Add detailed prose explaining each visualization step
+- [ ] **Algorithm tests** — Add vitest unit tests for each algorithm's correctness
 
 ### 🔴 High Value (day+, significant impact)
-- [ ] Learning paths — structured progression (Arrays → Sorting → Trees → Graphs → DP)
-- [ ] Progress tracking — mark algorithms as learned, track mastery
-- [ ] Pattern recognition trainer — "What algorithm solves this?" practice
-- [ ] Mock interview mode — timed problems with hints, scoring
-- [ ] Community algorithm submissions — users can add algorithms (with review)
+- [ ] **Learning paths** — Structured progression (Arrays → Sorting → Trees → Graphs → DP)
+- [ ] **Progress tracking** — LocalStorage-based mastery tracking per algorithm
+- [ ] **Pattern recognition trainer** — "What algorithm solves this?" quiz mode
+- [ ] **Mock interview mode** — Timed problems with hints, scoring
 
 ## Next Actions
 <!-- Auto-populated by iteration loop -->
