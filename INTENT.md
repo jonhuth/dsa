@@ -87,6 +87,29 @@ learning_content_needs_review: true # Don't auto-change explanations
 3. For new algorithms: verify correctness manually
 4. For UI changes: screenshot before/after
 
+## Backlog
+
+### 🟢 Quick Wins (< 1hr, low risk)
+- [ ] Complexity cheat sheet — O(1) to O(n!) with examples, always visible
+- [ ] Mobile touch controls — tap sides to step forward/back
+- [ ] Better loading states — skeleton UI while algorithms load
+- [ ] Algorithm search — cmd+k to find algorithms quickly
+- [ ] Copy code button — one-click copy for algorithm implementations
+
+### 🟡 Medium (few hours, moderate)
+- [ ] Code walkthrough sync — highlight current line as visualization steps
+- [ ] Related problems links — "Practice this pattern" links to LeetCode/HackerRank
+- [ ] Spaced repetition quiz — test understanding, schedule reviews
+- [ ] Custom input support — let users input their own arrays/graphs
+- [ ] Step explanations — detailed prose explaining each visualization step
+
+### 🔴 High Value (day+, significant impact)
+- [ ] Learning paths — structured progression (Arrays → Sorting → Trees → Graphs → DP)
+- [ ] Progress tracking — mark algorithms as learned, track mastery
+- [ ] Pattern recognition trainer — "What algorithm solves this?" practice
+- [ ] Mock interview mode — timed problems with hints, scoring
+- [ ] Community algorithm submissions — users can add algorithms (with review)
+
 ## Next Actions
 <!-- Auto-populated by iteration loop -->
 
