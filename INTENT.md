@@ -99,7 +99,7 @@ learning_content_needs_review: true # Don't auto-change explanations
 ## Backlog
 
 ### 🟢 Quick Wins (< 1hr, low risk)
-- [ ] **Add error.tsx** — Create `web/app/error.tsx` for graceful error handling
+- [x] **Add error.tsx** — Create `web/app/error.tsx` for graceful error handling
 - [ ] **Add loading.tsx** — Create `web/app/loading.tsx` with algorithm-themed skeleton
 - [ ] **Complexity cheat sheet** — Add always-visible O(1) to O(n!) reference card
 - [ ] **Copy code button** — Add one-click copy to algorithm implementations in CodeViewer
@@ -120,6 +120,8 @@ learning_content_needs_review: true # Don't auto-change explanations
 
 ## Next Actions
 <!-- Auto-populated by iteration loop -->
+- ⚠️ **Fix typecheck failures** — ~130 errors across algorithm pages (step data type mismatches). Blocks `type_check_must_pass` guardrail. Root cause: `Highlight[]` and step state types don't match visualizer props.
 
 ## Completed
+- [x] 2026-02-21: Added `error.tsx` for graceful error handling (goal 1: better UX)
 - [x] 2026-02-20: a11y warnings fixed — 58 → 1 (goal 1: better UX)
