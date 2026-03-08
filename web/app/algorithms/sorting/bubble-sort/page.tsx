@@ -14,6 +14,7 @@ import {
 import { ArrayVisualizer } from "@/components/visualizers/ArrayVisualizer";
 import { CodeViewer } from "@/components/visualizers/CodeViewer";
 import { PlaybackControls } from "@/components/visualizers/PlaybackControls";
+import { useRandomArray } from "@/hooks/useRandomArray";
 import registry from "@/lib/registry";
 import { getPrerequisites, getRelatedAlgorithms } from "@/lib/relationships";
 import type { AlgorithmStep } from "@/lib/types";
@@ -25,6 +26,9 @@ export default function BubbleSortPage() {
 	const [inputArray, setInputArray] = useState("5, 2, 8, 1, 9");
 	const [sourceCode, setSourceCode] = useState<string>("");
 	const [showCode, setShowCode] = useState(true);
+
+	const { randomize } = useRandomArray();
+	const randomizeArray = () => setInputArray(randomize().join(", "));
 
 	// Get algorithm metadata
 	const algorithm = registry.algorithms.get("bubble_sort");
@@ -133,13 +137,23 @@ export default function BubbleSortPage() {
 								<span className="block text-sm font-medium mb-2">
 									Input Array (comma-separated)
 								</span>
-								<input
-									type="text"
-									value={inputArray}
-									onChange={(e) => setInputArray(e.target.value)}
-									className="w-full px-3 sm:px-4 py-2 bg-background border border-border rounded text-sm sm:text-base"
-									placeholder="5, 2, 8, 1, 9"
-								/>
+								<div className="flex items-center gap-2">
+									<input
+										type="text"
+										value={inputArray}
+										onChange={(e) => setInputArray(e.target.value)}
+										className="w-full px-3 sm:px-4 py-2 bg-background border border-border rounded text-sm sm:text-base"
+										placeholder="5, 2, 8, 1, 9"
+									/>
+									<button
+										type="button"
+										onClick={randomizeArray}
+										title="Randomize array"
+										className="p-2 min-w-[44px] min-h-[44px] border border-border rounded hover:bg-accent transition-colors flex items-center justify-center"
+									>
+										🎲
+									</button>
+								</div>
 							</label>
 							<div className="flex flex-wrap gap-2">
 								<button
