@@ -56,3 +56,8 @@ addopts = [
     "--cov=algorithms",
     "--cov-report=term-missing",
 ]
+
+[dependency-groups]
+dev = [
+    "ruff>=0.14.14",
+]
