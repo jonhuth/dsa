@@ -86,7 +86,7 @@ export default function InsertionSortPage() {
 							<Link href="/algorithms" className="hover:underline">
 								Algorithms
 							</Link>{" "}
-							/ {" "}
+							/{" "}
 							<Link href="/algorithms/sorting" className="hover:underline">
 								Sorting
 							</Link>{" "}
@@ -209,22 +209,32 @@ export default function InsertionSortPage() {
 											<div className="mt-3 sm:mt-4 flex justify-center gap-4 sm:gap-6 text-xs flex-wrap">
 												{currentStepData.metadata.current_key !== undefined && (
 													<div>
-														Current: <span className="font-mono">{currentStepData.metadata.current_key}</span>
+														Current:{" "}
+														<span className="font-mono">
+															{currentStepData.metadata.current_key}
+														</span>
 													</div>
 												)}
 												{currentStepData.metadata.comparisons !== undefined && (
 													<div>
-														Comparisons: <span className="font-mono">{currentStepData.metadata.comparisons}</span>
+														Comparisons:{" "}
+														<span className="font-mono">
+															{currentStepData.metadata.comparisons}
+														</span>
 													</div>
 												)}
 												{currentStepData.metadata.shifts !== undefined && (
 													<div>
-														Shifts: <span className="font-mono">{currentStepData.metadata.shifts}</span>
+														Shifts:{" "}
+														<span className="font-mono">{currentStepData.metadata.shifts}</span>
 													</div>
 												)}
 												{currentStepData.metadata.sorted_boundary !== undefined && (
 													<div>
-														Sorted Size: <span className="font-mono">{currentStepData.metadata.sorted_boundary}</span>
+														Sorted Size:{" "}
+														<span className="font-mono">
+															{currentStepData.metadata.sorted_boundary}
+														</span>
 													</div>
 												)}
 											</div>
