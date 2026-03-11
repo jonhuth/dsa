@@ -214,7 +214,12 @@ export default function DijkstraPage() {
 									<GraphVisualizer
 										nodes={nodes}
 										edges={edges}
-										highlights={(currentStepData?.highlights as any) || []}
+										highlights={
+											(currentStepData?.highlights as Array<{
+												indices?: number[];
+												color?: string;
+											}>) || []
+										}
 									/>
 								</div>
 

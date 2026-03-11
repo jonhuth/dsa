@@ -14,11 +14,11 @@ export interface AlgorithmStep {
 	step_number: number;
 	operation: string;
 	description: string;
-	// eslint-disable-next-line @typescript-eslint/no-explicit-any
+	// biome-ignore lint/suspicious/noExplicitAny: algorithm step state is heterogeneous
 	state: Record<string, any>;
-	// eslint-disable-next-line @typescript-eslint/no-explicit-any
+	// biome-ignore lint/suspicious/noExplicitAny: highlights vary per algorithm type
 	highlights?: any[];
-	// eslint-disable-next-line @typescript-eslint/no-explicit-any
+	// biome-ignore lint/suspicious/noExplicitAny: metadata is algorithm-specific
 	metadata?: Record<string, any>;
 }
 

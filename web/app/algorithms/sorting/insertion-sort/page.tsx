@@ -196,7 +196,12 @@ export default function InsertionSortPage() {
 									<div className="p-4 sm:p-6 border border-border rounded-lg order-1 md:order-2">
 										<ArrayVisualizer
 											values={(currentStepData?.state?.values as number[]) || []}
-											highlights={(currentStepData?.highlights as any) || []}
+											highlights={
+												(currentStepData?.highlights as Array<{
+													indices?: number[];
+													color?: string;
+												}>) || []
+											}
 										/>
 
 										<div className="mt-3 sm:mt-4 text-center">

@@ -158,7 +158,12 @@ export default function NumIslandsPage() {
 							<div className="p-6 border border-border rounded-lg">
 								<GridVisualizer
 									grid={(currentStepData?.state?.grid as number[][] | undefined) || []}
-									highlights={(currentStepData?.highlights as any) || []}
+									highlights={
+										(currentStepData?.highlights as Array<{
+											indices?: number[];
+											color?: string;
+										}>) || []
+									}
 								/>
 
 								{/* Step Description */}
