@@ -201,7 +201,7 @@ export default function TreeTraversalsPage() {
 							<div className="p-6 border border-border rounded-lg">
 								<TreeVisualizer
 									tree={currentStepData?.state?.tree}
-									highlights={currentStepData?.highlights || []}
+									highlights={(currentStepData?.highlights as any) || []}
 								/>
 
 								{/* Step Description */}

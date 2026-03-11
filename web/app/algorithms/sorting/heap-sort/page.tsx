@@ -140,7 +140,7 @@ export default function HeapSortPage() {
 							<div className="p-6 border border-border rounded-lg">
 								<ArrayVisualizer
 									values={(currentStepData?.state?.values as number[]) || []}
-									highlights={currentStepData?.highlights || []}
+									highlights={(currentStepData?.highlights as any) || []}
 								/>
 
 								{/* Step Description */}

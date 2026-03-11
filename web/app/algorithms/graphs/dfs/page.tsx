@@ -194,7 +194,7 @@ export default function DFSPage() {
 									<GraphVisualizer
 										nodes={nodes}
 										edges={edges}
-										highlights={currentStepData?.highlights || []}
+										highlights={(currentStepData?.highlights as any) || []}
 									/>
 								</div>
 

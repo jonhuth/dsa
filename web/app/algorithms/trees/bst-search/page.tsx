@@ -158,7 +158,7 @@ export default function BSTSearchPage() {
 								<div className="flex justify-center">
 									<TreeVisualizer
 										tree={currentStepData?.state?.tree}
-										highlights={currentStepData?.highlights || []}
+										highlights={(currentStepData?.highlights as any) || []}
 									/>
 								</div>
 
