@@ -1,4 +1,5 @@
 import { AlgorithmSearch } from "@/components/AlgorithmSearch";
+import { LearnedCounter } from "@/components/LearnedCounter";
 import registry from "@/lib/registry";
 
 export default function HomePage() {
@@ -42,10 +43,7 @@ export default function HomePage() {
 						</div>
 						<div className="text-xs sm:text-sm text-muted-foreground">Categories</div>
 					</div>
-					<div className="text-center">
-						<div className="text-2xl sm:text-3xl font-bold text-primary">100%</div>
-						<div className="text-xs sm:text-sm text-muted-foreground">Live Code</div>
-					</div>
+					<LearnedCounter totalAlgorithms={allAlgorithms.length} />
 				</div>
 			</div>
 		</div>

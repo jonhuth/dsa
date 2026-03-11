@@ -1,20 +1,42 @@
 "use client";
 
+import Link from "next/link";
 import { useEffect, useState } from "react";
+import {
+	ComplexityChart,
+	EdgeCases,
+	InterviewTips,
+	KeyInsights,
+	Prerequisites,
+	RelatedLinks,
+	WhenToUse,
+} from "@/components/learning";
 import { ArrayVisualizer } from "@/components/visualizers/ArrayVisualizer";
 import { CodeViewer } from "@/components/visualizers/CodeViewer";
 import { PlaybackControls } from "@/components/visualizers/PlaybackControls";
+import { useLearnedState } from "@/hooks/useLearnedState";
+import { useRandomArray } from "@/hooks/useRandomArray";
+import { useStepHash } from "@/hooks/useStepHash";
+import registry from "@/lib/registry";
+import { getPrerequisites, getRelatedAlgorithms } from "@/lib/relationships";
 import type { AlgorithmStep } from "@/lib/types";
 
 export default function MergeSortPage() {
 	const [steps, setSteps] = useState<AlgorithmStep[]>([]);
-	const [currentStep, setCurrentStep] = useState(0);
+	const [currentStep, setCurrentStep] = useStepHash(steps.length);
 	const [isLoading, setIsLoading] = useState(false);
 	const [inputArray, setInputArray] = useState("5, 2, 8, 1, 9");
 	const [sourceCode, setSourceCode] = useState<string>("");
 	const [showCode, setShowCode] = useState(true);
+	const [isLearned, toggleLearned] = useLearnedState("merge_sort");
 
-	// Fetch source code on mount
+	const { randomize } = useRandomArray();
+	const randomizeArray = () => setInputArray(randomize().join(", "));
+
+	const algorithm = registry.algorithms.get("merge_sort");
+	const relatedAlgorithms = algorithm ? getRelatedAlgorithms("merge_sort") : [];
+	const prerequisites = algorithm ? getPrerequisites("merge_sort") : [];
+
 	useEffect(() => {
 		const fetchSource = async () => {
 			try {
@@ -31,8 +53,7 @@ export default function MergeSortPage() {
 	const executeAlgorithm = async () => {
 		setIsLoading(true);
 		try {
-			// Parse input
-			const arr = inputArray.split(",").map((n) => parseInt(n.trim(), 10));
+			const arr = inputArray.split(",").map((n) => Number.parseInt(n.trim(), 10));
 
 			const response = await fetch("/api/algorithms/merge_sort/execute", {
 				method: "POST",
@@ -55,239 +76,299 @@ export default function MergeSortPage() {
 	const currentStepData = steps[currentStep];
 	const currentLine = currentStepData?.metadata?.source_line;
 
+	if (!algorithm) {
+		return <div>Algorithm not found</div>;
+	}
+
 	return (
 		<div className="min-h-screen p-4 sm:p-6 lg:p-8">
-			<div className="max-w-7xl mx-auto space-y-8">
-				{/* Breadcrumb */}
-				<div className="text-sm text-muted-foreground">
-					<a href="/algorithms" className="hover:underline">
-						Algorithms
-					</a>{" "}
-					/{" "}
-					<a href="/algorithms/sorting" className="hover:underline">
-						Sorting
-					</a>{" "}
-					/ Merge Sort
-				</div>
+			<div className="max-w-7xl mx-auto">
+				<div className="grid grid-cols-1 lg:grid-cols-3 gap-4 sm:gap-6 lg:gap-8">
+					{/* Main Content */}
+					<div className="lg:col-span-2 space-y-4 sm:space-y-6 lg:space-y-8">
+						{/* Breadcrumb */}
+						<div className="text-sm text-muted-foreground">
+							<Link href="/algorithms" className="hover:underline">
+								Algorithms
+							</Link>{" "}
+							/{" "}
+							<Link href="/algorithms/sorting" className="hover:underline">
+								Sorting
+							</Link>{" "}
+							/ {algorithm.name}
+						</div>
 
-				{/* Header */}
-				<div className="flex items-start justify-between">
-					<div>
-						<h1 className="text-2xl sm:text-3xl lg:text-4xl font-bold mb-2">Merge Sort</h1>
-						<p className="text-muted-foreground">
-							Stable divide-and-conquer sorting with guaranteed O(n log n) performance
-						</p>
-					</div>
-					{steps.length > 0 && (
-						<button
-							type="button"
-							onClick={() => setShowCode(!showCode)}
-							className="px-4 py-2 border border-border rounded hover:bg-accent text-sm"
-						>
-							{showCode ? "Hide Code" : "Show Code"}
-						</button>
-					)}
-				</div>
-
-				{/* Input Controls */}
-				<div className="p-6 border border-border rounded-lg space-y-4">
-					<label className="block">
-						<span className="block text-sm font-medium mb-2">Input Array (comma-separated)</span>
-						<input
-							type="text"
-							value={inputArray}
-							onChange={(e) => setInputArray(e.target.value)}
-							className="w-full px-4 py-2 bg-background border border-border rounded"
-							placeholder="5, 2, 8, 1, 9"
-						/>
-					</label>
-					<button
-						type="button"
-						onClick={executeAlgorithm}
-						disabled={isLoading}
-						className="px-6 py-2 bg-primary text-primary-foreground rounded hover:bg-primary/90 disabled:opacity-50"
-					>
-						{isLoading ? "Running..." : "Run Algorithm"}
-					</button>
-				</div>
-
-				{/* Visualization */}
-				{steps.length > 0 && (
-					<div className="space-y-4">
-						{/* Split-pane layout: Code + Visualization */}
-						<div className={`grid ${showCode ? "grid-cols-2" : "grid-cols-1"} gap-4`}>
-							{/* Code Viewer */}
-							{showCode && sourceCode && (
-								<div className="border border-border rounded-lg overflow-hidden">
-									<div className="bg-card p-3 border-b border-border">
-										<h3 className="font-semibold text-sm">
-											Live Code Execution
-											{currentLine && (
-												<span className="ml-2 text-xs text-muted-foreground">
-													Line {currentLine}
-												</span>
-											)}
-										</h3>
-									</div>
-									<CodeViewer
-										code={sourceCode}
-										highlightedLine={currentLine as number | undefined}
-									/>
+						{/* Header */}
+						<div>
+							<div className="flex flex-wrap items-center gap-2 sm:gap-3 mb-2">
+								<h1 className="text-2xl sm:text-3xl lg:text-4xl font-bold">{algorithm.name}</h1>
+								<span
+									className={`px-2 sm:px-3 py-1 rounded text-xs sm:text-sm ${
+										algorithm.difficulty === "easy"
+											? "bg-green-500/10 text-green-500"
+											: algorithm.difficulty === "medium"
+												? "bg-yellow-500/10 text-yellow-500"
+												: "bg-red-500/10 text-red-500"
+									}`}
+								>
+									{algorithm.difficulty.charAt(0).toUpperCase() + algorithm.difficulty.slice(1)}
+								</span>
+								<button
+									type="button"
+									onClick={toggleLearned}
+									className={`px-3 py-1 rounded text-xs sm:text-sm border transition-colors ${
+										isLearned
+											? "bg-green-500/10 text-green-500 border-green-500/30"
+											: "border-border hover:bg-accent"
+									}`}
+								>
+									{isLearned ? "✓ Learned" : "Mark as learned"}
+								</button>
+							</div>
+							<p className="text-sm sm:text-base text-muted-foreground">{algorithm.description}</p>
+							{algorithm.tags && algorithm.tags.length > 0 && (
+								<div className="flex flex-wrap gap-1.5 sm:gap-2 mt-2 sm:mt-3">
+									{algorithm.tags.map((tag) => (
+										<span
+											key={tag}
+											className="text-xs px-2 py-1 bg-background border border-border rounded"
+										>
+											{tag}
+										</span>
+									))}
 								</div>
 							)}
+						</div>
 
-							{/* Array Visualization */}
-							<div className="p-6 border border-border rounded-lg">
-								<ArrayVisualizer
-									values={(currentStepData?.state?.values as number[]) || []}
-									highlights={
-										(currentStepData?.highlights as Array<{
-											indices?: number[];
-											color?: string;
-										}>) || []
-									}
-								/>
-
-								{/* Step Description */}
-								<div className="mt-4 text-center">
-									<p className="text-sm font-medium">{currentStepData?.description}</p>
-									<p className="text-xs text-muted-foreground mt-1">
-										Step {currentStep + 1} of {steps.length}
-									</p>
+						{/* Input Controls */}
+						<div className="p-4 sm:p-6 border border-border rounded-lg space-y-3 sm:space-y-4">
+							<label className="block">
+								<span className="block text-sm font-medium mb-2">
+									Input Array (comma-separated)
+								</span>
+								<div className="flex items-center gap-2">
+									<input
+										type="text"
+										value={inputArray}
+										onChange={(e) => setInputArray(e.target.value)}
+										className="w-full px-3 sm:px-4 py-2 bg-background border border-border rounded text-sm sm:text-base"
+										placeholder="5, 2, 8, 1, 9"
+									/>
+									<button
+										type="button"
+										onClick={randomizeArray}
+										title="Randomize array"
+										className="p-2 min-w-[44px] min-h-[44px] border border-border rounded hover:bg-accent transition-colors flex items-center justify-center"
+									>
+										🎲
+									</button>
 								</div>
-
-								{/* Metadata */}
-								{currentStepData?.metadata && (
-									<div className="mt-4 flex justify-center gap-6 text-xs">
-										{currentStepData.metadata.comparisons !== undefined && (
-											<div>
-												Comparisons:{" "}
-												<span className="font-mono">
-													{currentStepData.metadata.comparisons as number}
-												</span>
-											</div>
-										)}
-										{currentStepData.metadata.merges !== undefined && (
-											<div>
-												Merges: <span className="font-mono">{currentStepData.metadata.merges}</span>
-											</div>
-										)}
-										{currentStepData.metadata.array_accesses !== undefined && (
-											<div>
-												Array Accesses:{" "}
-												<span className="font-mono">{currentStepData.metadata.array_accesses}</span>
-											</div>
-										)}
-									</div>
+							</label>
+							<div className="flex flex-wrap gap-2">
+								<button
+									type="button"
+									onClick={executeAlgorithm}
+									disabled={isLoading}
+									className="px-4 sm:px-6 py-2 bg-primary text-primary-foreground rounded hover:bg-primary/90 disabled:opacity-50 text-sm sm:text-base touch-manipulation"
+								>
+									{isLoading ? "Running..." : "Run Algorithm"}
+								</button>
+								{steps.length > 0 && (
+									<button
+										type="button"
+										onClick={() => setShowCode(!showCode)}
+										className="px-3 sm:px-4 py-2 border border-border rounded hover:bg-accent text-sm touch-manipulation"
+									>
+										{showCode ? "Hide Code" : "Show Code"}
+									</button>
 								)}
 							</div>
 						</div>
 
-						{/* Color Legend */}
-						<div className="flex items-center justify-center gap-6 text-xs">
-							<div className="flex items-center gap-2">
-								<div className="w-4 h-4 bg-yellow-500 rounded" />
-								<span>Left Subarray</span>
+						{/* Visualization */}
+						{steps.length > 0 && (
+							<div className="space-y-3 sm:space-y-4">
+								<div
+									className={`grid ${showCode ? "grid-cols-1 md:grid-cols-2" : "grid-cols-1"} gap-3 sm:gap-4`}
+								>
+									{showCode && sourceCode && (
+										<div className="border border-border rounded-lg overflow-hidden order-2 md:order-1">
+											<div className="bg-card p-2 sm:p-3 border-b border-border">
+												<h3 className="font-semibold text-xs sm:text-sm">
+													Live Code Execution
+													{currentLine && (
+														<span className="ml-2 text-xs text-muted-foreground">
+															Line {currentLine}
+														</span>
+													)}
+												</h3>
+											</div>
+											<CodeViewer
+												code={sourceCode}
+												highlightedLine={currentLine as number | undefined}
+											/>
+										</div>
+									)}
+
+									<div className="p-4 sm:p-6 border border-border rounded-lg order-1 md:order-2">
+										<ArrayVisualizer
+											values={(currentStepData?.state?.values as number[]) || []}
+											highlights={
+												(currentStepData?.highlights as Array<{
+													indices?: number[];
+													color?: string;
+												}>) || []
+											}
+										/>
+
+										<div className="mt-3 sm:mt-4 text-center">
+											<p className="text-xs sm:text-sm font-medium">
+												{currentStepData?.description}
+											</p>
+											<p className="text-xs text-muted-foreground mt-1">
+												Step {currentStep + 1} of {steps.length}
+											</p>
+										</div>
+
+										{currentStepData?.metadata && (
+											<div className="mt-3 sm:mt-4 flex justify-center gap-4 sm:gap-6 text-xs flex-wrap">
+												{currentStepData.metadata.comparisons !== undefined && (
+													<div>
+														Comparisons:{" "}
+														<span className="font-mono">
+															{currentStepData.metadata.comparisons as number}
+														</span>
+													</div>
+												)}
+												{currentStepData.metadata.merges !== undefined && (
+													<div>
+														Merges:{" "}
+														<span className="font-mono">{currentStepData.metadata.merges}</span>
+													</div>
+												)}
+												{currentStepData.metadata.array_accesses !== undefined && (
+													<div>
+														Array Accesses:{" "}
+														<span className="font-mono">
+															{currentStepData.metadata.array_accesses}
+														</span>
+													</div>
+												)}
+											</div>
+										)}
+									</div>
+								</div>
+
+								{/* Color Legend — left=comparing (yellow), right=active (blue), placed=swapped (green), merged=sorted (purple) */}
+								<div className="flex items-center justify-center gap-4 sm:gap-6 text-xs flex-wrap">
+									<div className="flex items-center gap-2">
+										<div className="w-4 h-4 bg-yellow-500 rounded" />
+										<span>Left Subarray</span>
+									</div>
+									<div className="flex items-center gap-2">
+										<div className="w-4 h-4 bg-blue-500 rounded" />
+										<span>Right Subarray</span>
+									</div>
+									<div className="flex items-center gap-2">
+										<div className="w-4 h-4 bg-green-500 rounded" />
+										<span>Placed</span>
+									</div>
+									<div className="flex items-center gap-2">
+										<div className="w-4 h-4 bg-purple-500 rounded" />
+										<span>Merged Range</span>
+									</div>
+								</div>
+
+								<PlaybackControls
+									currentStep={currentStep}
+									totalSteps={steps.length}
+									onStepChange={setCurrentStep}
+								/>
 							</div>
-							<div className="flex items-center gap-2">
-								<div className="w-4 h-4 bg-blue-500 rounded" />
-								<span>Right Subarray</span>
+						)}
+
+						{/* Learning Content */}
+						<div className="space-y-4 sm:space-y-6">
+							<div className="p-4 sm:p-6 border border-border rounded-lg">
+								<ComplexityChart complexity={algorithm.complexity} />
 							</div>
-							<div className="flex items-center gap-2">
-								<div className="w-4 h-4 bg-green-500 rounded" />
-								<span>Placed</span>
-							</div>
-							<div className="flex items-center gap-2">
-								<div className="w-4 h-4 bg-purple-500 rounded" />
-								<span>Merged Range</span>
-							</div>
+
+							{algorithm.howItWorks && (
+								<div className="p-4 sm:p-6 border border-border rounded-lg">
+									<h2 className="text-xl sm:text-2xl font-semibold mb-3 sm:mb-4">How It Works</h2>
+									<p className="text-sm leading-relaxed">{algorithm.howItWorks}</p>
+								</div>
+							)}
+
+							{algorithm.keyInsights && algorithm.keyInsights.length > 0 && (
+								<div className="p-4 sm:p-6 border border-border rounded-lg">
+									<KeyInsights insights={algorithm.keyInsights} />
+								</div>
+							)}
+
+							{algorithm.edgeCases && algorithm.edgeCases.length > 0 && (
+								<div className="p-4 sm:p-6 border border-border rounded-lg">
+									<EdgeCases edgeCases={algorithm.edgeCases} />
+								</div>
+							)}
+
+							{algorithm.whenToUse && algorithm.whenToUse.length > 0 && (
+								<div className="p-4 sm:p-6 border border-border rounded-lg">
+									<WhenToUse useCases={algorithm.whenToUse} />
+								</div>
+							)}
+
+							{algorithm.interviewTips && algorithm.interviewTips.length > 0 && (
+								<div className="p-4 sm:p-6 border border-border rounded-lg">
+									<InterviewTips tips={algorithm.interviewTips} />
+								</div>
+							)}
+						</div>
+					</div>
+
+					{/* Sidebar */}
+					<div className="space-y-4 sm:space-y-6">
+						<div className="p-3 sm:p-4 border border-border rounded-lg">
+							<Prerequisites prerequisites={prerequisites} />
 						</div>
 
-						{/* Playback Controls */}
-						<PlaybackControls
-							currentStep={currentStep}
-							totalSteps={steps.length}
-							onStepChange={setCurrentStep}
-						/>
-					</div>
-				)}
-
-				{/* Documentation */}
-				<div className="space-y-6">
-					<div className="p-6 border border-border rounded-lg">
-						<h2 className="text-2xl font-semibold mb-4">Complexity Analysis</h2>
-						<div className="grid grid-cols-2 gap-4">
-							<div>
-								<h3 className="font-medium mb-2">Time Complexity</h3>
-								<ul className="text-sm space-y-1">
-									<li>Best: O(n log n)</li>
-									<li>Average: O(n log n)</li>
-									<li>Worst: O(n log n) - guaranteed!</li>
-								</ul>
-							</div>
-							<div>
-								<h3 className="font-medium mb-2">Space Complexity</h3>
-								<p className="text-sm">O(n) - requires extra space for merging</p>
-							</div>
+						<div className="p-3 sm:p-4 border border-border rounded-lg">
+							<RelatedLinks
+								algorithms={relatedAlgorithms}
+								title="Related Algorithms"
+								emptyMessage="No related algorithms"
+							/>
 						</div>
-					</div>
 
-					<div className="p-6 border border-border rounded-lg">
-						<h2 className="text-2xl font-semibold mb-4">How It Works</h2>
-						<ol className="text-sm space-y-2 list-decimal list-inside">
-							<li>Divide the array into two halves</li>
-							<li>Recursively sort the left half</li>
-							<li>Recursively sort the right half</li>
-							<li>Merge the two sorted halves into one sorted array</li>
-							<li>Base case: arrays of size ≤ 1 are already sorted</li>
-						</ol>
-					</div>
-
-					<div className="p-6 border border-border rounded-lg">
-						<h2 className="text-2xl font-semibold mb-4">Key Insights</h2>
-						<ul className="text-sm space-y-2">
-							<li>⚡ Divide-and-conquer: splits problem recursively</li>
-							<li>✅ Stable: preserves relative order of equal elements</li>
-							<li>✅ Predictable: O(n log n) guaranteed, no worst-case degradation</li>
-							<li>❌ Not in-place: requires O(n) extra space</li>
-							<li>⚡ Great for external sorting (sorting data that doesn't fit in memory)</li>
-							<li>💡 No worst-case scenario unlike Quick Sort</li>
-							<li>🔍 Easy to parallelize (each half can be sorted independently)</li>
-						</ul>
-					</div>
-
-					<div className="p-6 border border-border rounded-lg">
-						<h2 className="text-2xl font-semibold mb-4">When to Use</h2>
-						<ul className="text-sm space-y-2">
-							<li>✅ When stability is required (preserve order of equal elements)</li>
-							<li>✅ When worst-case O(n log n) guarantee is needed</li>
-							<li>✅ For external sorting (large datasets that don't fit in memory)</li>
-							<li>✅ When parallelization is beneficial</li>
-							<li>❌ When memory is extremely limited (use Quick Sort or Heap Sort)</li>
-							<li>❌ When in-place sorting is required</li>
-						</ul>
-					</div>
-
-					<div className="p-6 border border-border rounded-lg">
-						<h2 className="text-2xl font-semibold mb-4">Comparison with Quick Sort</h2>
-						<div className="grid grid-cols-2 gap-4 text-sm">
-							<div>
-								<h3 className="font-medium mb-2 text-purple-400">Merge Sort</h3>
-								<ul className="space-y-1">
-									<li>✅ O(n log n) guaranteed</li>
-									<li>✅ Stable</li>
-									<li>❌ O(n) extra space</li>
-									<li>⚡ Great for linked lists</li>
-								</ul>
-							</div>
-							<div>
-								<h3 className="font-medium mb-2 text-blue-400">Quick Sort</h3>
-								<ul className="space-y-1">
-									<li>❌ O(n²) worst case</li>
-									<li>❌ Not stable</li>
-									<li>✅ O(log n) space (in-place)</li>
-									<li>⚡ Often faster in practice</li>
-								</ul>
+						<div className="p-3 sm:p-4 border border-border rounded-lg space-y-2 sm:space-y-3">
+							<h3 className="font-semibold text-sm sm:text-base">Quick Stats</h3>
+							<div className="space-y-2 text-xs sm:text-sm">
+								<div className="flex justify-between">
+									<span className="text-muted-foreground">Category:</span>
+									<span className="font-medium capitalize">{algorithm.category}</span>
+								</div>
+								<div className="flex justify-between">
+									<span className="text-muted-foreground">Difficulty:</span>
+									<span
+										className={`font-medium capitalize ${
+											algorithm.difficulty === "easy"
+												? "text-green-500"
+												: algorithm.difficulty === "medium"
+													? "text-yellow-500"
+													: "text-red-500"
+										}`}
+									>
+										{algorithm.difficulty}
+									</span>
+								</div>
+								<div className="flex justify-between">
+									<span className="text-muted-foreground">Avg Time:</span>
+									<span className="font-mono text-xs">{algorithm.complexity.time.average}</span>
+								</div>
+								<div className="flex justify-between">
+									<span className="text-muted-foreground">Space:</span>
+									<span className="font-mono text-xs">{algorithm.complexity.space}</span>
+								</div>
 							</div>
 						</div>
 					</div>
