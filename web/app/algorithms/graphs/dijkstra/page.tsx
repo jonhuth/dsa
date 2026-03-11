@@ -201,7 +201,10 @@ export default function DijkstraPage() {
 											)}
 										</h3>
 									</div>
-									<CodeViewer code={sourceCode} highlightedLine={currentLine} />
+									<CodeViewer
+										code={sourceCode}
+										highlightedLine={currentLine as number | undefined}
+									/>
 								</div>
 							)}
 

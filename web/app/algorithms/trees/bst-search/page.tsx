@@ -146,7 +146,10 @@ export default function BSTSearchPage() {
 											)}
 										</h3>
 									</div>
-									<CodeViewer code={sourceCode} highlightedLine={currentLine} />
+									<CodeViewer
+										code={sourceCode}
+										highlightedLine={currentLine as number | undefined}
+									/>
 								</div>
 							)}
 

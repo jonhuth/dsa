@@ -186,7 +186,10 @@ export default function InsertionSortPage() {
 													)}
 												</h3>
 											</div>
-											<CodeViewer code={sourceCode} highlightedLine={currentLine} />
+											<CodeViewer
+												code={sourceCode}
+												highlightedLine={currentLine as number | undefined}
+											/>
 										</div>
 									)}
 

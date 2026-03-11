@@ -191,7 +191,10 @@ export default function BinarySearchPage() {
 													)}
 												</h3>
 											</div>
-											<CodeViewer code={sourceCode} highlightedLine={currentLine} />
+											<CodeViewer
+												code={sourceCode}
+												highlightedLine={currentLine as number | undefined}
+											/>
 										</div>
 									)}
 
