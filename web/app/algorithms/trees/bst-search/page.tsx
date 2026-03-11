@@ -176,7 +176,9 @@ export default function BSTSearchPage() {
 										{currentStepData.metadata.comparisons !== undefined && (
 											<div>
 												Comparisons:{" "}
-												<span className="font-mono">{currentStepData.metadata.comparisons}</span>
+												<span className="font-mono">
+													{currentStepData.metadata.comparisons as number}
+												</span>
 											</div>
 										)}
 										{currentStepData.metadata.target !== undefined && (
@@ -188,7 +190,7 @@ export default function BSTSearchPage() {
 											<div>
 												Path:{" "}
 												<span className="font-mono">
-													{currentStepData.metadata.path.join(" → ")}
+													{(currentStepData.metadata.path as number[]).join(" → ")}
 												</span>
 											</div>
 										)}

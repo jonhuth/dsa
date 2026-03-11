@@ -16,7 +16,7 @@ export interface AlgorithmStep {
 	description: string;
 	state: Record<string, unknown>;
 	highlights?: unknown[];
-	metadata?: Record<string, string | number | boolean | null | undefined>;
+	metadata?: Record<string, unknown>;
 }
 
 export type Category =

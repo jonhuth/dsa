@@ -176,7 +176,7 @@ export default function NumIslandsPage() {
 											<div>
 												Islands Found:{" "}
 												<span className="font-mono font-bold">
-													{currentStepData.metadata.island_count}
+													{currentStepData.metadata.island_count as number}
 												</span>
 											</div>
 										)}
@@ -190,8 +190,8 @@ export default function NumIslandsPage() {
 											<div>
 												Position:{" "}
 												<span className="font-mono">
-													({currentStepData.metadata.current_pos[0]},{" "}
-													{currentStepData.metadata.current_pos[1]})
+													({(currentStepData.metadata.current_pos as number[])[0]},{" "}
+													{(currentStepData.metadata.current_pos as number[])[1]})
 												</span>
 											</div>
 										)}
@@ -199,7 +199,8 @@ export default function NumIslandsPage() {
 											<div>
 												Grid Size:{" "}
 												<span className="font-mono">
-													{currentStepData.metadata.rows} × {currentStepData.metadata.cols}
+													{currentStepData.metadata.rows as number} ×{" "}
+													{currentStepData.metadata.cols as number}
 												</span>
 											</div>
 										)}

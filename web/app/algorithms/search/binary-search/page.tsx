@@ -222,7 +222,7 @@ export default function BinarySearchPage() {
 													<div>
 														Comparisons:{" "}
 														<span className="font-mono">
-															{currentStepData.metadata.comparisons}
+															{currentStepData.metadata.comparisons as number}
 														</span>
 													</div>
 												)}

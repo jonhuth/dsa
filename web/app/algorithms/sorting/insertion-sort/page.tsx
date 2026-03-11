@@ -214,7 +214,7 @@ export default function InsertionSortPage() {
 													<div>
 														Current:{" "}
 														<span className="font-mono">
-															{currentStepData.metadata.current_key}
+															{currentStepData.metadata.current_key as number}
 														</span>
 													</div>
 												)}
@@ -222,7 +222,7 @@ export default function InsertionSortPage() {
 													<div>
 														Comparisons:{" "}
 														<span className="font-mono">
-															{currentStepData.metadata.comparisons}
+															{currentStepData.metadata.comparisons as number}
 														</span>
 													</div>
 												)}
@@ -236,7 +236,7 @@ export default function InsertionSortPage() {
 													<div>
 														Sorted Size:{" "}
 														<span className="font-mono">
-															{currentStepData.metadata.sorted_boundary}
+															{currentStepData.metadata.sorted_boundary as number}
 														</span>
 													</div>
 												)}

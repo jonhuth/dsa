@@ -180,7 +180,7 @@ export default function FibonacciMemoizationPage() {
 											<div>
 												Recursive Calls:{" "}
 												<span className="font-mono">
-													{currentStepData.metadata.recursive_calls}
+													{currentStepData.metadata.recursive_calls as number}
 												</span>
 											</div>
 										)}

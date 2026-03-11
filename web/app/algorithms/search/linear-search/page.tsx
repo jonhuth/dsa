@@ -167,7 +167,9 @@ export default function LinearSearchPage() {
 										{currentStepData.metadata.comparisons !== undefined && (
 											<div>
 												Comparisons:{" "}
-												<span className="font-mono">{currentStepData.metadata.comparisons}</span>
+												<span className="font-mono">
+													{currentStepData.metadata.comparisons as number}
+												</span>
 											</div>
 										)}
 										{currentStepData.metadata.current_index !== undefined && (

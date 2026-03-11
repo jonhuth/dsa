@@ -218,7 +218,9 @@ export default function LCSPage() {
 										{currentStepData.metadata.comparisons !== undefined && (
 											<div>
 												Comparisons:{" "}
-												<span className="font-mono">{currentStepData.metadata.comparisons}</span>
+												<span className="font-mono">
+													{currentStepData.metadata.comparisons as number}
+												</span>
 											</div>
 										)}
 									</div>

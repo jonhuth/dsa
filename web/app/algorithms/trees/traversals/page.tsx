@@ -217,7 +217,7 @@ export default function TreeTraversalsPage() {
 									<div className="mt-4 text-center">
 										<p className="text-xs text-muted-foreground mb-1">Traversal Order:</p>
 										<p className="font-mono text-sm font-bold">
-											[{currentStepData.metadata.order.join(", ")}]
+											[{(currentStepData.metadata.order as number[]).join(", ")}]
 										</p>
 									</div>
 								)}

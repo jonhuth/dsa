@@ -239,7 +239,7 @@ export default function DijkstraPage() {
 											<div>
 												Distance:{" "}
 												<span className="font-mono">
-													{currentStepData.metadata.current_distance}
+													{currentStepData.metadata.current_distance as number}
 												</span>
 											</div>
 										)}
