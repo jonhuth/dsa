@@ -14,9 +14,12 @@ export interface AlgorithmStep {
 	step_number: number;
 	operation: string;
 	description: string;
-	state: Record<string, unknown>;
-	highlights?: unknown[];
-	metadata?: Record<string, unknown>;
+	// eslint-disable-next-line @typescript-eslint/no-explicit-any
+	state: Record<string, any>;
+	// eslint-disable-next-line @typescript-eslint/no-explicit-any
+	highlights?: any[];
+	// eslint-disable-next-line @typescript-eslint/no-explicit-any
+	metadata?: Record<string, any>;
 }
 
 export type Category =

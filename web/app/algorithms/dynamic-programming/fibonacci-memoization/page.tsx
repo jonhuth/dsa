@@ -162,7 +162,7 @@ export default function FibonacciMemoizationPage() {
 										{currentStepData.metadata.n !== undefined && (
 											<div>
 												Computing:{" "}
-												<span className="font-mono">F({currentStepData.metadata.n})</span>
+												<span className="font-mono">F({currentStepData.metadata.n as number})</span>
 											</div>
 										)}
 										{currentStepData.metadata.result !== undefined && (
