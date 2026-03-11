@@ -145,7 +145,7 @@ export default function BSTInsertPage() {
 							<div className="p-6 border border-border rounded-lg">
 								<div className="flex justify-center">
 									<TreeVisualizer
-										tree={currentStepData?.state?.tree}
+										tree={currentStepData?.state?.tree as any}
 										highlights={(currentStepData?.highlights as any) || []}
 									/>
 								</div>

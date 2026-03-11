@@ -157,7 +157,7 @@ export default function NumIslandsPage() {
 							{/* Grid Visualization */}
 							<div className="p-6 border border-border rounded-lg">
 								<GridVisualizer
-									grid={currentStepData?.state?.grid || []}
+									grid={(currentStepData?.state?.grid as number[][] | undefined) || []}
 									highlights={(currentStepData?.highlights as any) || []}
 								/>
 
