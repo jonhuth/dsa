@@ -10,6 +10,13 @@ interface PlaybackControlsProps {
 	defaultSpeed?: number;
 }
 
+const SPEED_OPTIONS = [
+	{ label: "0.5x", ms: 1000 },
+	{ label: "1x", ms: 500 },
+	{ label: "2x", ms: 250 },
+	{ label: "3x", ms: 167 },
+];
+
 export function PlaybackControls({
 	currentStep,
 	totalSteps,
@@ -18,6 +25,7 @@ export function PlaybackControls({
 }: PlaybackControlsProps) {
 	const [isPlaying, setIsPlaying] = useState(false);
 	const [speed, setSpeed] = useState(defaultSpeed);
+	const [showShortcuts, setShowShortcuts] = useState(false);
 
 	const isAtStart = currentStep === 0;
 	const isAtEnd = currentStep === totalSteps - 1;
@@ -98,18 +106,17 @@ export function PlaybackControls({
 						goToNext();
 					}
 					break;
-				case "ArrowUp": // Up - Speed up
-					e.preventDefault();
-					setSpeed((s) => Math.max(100, s - 100));
-					break;
-				case "ArrowDown": // Down - Slow down
-					e.preventDefault();
-					setSpeed((s) => Math.min(2000, s + 100));
-					break;
 				case "r": // R - Reset
 				case "R":
 					e.preventDefault();
 					goToFirst();
+					break;
+				case "?":
+					e.preventDefault();
+					setShowShortcuts((s) => !s);
+					break;
+				case "Escape":
+					setShowShortcuts(false);
 					break;
 			}
 		};
@@ -119,7 +126,7 @@ export function PlaybackControls({
 	}, [togglePlay, goToFirst, goToPrevious, goToNext, goToLast]);
 
 	return (
-		<div className="space-y-3 sm:space-y-4">
+		<div className="space-y-3 sm:space-y-4 relative">
 			{/* Main Controls */}
 			<div className="flex items-center justify-center gap-1 sm:gap-2">
 				<button
@@ -171,17 +178,23 @@ export function PlaybackControls({
 			{/* Speed Control */}
 			<div className="flex items-center justify-center gap-2 sm:gap-3">
 				<span className="text-xs text-muted-foreground">Speed:</span>
-				<input
-					type="range"
-					min="100"
-					max="2000"
-					step="100"
-					value={2100 - speed}
-					onChange={(e) => setSpeed(2100 - Number(e.target.value))}
-					className="w-24 sm:w-32 h-2 bg-border rounded-lg appearance-none cursor-pointer touch-manipulation"
-					title="Speed (↑/↓)"
-				/>
-				<span className="text-xs text-muted-foreground w-12 sm:w-16">{speed}ms</span>
+				<div className="flex gap-1">
+					{SPEED_OPTIONS.map((opt) => (
+						<button
+							key={opt.label}
+							type="button"
+							onClick={() => setSpeed(opt.ms)}
+							className={`px-2 py-1 text-xs rounded border transition-colors touch-manipulation ${
+								speed === opt.ms
+									? "bg-primary text-primary-foreground border-primary"
+									: "border-border hover:bg-accent"
+							}`}
+							title={`${opt.label} speed`}
+						>
+							{opt.label}
+						</button>
+					))}
+				</div>
 			</div>
 
 			{/* Progress */}
@@ -197,23 +210,93 @@ export function PlaybackControls({
 				</span>
 			</div>
 
-			{/* Keyboard Hints - Hidden on mobile */}
-			<div className="hidden sm:flex items-center justify-center gap-4 text-[10px] text-muted-foreground">
-				<span>
-					<kbd className="px-1 py-0.5 bg-muted rounded text-[10px]">Space</kbd> Play/Pause
-				</span>
-				<span>
-					<kbd className="px-1 py-0.5 bg-muted rounded text-[10px]">←</kbd>
-					<kbd className="px-1 py-0.5 bg-muted rounded text-[10px]">→</kbd> Step
-				</span>
-				<span>
-					<kbd className="px-1 py-0.5 bg-muted rounded text-[10px]">↑</kbd>
-					<kbd className="px-1 py-0.5 bg-muted rounded text-[10px]">↓</kbd> Speed
-				</span>
-				<span>
-					<kbd className="px-1 py-0.5 bg-muted rounded text-[10px]">R</kbd> Reset
-				</span>
+			{/* Keyboard Hints + Help Button */}
+			<div className="flex items-center justify-center gap-4 text-[10px] text-muted-foreground">
+				<div className="hidden sm:flex items-center gap-4">
+					<span>
+						<kbd className="px-1 py-0.5 bg-muted rounded text-[10px]">Space</kbd> Play/Pause
+					</span>
+					<span>
+						<kbd className="px-1 py-0.5 bg-muted rounded text-[10px]">←</kbd>
+						<kbd className="px-1 py-0.5 bg-muted rounded text-[10px]">→</kbd> Step
+					</span>
+					<span>
+						<kbd className="px-1 py-0.5 bg-muted rounded text-[10px]">R</kbd> Reset
+					</span>
+				</div>
+				<button
+					type="button"
+					onClick={() => setShowShortcuts((s) => !s)}
+					className="ml-1 w-5 h-5 rounded-full border border-border text-[10px] hover:bg-accent transition-colors flex items-center justify-center"
+					title="Keyboard shortcuts (?)"
+				>
+					?
+				</button>
 			</div>
+
+			{/* Shortcuts Modal */}
+			{showShortcuts && (
+				<div className="fixed inset-0 z-50 flex items-center justify-center bg-black/50">
+					<div className="bg-card border border-border rounded-lg p-6 w-80 shadow-xl">
+						<div className="flex items-center justify-between mb-4">
+							<h3 className="font-semibold text-base">Keyboard Shortcuts</h3>
+							<button
+								type="button"
+								onClick={() => setShowShortcuts(false)}
+								className="text-muted-foreground hover:text-foreground transition-colors"
+								aria-label="Close"
+							>
+								x
+							</button>
+						</div>
+						<div className="space-y-3 text-sm">
+							<div className="flex justify-between items-center">
+								<span className="text-muted-foreground">Play / Pause</span>
+								<kbd className="px-2 py-1 bg-muted rounded text-xs">Space</kbd>
+							</div>
+							<div className="flex justify-between items-center">
+								<span className="text-muted-foreground">Step forward</span>
+								<kbd className="px-2 py-1 bg-muted rounded text-xs">right arrow</kbd>
+							</div>
+							<div className="flex justify-between items-center">
+								<span className="text-muted-foreground">Step back</span>
+								<kbd className="px-2 py-1 bg-muted rounded text-xs">left arrow</kbd>
+							</div>
+							<div className="flex justify-between items-center">
+								<span className="text-muted-foreground">Jump to start</span>
+								<span className="text-xs">
+									<kbd className="px-2 py-1 bg-muted rounded">Shift</kbd>
+									{" + "}
+									<kbd className="px-2 py-1 bg-muted rounded">left arrow</kbd>
+								</span>
+							</div>
+							<div className="flex justify-between items-center">
+								<span className="text-muted-foreground">Jump to end</span>
+								<span className="text-xs">
+									<kbd className="px-2 py-1 bg-muted rounded">Shift</kbd>
+									{" + "}
+									<kbd className="px-2 py-1 bg-muted rounded">right arrow</kbd>
+								</span>
+							</div>
+							<div className="flex justify-between items-center">
+								<span className="text-muted-foreground">Reset to start</span>
+								<kbd className="px-2 py-1 bg-muted rounded text-xs">R</kbd>
+							</div>
+							<div className="flex justify-between items-center">
+								<span className="text-muted-foreground">Show shortcuts</span>
+								<kbd className="px-2 py-1 bg-muted rounded text-xs">?</kbd>
+							</div>
+						</div>
+						<button
+							type="button"
+							onClick={() => setShowShortcuts(false)}
+							className="mt-4 w-full py-2 bg-primary text-primary-foreground rounded text-sm hover:bg-primary/90 transition-colors"
+						>
+							Got it
+						</button>
+					</div>
+				</div>
+			)}
 		</div>
 	);
 }
