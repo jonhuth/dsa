@@ -136,7 +136,7 @@ export default function MergeSortPage() {
 							{/* Array Visualization */}
 							<div className="p-6 border border-border rounded-lg">
 								<ArrayVisualizer
-									values={currentStepData?.state?.values || []}
+									values={(currentStepData?.state?.values as number[]) || []}
 									highlights={currentStepData?.highlights || []}
 								/>
 
