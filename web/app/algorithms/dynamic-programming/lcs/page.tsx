@@ -55,7 +55,7 @@ export default function LCSPage() {
 	};
 
 	const currentStepData = steps[currentStep];
-	const currentLine = currentStepData?.metadata?.source_line;
+	const currentLine = currentStepData?.metadata?.source_line as number | undefined;
 
 	return (
 		<div className="min-h-screen p-4 sm:p-6 lg:p-8">
