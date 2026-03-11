@@ -3,8 +3,8 @@
 interface ArrayVisualizerProps {
 	values: number[];
 	highlights?: Array<{
-		indices: number[];
-		color: string;
+		indices?: number[];
+		color?: string;
 	}>;
 	height?: number;
 }
