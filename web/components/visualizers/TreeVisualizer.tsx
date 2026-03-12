@@ -3,7 +3,7 @@
 import type React from "react";
 import { useId } from "react";
 
-interface TreeNode {
+export interface TreeNode {
 	val: number;
 	left?: TreeNode | null;
 	right?: TreeNode | null;

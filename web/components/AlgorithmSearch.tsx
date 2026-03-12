@@ -1,6 +1,7 @@
 "use client";
 import Link from "next/link";
-import { useState } from "react";
+import { useEffect, useState } from "react";
+import { getLearnedSlugs } from "@/hooks/useLearnedState";
 import registry from "@/lib/registry";
 import type { AlgorithmMetadata, Category } from "@/lib/types";
 
@@ -27,6 +28,17 @@ const categoryDisplayName = (category: Category) => {
 
 export function AlgorithmSearch({ initialAlgorithms }: Props) {
 	const [query, setQuery] = useState("");
+	const [learnedSlugs, setLearnedSlugs] = useState<Set<string>>(new Set());
+
+	useEffect(() => {
+		setLearnedSlugs(getLearnedSlugs());
+
+		const handleStorage = () => {
+			setLearnedSlugs(getLearnedSlugs());
+		};
+		window.addEventListener("storage", handleStorage);
+		return () => window.removeEventListener("storage", handleStorage);
+	}, []);
 
 	const results = query.trim() ? registry.algorithms.search(query) : initialAlgorithms;
 
@@ -47,7 +59,7 @@ export function AlgorithmSearch({ initialAlgorithms }: Props) {
 						className="absolute right-2 top-1/2 -translate-y-1/2 text-muted-foreground hover:text-foreground text-lg leading-none"
 						aria-label="Clear search"
 					>
-						×
+						x
 					</button>
 				)}
 			</div>
@@ -73,6 +85,15 @@ export function AlgorithmSearch({ initialAlgorithms }: Props) {
 										<span className="text-xs text-muted-foreground px-2 py-1 bg-background border border-border rounded">
 											{categoryDisplayName(algo.category)}
 										</span>
+										{learnedSlugs.has(algo.id) && (
+											<span
+												className="flex items-center gap-1 text-xs px-2 py-1 bg-green-500/10 text-green-500 rounded"
+												title="Marked as learned"
+											>
+												<span>✓</span>
+												<span>Learned</span>
+											</span>
+										)}
 									</div>
 									<p className="text-sm text-muted-foreground mb-3 line-clamp-2">
 										{algo.description}

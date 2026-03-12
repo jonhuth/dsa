@@ -14,18 +14,21 @@ import {
 import { ArrayVisualizer } from "@/components/visualizers/ArrayVisualizer";
 import { CodeViewer } from "@/components/visualizers/CodeViewer";
 import { PlaybackControls } from "@/components/visualizers/PlaybackControls";
+import { useLearnedState } from "@/hooks/useLearnedState";
 import { useRandomArray } from "@/hooks/useRandomArray";
+import { useStepHash } from "@/hooks/useStepHash";
 import registry from "@/lib/registry";
 import { getPrerequisites, getRelatedAlgorithms } from "@/lib/relationships";
 import type { AlgorithmStep } from "@/lib/types";
 
 export default function BubbleSortPage() {
 	const [steps, setSteps] = useState<AlgorithmStep[]>([]);
-	const [currentStep, setCurrentStep] = useState(0);
+	const [currentStep, setCurrentStep] = useStepHash(steps.length);
 	const [isLoading, setIsLoading] = useState(false);
 	const [inputArray, setInputArray] = useState("5, 2, 8, 1, 9");
 	const [sourceCode, setSourceCode] = useState<string>("");
 	const [showCode, setShowCode] = useState(true);
+	const [isLearned, toggleLearned] = useLearnedState("bubble_sort");
 
 	const { randomize } = useRandomArray();
 	const randomizeArray = () => setInputArray(randomize().join(", "));
@@ -115,6 +118,17 @@ export default function BubbleSortPage() {
 								>
 									{algorithm.difficulty.charAt(0).toUpperCase() + algorithm.difficulty.slice(1)}
 								</span>
+								<button
+									type="button"
+									onClick={toggleLearned}
+									className={`px-3 py-1 rounded text-xs sm:text-sm border transition-colors ${
+										isLearned
+											? "bg-green-500/10 text-green-500 border-green-500/30"
+											: "border-border hover:bg-accent"
+									}`}
+								>
+									{isLearned ? "✓ Learned" : "Mark as learned"}
+								</button>
 							</div>
 							<p className="text-sm sm:text-base text-muted-foreground">{algorithm.description}</p>
 							{algorithm.tags && algorithm.tags.length > 0 && (
