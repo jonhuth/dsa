@@ -3,6 +3,7 @@
 import { useEffect, useState } from "react";
 import { CodeViewer } from "@/components/visualizers/CodeViewer";
 import { PlaybackControls } from "@/components/visualizers/PlaybackControls";
+import type { TreeNode } from "@/components/visualizers/TreeVisualizer";
 import { TreeVisualizer } from "@/components/visualizers/TreeVisualizer";
 import type { AlgorithmStep } from "@/lib/types";
 
@@ -145,7 +146,7 @@ export default function BSTInsertPage() {
 							<div className="p-6 border border-border rounded-lg">
 								<div className="flex justify-center">
 									<TreeVisualizer
-										tree={currentStepData?.state?.tree as any}
+										tree={currentStepData?.state?.tree as TreeNode | null}
 										highlights={
 											(currentStepData?.highlights as Array<{
 												indices?: number[];
