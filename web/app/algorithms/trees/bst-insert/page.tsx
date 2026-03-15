@@ -148,10 +148,7 @@ export default function BSTInsertPage() {
 									<TreeVisualizer
 										tree={currentStepData?.state?.tree as TreeNode | null}
 										highlights={
-											(currentStepData?.highlights as Array<{
-												indices?: number[];
-												color?: string;
-											}>) || []
+											(currentStepData?.highlights as any[]) || []
 										}
 									/>
 								</div>

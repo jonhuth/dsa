@@ -4,6 +4,7 @@
   "private": true,
   "type": "module",
   "scripts": {
+    "postinstall": "git config core.hooksPath .githooks",
     "setup": "bun install && cd web && bun install && cd ../api && uv sync",
     "dev": "concurrently -n \"web,api\" -c \"cyan,magenta\" \"bun run dev:web\" \"bun run dev:api\"",
     "dev:web": "cd web && bun dev -- --hostname 0.0.0.0",

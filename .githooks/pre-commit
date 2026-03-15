@@ -1,0 +1,43 @@
+#!/bin/bash
+# Pre-commit hook: lockfile sync + typecheck + secrets
+
+echo "🔍 Running pre-commit checks..."
+
+GIT_COMMON=$(git rev-parse --git-common-dir)
+MAIN_ROOT=$(dirname "$GIT_COMMON")
+
+# Check bun.lock is in sync (BLOCKING)
+echo "  📦 Checking bun.lock is up to date..."
+bun install --frozen-lockfile --dry-run --cwd "$MAIN_ROOT" 2>/dev/null
+if [ $? -ne 0 ]; then
+  echo ""
+  echo "❌ bun.lock is out of sync with package.json."
+  echo "   Run 'bun install', then re-stage bun.lock."
+  exit 1
+fi
+
+# TypeScript check (BLOCKING) — tsconfig lives in web/
+echo "  📝 TypeScript type check..."
+if [ -f "$MAIN_ROOT/web/tsconfig.json" ]; then
+  # Clear stale .next cache to avoid missing-generated-types errors
+  rm -rf "$MAIN_ROOT/web/.next"
+  cd "$MAIN_ROOT/web" && bunx tsc --noEmit
+  if [ $? -ne 0 ]; then
+    echo ""
+    echo "❌ TypeScript errors found. Commit blocked."
+    exit 1
+  fi
+else
+  echo "  ⚠️  No web/tsconfig.json found, skipping TS check"
+fi
+
+# Check for secrets (BLOCKING)
+echo "  🔒 Checking for secrets..."
+if git diff --cached | grep -iE '(api[_-]?key|secret|password|token|private[_-]?key).*=.*["'"'"'][a-zA-Z0-9_-]{20,}'; then
+  echo ""
+  echo "❌ Potential secret detected. Commit blocked."
+  exit 1
+fi
+
+echo "✅ All pre-commit checks passed"
+exit 0
