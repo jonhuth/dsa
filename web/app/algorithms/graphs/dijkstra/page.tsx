@@ -215,10 +215,7 @@ export default function DijkstraPage() {
 										nodes={nodes}
 										edges={edges}
 										highlights={
-											(currentStepData?.highlights as Array<{
-												indices?: number[];
-												color?: string;
-											}>) || []
+											(currentStepData?.highlights as any[]) || []
 										}
 									/>
 								</div>

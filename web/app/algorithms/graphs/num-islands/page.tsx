@@ -159,10 +159,7 @@ export default function NumIslandsPage() {
 								<GridVisualizer
 									grid={(currentStepData?.state?.grid as number[][] | undefined) || []}
 									highlights={
-										(currentStepData?.highlights as Array<{
-											indices?: number[];
-											color?: string;
-										}>) || []
+										(currentStepData?.highlights as any[]) || []
 									}
 								/>
 
