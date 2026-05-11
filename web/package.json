@@ -27,7 +27,7 @@
 		"class-variance-authority": "^0.7.1",
 		"clsx": "^2.1.1",
 		"cmdk": "^1.1.1",
-		"lucide-react": "^0.563.0",
+		"lucide-react": "^1.14.0",
 		"next": "^16.1.4",
 		"next-themes": "^0.4.6",
 		"react": "^19.2.3",
@@ -36,7 +36,7 @@
 		"recharts": "^2.15.0",
 		"sonner": "^2.0.7",
 		"tailwind-merge": "^3.4.0",
-		"zod": "^3.24.1",
+		"zod": "^4.4.3",
 		"zustand": "^5.0.2"
 	},
 	"devDependencies": {
@@ -48,7 +48,7 @@
 		"@types/node": "^22.10.5",
 		"@types/react": "^19.0.6",
 		"@types/react-dom": "^19.0.2",
-		"@vitejs/plugin-react": "^4.3.4",
+		"@vitejs/plugin-react": "^6.0.1",
 		"postcss": "^8.4.49",
 		"tailwindcss": "^4.1.18",
 		"typescript": "^5.7.2",

@@ -3,22 +3,35 @@ name: CI
 on:
   push:
     branches: [master]
+    paths-ignore:
+      - '**.md'
+      - 'docs/**'
+      - '.vscode/**'
+      - '.gitignore'
   pull_request:
-    branches: [master]
+    paths-ignore:
+      - '**.md'
+      - 'docs/**'
+      - '.vscode/**'
+      - '.gitignore'
+
+concurrency:
+  group: ${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: true
 
 jobs:
   test:
     runs-on: ubuntu-latest
     
     steps:
-      - uses: actions/checkout@v4
+      - uses: actions/checkout@v6
       
       - uses: oven-sh/setup-bun@v2
         with:
           bun-version: latest
       
       - name: Install uv
-        uses: astral-sh/setup-uv@v4
+        uses: astral-sh/setup-uv@v7
         with:
           version: "latest"
       
@@ -26,7 +39,7 @@ jobs:
         run: uv python install 3.12
       
       - name: Install web dependencies
-        run: cd web && bun install --frozen-lockfile
+        run: cd web && bun install --no-save
       
       - name: Install API dependencies
         run: cd api && uv sync --extra dev
