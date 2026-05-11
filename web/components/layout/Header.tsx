@@ -1,6 +1,6 @@
 "use client";
 
-import { Github, Search } from "lucide-react";
+import { Code2, Search } from "lucide-react";
 import Link from "next/link";
 import { useEffect, useState } from "react";
 import { SearchDialog } from "./SearchDialog";
@@ -58,7 +58,7 @@ export function Header() {
 						className="flex items-center gap-2 px-3 py-2 text-sm text-muted-foreground border border-border rounded-lg hover:bg-accent transition-colors shrink-0"
 						aria-label="View source on GitHub"
 					>
-						<Github className="w-4 h-4" />
+						<Code2 className="w-4 h-4" />
 						<span className="hidden lg:inline">GitHub</span>
 					</a>
 				</div>
