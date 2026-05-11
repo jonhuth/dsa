@@ -39,7 +39,7 @@ jobs:
         run: uv python install 3.12
       
       - name: Install web dependencies
-        run: cd web && bun install --frozen-lockfile
+        run: cd web && bun install --no-save
       
       - name: Install API dependencies
         run: cd api && uv sync --extra dev
