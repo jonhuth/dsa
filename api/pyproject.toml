@@ -6,7 +6,7 @@ requires-python = ">=3.11"
 dependencies = [
     "flask>=3.1.0",
     "flask-cors>=5.0.0",
-    "pydantic>=2.13.3",
+    "pydantic>=2.13.4",
 ]
 
 [project.optional-dependencies]
@@ -14,7 +14,7 @@ dev = [
     "pytest>=9.0.3",
     "pytest-cov>=7.1.0",
     "ruff>=0.15.12",
-    "hypothesis>=6.152.4",
+    "hypothesis>=6.152.6",
 ]
 
 [build-system]
