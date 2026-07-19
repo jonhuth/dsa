@@ -6,7 +6,7 @@ import { GraphVisualizer } from "@/components/visualizers/GraphVisualizer";
 import { PlaybackControls } from "@/components/visualizers/PlaybackControls";
 import type { AlgorithmStep } from "@/lib/types";
 
-export default function DijkstraPage() {
+export default function BellmanFordPage() {
 	const [steps, setSteps] = useState<AlgorithmStep[]>([]);
 	const [currentStep, setCurrentStep] = useState(0);
 	const [isLoading, setIsLoading] = useState(false);
@@ -15,12 +15,12 @@ export default function DijkstraPage() {
 			{
 				0: [
 					[1, 4],
-					[2, 1],
+					[2, 5],
 				],
-				1: [[3, 1]],
+				1: [[3, 3]],
 				2: [
-					[1, 2],
-					[3, 5],
+					[1, -2],
+					[3, 4],
 				],
 				3: [],
 			},
@@ -29,14 +29,13 @@ export default function DijkstraPage() {
 		),
 	);
 	const [startNode, setStartNode] = useState("0");
-	const [targetNode, setTargetNode] = useState("3");
 	const [sourceCode, setSourceCode] = useState<string>("");
 	const [showCode, setShowCode] = useState(true);
 
 	useEffect(() => {
 		const fetchSource = async () => {
 			try {
-				const response = await fetch("/api/algorithms/dijkstra/source");
+				const response = await fetch("/api/algorithms/bellman_ford/source");
 				const data = await response.json();
 				setSourceCode(data.source || "");
 			} catch (error) {
@@ -51,15 +50,14 @@ export default function DijkstraPage() {
 		try {
 			const graph = JSON.parse(graphInput);
 			const start = parseInt(startNode, 10);
-			const target = targetNode ? parseInt(targetNode, 10) : null;
 
-			const response = await fetch("/api/algorithms/dijkstra/execute", {
+			const response = await fetch("/api/algorithms/bellman_ford/execute", {
 				method: "POST",
 				headers: {
 					"Content-Type": "application/json",
 				},
 				body: JSON.stringify({
-					input: { graph, start, target },
+					input: { graph, start },
 				}),
 			});
 
@@ -110,17 +108,18 @@ export default function DijkstraPage() {
 					<a href="/algorithms/graphs" className="hover:underline">
 						Graphs
 					</a>{" "}
-					/ Dijkstra's Algorithm
+					/ Bellman-Ford
 				</div>
 
 				{/* Header */}
 				<div className="flex items-start justify-between">
 					<div>
 						<h1 className="text-2xl sm:text-3xl lg:text-4xl font-bold mb-2">
-							Dijkstra's Algorithm
+							Bellman-Ford Algorithm
 						</h1>
 						<p className="text-muted-foreground">
-							Shortest path algorithm for weighted graphs with non-negative edges
+							Single-source shortest paths for weighted graphs — handles negative edges and detects
+							negative-weight cycles
 						</p>
 					</div>
 					{steps.length > 0 && (
@@ -145,31 +144,21 @@ export default function DijkstraPage() {
 							onChange={(e) => setGraphInput(e.target.value)}
 							className="w-full px-4 py-2 bg-background border border-border rounded font-mono text-sm"
 							rows={10}
-							placeholder='{"0": [[1, 4], [2, 1]], "1": [[3, 1]], "2": [[1, 2], [3, 5]], "3": []}'
+							placeholder='{"0": [[1, 4], [2, 5]], "1": [[3, 3]], "2": [[1, -2], [3, 4]], "3": []}'
 						/>
 						<p className="text-xs text-muted-foreground mt-1">
-							Format: {`{node: [[neighbor, weight], ...], ...}`}
+							Format: {`{node: [[neighbor, weight], ...], ...}`} — weights may be negative
 						</p>
 					</label>
 					<div className="grid grid-cols-2 gap-4">
 						<label className="block">
 							<span className="block text-sm font-medium mb-2">Start Node</span>
 							<input
-								type="text"
+								type="number"
 								value={startNode}
 								onChange={(e) => setStartNode(e.target.value)}
 								className="w-full px-4 py-2 bg-background border border-border rounded"
 								placeholder="0"
-							/>
-						</label>
-						<label className="block">
-							<span className="block text-sm font-medium mb-2">Target Node (optional)</span>
-							<input
-								type="text"
-								value={targetNode}
-								onChange={(e) => setTargetNode(e.target.value)}
-								className="w-full px-4 py-2 bg-background border border-border rounded"
-								placeholder="3"
 							/>
 						</label>
 					</div>
@@ -229,31 +218,32 @@ export default function DijkstraPage() {
 								{/* Metadata */}
 								{currentStepData?.metadata && (
 									<div className="mt-4 flex justify-center gap-6 text-xs flex-wrap">
-										{currentStepData.metadata.current !== undefined && (
+										{currentStepData.metadata.iteration !== undefined && (
 											<div>
-												Current:{" "}
-												<span className="font-mono">{currentStepData.metadata.current}</span>
-											</div>
-										)}
-										{currentStepData.metadata.current_distance !== undefined && (
-											<div>
-												Distance:{" "}
+												Pass:{" "}
 												<span className="font-mono">
-													{currentStepData.metadata.current_distance as number}
+													{currentStepData.metadata.iteration as number}
 												</span>
 											</div>
 										)}
-										{currentStepData.metadata.queue_size !== undefined && (
+										{currentStepData.metadata.relaxations !== undefined && (
 											<div>
-												Queue:{" "}
-												<span className="font-mono">{currentStepData.metadata.queue_size}</span>
+												Relaxations:{" "}
+												<span className="font-mono">
+													{currentStepData.metadata.relaxations as number}
+												</span>
 											</div>
 										)}
-										{currentStepData.metadata.visited_count !== undefined && (
+										{currentStepData.metadata.weight !== undefined && (
 											<div>
-												Visited:{" "}
-												<span className="font-mono">{currentStepData.metadata.visited_count}</span>
+												Edge weight:{" "}
+												<span className="font-mono">
+													{currentStepData.metadata.weight as number}
+												</span>
 											</div>
+										)}
+										{currentStepData.metadata.negative_cycle === true && (
+											<div className="text-red-500 font-semibold">Negative cycle!</div>
 										)}
 									</div>
 								)}
@@ -264,19 +254,15 @@ export default function DijkstraPage() {
 						<div className="flex items-center justify-center gap-6 text-xs">
 							<div className="flex items-center gap-2">
 								<div className="w-4 h-4 bg-blue-500 rounded-full" />
-								<span>Current</span>
+								<span>Source of edge</span>
 							</div>
 							<div className="flex items-center gap-2">
 								<div className="w-4 h-4 bg-yellow-500 rounded-full" />
-								<span>Comparing</span>
-							</div>
-							<div className="flex items-center gap-2">
-								<div className="w-4 h-4 bg-purple-500 rounded-full" />
-								<span>Visited</span>
+								<span>Target being relaxed</span>
 							</div>
 							<div className="flex items-center gap-2">
 								<div className="w-4 h-4 bg-green-500 rounded-full" />
-								<span>Shortest Path</span>
+								<span>Distance updated</span>
 							</div>
 						</div>
 
@@ -297,13 +283,13 @@ export default function DijkstraPage() {
 							<div>
 								<h3 className="font-medium mb-2">Time Complexity</h3>
 								<p className="text-sm">
-									O((V + E) log V) with min-heap
+									O(V · E) — relax every edge across V−1 passes
 									<br />V = vertices, E = edges
 								</p>
 							</div>
 							<div>
 								<h3 className="font-medium mb-2">Space Complexity</h3>
-								<p className="text-sm">O(V) for distances and priority queue</p>
+								<p className="text-sm">O(V) for distance and predecessor tables</p>
 							</div>
 						</div>
 					</div>
@@ -311,28 +297,37 @@ export default function DijkstraPage() {
 					<div className="p-6 border border-border rounded-lg">
 						<h2 className="text-2xl font-semibold mb-4">How It Works</h2>
 						<ol className="text-sm space-y-2 list-decimal list-inside">
-							<li>Initialize all distances to infinity except source (0)</li>
-							<li>Add source to priority queue with distance 0</li>
-							<li>While queue not empty: extract node with minimum distance</li>
-							<li>For each unvisited neighbor: calculate new distance</li>
-							<li>If new distance is shorter, update and add to queue</li>
-							<li>Repeat until target found or queue empty</li>
+							<li>Initialize all distances to infinity except the source (0)</li>
+							<li>Repeat V−1 times: relax every edge (u → v, w)</li>
+							<li>Relaxing means: if dist[u] + w &lt; dist[v], update dist[v]</li>
+							<li>After V−1 passes, all shortest paths (≤ V−1 edges) have settled</li>
+							<li>Run one extra pass: if any edge still relaxes, a negative cycle exists</li>
+							<li>Otherwise the computed distances are final and optimal</li>
 						</ol>
 					</div>
 
 					<div className="p-6 border border-border rounded-lg">
 						<h2 className="text-2xl font-semibold mb-4">Key Insights</h2>
 						<ul className="text-sm space-y-2">
-							<li>✅ Finds optimal shortest path (if one exists)</li>
-							<li>✅ Works with weighted graphs (non-negative weights only)</li>
-							<li>✅ Greedy algorithm - always picks minimum distance node</li>
-							<li>💡 Uses priority queue for efficiency (min-heap)</li>
-							<li>💡 Edge relaxation: try to improve distances by exploring edges</li>
-							<li>💡 Once a node is visited, its shortest path is guaranteed</li>
+							<li>✅ Handles negative edge weights (unlike Dijkstra)</li>
+							<li>✅ Detects negative-weight cycles reachable from the source</li>
+							<li>💡 A shortest path visits at most V−1 edges, so V−1 passes suffice</li>
+							<li>💡 Dynamic programming: each pass extends optimal paths by one more edge</li>
+							<li>💡 If a pass makes no updates, distances have converged — stop early</li>
 							<li>
-								💡 Used in: GPS navigation, network routing, game pathfinding, flight planning
+								❌ Slower than Dijkstra's O((V + E) log V); prefer Dijkstra when weights are
+								non-negative
 							</li>
-							<li>❌ Doesn't work with negative edge weights (use Bellman-Ford instead)</li>
+						</ul>
+					</div>
+
+					<div className="p-6 border border-border rounded-lg">
+						<h2 className="text-2xl font-semibold mb-4">When To Use</h2>
+						<ul className="text-sm space-y-2">
+							<li>📍 Shortest paths in graphs that contain negative edge weights</li>
+							<li>📍 Detecting negative-weight cycles (e.g. currency arbitrage)</li>
+							<li>📍 Distance-vector routing protocols such as RIP</li>
+							<li>📍 As a subroutine in Johnson's all-pairs shortest paths</li>
 						</ul>
 					</div>
 				</div>

@@ -10,6 +10,7 @@ interface GraphNode {
 interface GraphEdge {
 	from: number;
 	to: number;
+	label?: string;
 }
 
 interface GraphVisualizerProps {
@@ -94,17 +95,37 @@ export function GraphVisualizer({
 					const highlight = highlights.find((h) => h.type === "edge" && h.id === edgeId);
 					const color = highlight?.color || "default";
 
+					// Offset the weight label slightly off the midpoint so it doesn't
+					// sit directly on the line (and away from the arrowhead).
+					const midX = (from.x + to.x) / 2;
+					const midY = (from.y + to.y) / 2;
+
 					return (
-						<line
-							key={edgeId}
-							x1={from.x}
-							y1={from.y}
-							x2={to.x}
-							y2={to.y}
-							className={`${edgeColorClasses[color as keyof typeof edgeColorClasses]} transition-all duration-300`}
-							strokeWidth={2}
-							markerEnd={`url(#${markerId})`}
-						/>
+						<g key={edgeId}>
+							<line
+								x1={from.x}
+								y1={from.y}
+								x2={to.x}
+								y2={to.y}
+								className={`${edgeColorClasses[color as keyof typeof edgeColorClasses]} transition-all duration-300`}
+								strokeWidth={2}
+								markerEnd={`url(#${markerId})`}
+							/>
+							{edge.label !== undefined && edge.label !== "" && (
+								<text
+									x={midX}
+									y={midY}
+									textAnchor="middle"
+									dominantBaseline="middle"
+									className="fill-foreground text-xs font-semibold pointer-events-none"
+									style={{ paintOrder: "stroke" }}
+									stroke="var(--background)"
+									strokeWidth={4}
+								>
+									{edge.label}
+								</text>
+							)}
+						</g>
 					);
 				})}
 			</g>

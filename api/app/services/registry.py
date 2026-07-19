@@ -43,6 +43,7 @@ class AlgorithmRegistry:
         spec.loader.exec_module(bst_module)
         BSTClass = bst_module.BST
         from algorithms.dynamic_programming.climbing_stairs_viz import ClimbingStairs
+        from algorithms.dynamic_programming.coin_change_2_viz import CoinChange2
         from algorithms.dynamic_programming.coin_change_viz import CoinChange
         from algorithms.dynamic_programming.edit_distance_viz import EditDistance
         from algorithms.dynamic_programming.fibonacci import Fibonacci
@@ -53,24 +54,35 @@ class AlgorithmRegistry:
         from algorithms.dynamic_programming.knapsack import Knapsack
         from algorithms.dynamic_programming.lcs import LCS
         from algorithms.dynamic_programming.lis_viz import LongestIncreasingSubsequence
+        from algorithms.dynamic_programming.lps_viz import LongestPalindromicSubsequence
+        from algorithms.dynamic_programming.max_product_subarray_viz import MaxProductSubarray
         from algorithms.dynamic_programming.min_path_sum_viz import MinPathSum
         from algorithms.dynamic_programming.unique_paths_viz import UniquePaths
         from algorithms.dynamic_programming.word_break_viz import WordBreak
+        from algorithms.graphs.astar_grid_viz import AStarGrid
+
+        # Wave 3 exhibits (uniform run(input_data) generator interface)
+        from algorithms.graphs.bellman_ford_viz import BellmanFord
         from algorithms.graphs.connected_components_viz import ConnectedComponents
         from algorithms.graphs.course_schedule_viz import CourseSchedule
         from algorithms.graphs.num_islands import NumIslands
+        from algorithms.graphs.prim_mst_viz import PrimMST
         from algorithms.graphs.topological_sort import TopologicalSort
+        from algorithms.search.exponential_search_viz import ExponentialSearch
 
         # Wave 2 exhibits (uniform run(input_data) generator interface)
         from algorithms.search.quickselect_viz import QuickSelect
         from algorithms.search.rotated_array_search_viz import RotatedArraySearch
+        from algorithms.search.ternary_search_viz import TernarySearch
         from algorithms.sorting.counting_sort import CountingSort
         from algorithms.sorting.radix_sort import RadixSort
         from algorithms.trees.invert_binary_tree_viz import InvertBinaryTree
         from algorithms.trees.lca_viz import LowestCommonAncestor
         from algorithms.trees.level_order_viz import LevelOrder
         from algorithms.trees.max_depth_viz import MaxDepth
+        from algorithms.trees.path_sum_viz import PathSum
         from algorithms.trees.traversals import TreeTraversals
+        from algorithms.trees.tree_diameter_viz import TreeDiameter
         from algorithms.trees.validate_bst_viz import ValidateBST
 
         self._algorithms["bubble_sort"] = {
@@ -409,7 +421,87 @@ class AlgorithmRegistry:
             "visualizer_type": ConnectedComponents.visualizer_type.value,
         }
 
-    # Wave 1 & 2 exhibits use a uniform run(input_data) generator interface
+        self._algorithms["bellman_ford"] = {
+            "id": "bellman_ford",
+            "name": "Bellman-Ford",
+            "category": "graphs",
+            "class": BellmanFord,
+            "visualizer_type": BellmanFord.visualizer_type.value,
+        }
+
+        self._algorithms["prim_mst"] = {
+            "id": "prim_mst",
+            "name": "Prim's Minimum Spanning Tree",
+            "category": "graphs",
+            "class": PrimMST,
+            "visualizer_type": PrimMST.visualizer_type.value,
+        }
+
+        self._algorithms["astar_grid"] = {
+            "id": "astar_grid",
+            "name": "A* Pathfinding (Grid)",
+            "category": "graphs",
+            "class": AStarGrid,
+            "visualizer_type": AStarGrid.visualizer_type.value,
+        }
+
+        self._algorithms["exponential_search"] = {
+            "id": "exponential_search",
+            "name": "Exponential Search",
+            "category": "searching",
+            "class": ExponentialSearch,
+            "visualizer_type": ExponentialSearch.visualizer_type.value,
+        }
+
+        self._algorithms["ternary_search"] = {
+            "id": "ternary_search",
+            "name": "Ternary Search",
+            "category": "searching",
+            "class": TernarySearch,
+            "visualizer_type": TernarySearch.visualizer_type.value,
+        }
+
+        self._algorithms["coin_change_2"] = {
+            "id": "coin_change_2",
+            "name": "Coin Change II (Count Ways)",
+            "category": "dynamic_programming",
+            "class": CoinChange2,
+            "visualizer_type": CoinChange2.visualizer_type.value,
+        }
+
+        self._algorithms["longest_palindromic_subsequence"] = {
+            "id": "longest_palindromic_subsequence",
+            "name": "Longest Palindromic Subsequence",
+            "category": "dynamic_programming",
+            "class": LongestPalindromicSubsequence,
+            "visualizer_type": LongestPalindromicSubsequence.visualizer_type.value,
+        }
+
+        self._algorithms["max_product_subarray"] = {
+            "id": "max_product_subarray",
+            "name": "Maximum Product Subarray",
+            "category": "dynamic_programming",
+            "class": MaxProductSubarray,
+            "visualizer_type": MaxProductSubarray.visualizer_type.value,
+        }
+
+        self._algorithms["tree_diameter"] = {
+            "id": "tree_diameter",
+            "name": "Binary Tree Diameter",
+            "category": "trees",
+            "class": TreeDiameter,
+            "visualizer_type": TreeDiameter.visualizer_type.value,
+        }
+
+        self._algorithms["tree_path_sum"] = {
+            "id": "tree_path_sum",
+            "name": "Path Sum (Root-to-Leaf)",
+            "category": "trees",
+            "class": PathSum,
+            "visualizer_type": PathSum.visualizer_type.value,
+        }
+
+    # Wave 1, 2 & 3 exhibits use a uniform run(input_data) generator interface
     _RUN_BASED = {
         "kadane",
         "coin_change",
@@ -432,6 +524,16 @@ class AlgorithmRegistry:
         "level_order",
         "course_schedule",
         "connected_components",
+        "bellman_ford",
+        "prim_mst",
+        "astar_grid",
+        "exponential_search",
+        "ternary_search",
+        "coin_change_2",
+        "longest_palindromic_subsequence",
+        "max_product_subarray",
+        "tree_diameter",
+        "tree_path_sum",
     }
 
     def get_algorithm(self, algorithm_id: str) -> dict[str, Any] | None:
