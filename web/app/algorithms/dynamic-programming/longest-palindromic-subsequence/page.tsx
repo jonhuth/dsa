@@ -2,41 +2,22 @@
 
 import { useEffect, useState } from "react";
 import { CodeViewer } from "@/components/visualizers/CodeViewer";
-import { GraphVisualizer } from "@/components/visualizers/GraphVisualizer";
+import { GridVisualizer } from "@/components/visualizers/GridVisualizer";
 import { PlaybackControls } from "@/components/visualizers/PlaybackControls";
 import type { AlgorithmStep } from "@/lib/types";
 
-export default function DijkstraPage() {
+export default function LongestPalindromicSubsequencePage() {
 	const [steps, setSteps] = useState<AlgorithmStep[]>([]);
 	const [currentStep, setCurrentStep] = useState(0);
 	const [isLoading, setIsLoading] = useState(false);
-	const [graphInput, setGraphInput] = useState(
-		JSON.stringify(
-			{
-				0: [
-					[1, 4],
-					[2, 1],
-				],
-				1: [[3, 1]],
-				2: [
-					[1, 2],
-					[3, 5],
-				],
-				3: [],
-			},
-			null,
-			2,
-		),
-	);
-	const [startNode, setStartNode] = useState("0");
-	const [targetNode, setTargetNode] = useState("3");
+	const [s, setS] = useState("bbbab");
 	const [sourceCode, setSourceCode] = useState<string>("");
 	const [showCode, setShowCode] = useState(true);
 
 	useEffect(() => {
 		const fetchSource = async () => {
 			try {
-				const response = await fetch("/api/algorithms/dijkstra/source");
+				const response = await fetch("/api/algorithms/longest_palindromic_subsequence/source");
 				const data = await response.json();
 				setSourceCode(data.source || "");
 			} catch (error) {
@@ -49,17 +30,13 @@ export default function DijkstraPage() {
 	const executeAlgorithm = async () => {
 		setIsLoading(true);
 		try {
-			const graph = JSON.parse(graphInput);
-			const start = parseInt(startNode, 10);
-			const target = targetNode ? parseInt(targetNode, 10) : null;
-
-			const response = await fetch("/api/algorithms/dijkstra/execute", {
+			const response = await fetch("/api/algorithms/longest_palindromic_subsequence/execute", {
 				method: "POST",
 				headers: {
 					"Content-Type": "application/json",
 				},
 				body: JSON.stringify({
-					input: { graph, start, target },
+					input: { s: s },
 				}),
 			});
 
@@ -68,7 +45,7 @@ export default function DijkstraPage() {
 			setCurrentStep(0);
 		} catch (error) {
 			console.error("Failed to execute algorithm:", error);
-			alert("Invalid graph format. Please check your input.");
+			alert("Failed to compute the longest palindromic subsequence. Please check your input.");
 		} finally {
 			setIsLoading(false);
 		}
@@ -76,27 +53,6 @@ export default function DijkstraPage() {
 
 	const currentStepData = steps[currentStep];
 	const currentLine = currentStepData?.metadata?.source_line;
-
-	// Extract nodes and edges from weighted graph
-	const getNodesAndEdges = () => {
-		try {
-			const graph = JSON.parse(graphInput);
-			const nodes = Object.keys(graph).map((id) => ({ id: parseInt(id, 10) }));
-			const edges: Array<{ from: number; to: number; label?: string }> = [];
-
-			for (const [from, neighbors] of Object.entries(graph)) {
-				for (const [to, weight] of neighbors as Array<[number, number]>) {
-					edges.push({ from: parseInt(from, 10), to, label: String(weight) });
-				}
-			}
-
-			return { nodes, edges };
-		} catch {
-			return { nodes: [], edges: [] };
-		}
-	};
-
-	const { nodes, edges } = getNodesAndEdges();
 
 	return (
 		<div className="min-h-screen p-4 sm:p-6 lg:p-8">
@@ -107,20 +63,20 @@ export default function DijkstraPage() {
 						Algorithms
 					</a>{" "}
 					/{" "}
-					<a href="/algorithms/graphs" className="hover:underline">
-						Graphs
+					<a href="/algorithms/dynamic-programming" className="hover:underline">
+						Dynamic Programming
 					</a>{" "}
-					/ Dijkstra's Algorithm
+					/ Longest Palindromic Subsequence
 				</div>
 
 				{/* Header */}
 				<div className="flex items-start justify-between">
 					<div>
 						<h1 className="text-2xl sm:text-3xl lg:text-4xl font-bold mb-2">
-							Dijkstra's Algorithm
+							Longest Palindromic Subsequence
 						</h1>
 						<p className="text-muted-foreground">
-							Shortest path algorithm for weighted graphs with non-negative edges
+							Longest subsequence of a string that reads the same forwards and backwards
 						</p>
 					</div>
 					{steps.length > 0 && (
@@ -136,50 +92,29 @@ export default function DijkstraPage() {
 
 				{/* Input Controls */}
 				<div className="p-6 border border-border rounded-lg space-y-4">
-					<label className="block">
-						<span className="block text-sm font-medium mb-2">
-							Weighted Graph (JSON adjacency list)
-						</span>
-						<textarea
-							value={graphInput}
-							onChange={(e) => setGraphInput(e.target.value)}
-							className="w-full px-4 py-2 bg-background border border-border rounded font-mono text-sm"
-							rows={10}
-							placeholder='{"0": [[1, 4], [2, 1]], "1": [[3, 1]], "2": [[1, 2], [3, 5]], "3": []}'
-						/>
-						<p className="text-xs text-muted-foreground mt-1">
-							Format: {`{node: [[neighbor, weight], ...], ...}`}
-						</p>
-					</label>
-					<div className="grid grid-cols-2 gap-4">
+					<div className="grid grid-cols-1 gap-4">
 						<label className="block">
-							<span className="block text-sm font-medium mb-2">Start Node</span>
+							<span className="block text-sm font-medium mb-2">String</span>
 							<input
 								type="text"
-								value={startNode}
-								onChange={(e) => setStartNode(e.target.value)}
-								className="w-full px-4 py-2 bg-background border border-border rounded"
-								placeholder="0"
-							/>
-						</label>
-						<label className="block">
-							<span className="block text-sm font-medium mb-2">Target Node (optional)</span>
-							<input
-								type="text"
-								value={targetNode}
-								onChange={(e) => setTargetNode(e.target.value)}
-								className="w-full px-4 py-2 bg-background border border-border rounded"
-								placeholder="3"
+								value={s}
+								onChange={(e) => setS(e.target.value)}
+								className="w-full px-4 py-2 bg-background border border-border rounded font-mono text-sm"
+								placeholder="bbbab"
 							/>
 						</label>
 					</div>
+					<p className="text-xs text-muted-foreground">
+						The grid fills dp[i][j] = length of the longest palindromic subsequence within s[i..j].
+						The answer is the top-right cell dp[0][n-1].
+					</p>
 					<button
 						type="button"
 						onClick={executeAlgorithm}
 						disabled={isLoading}
 						className="px-6 py-2 bg-primary text-primary-foreground rounded hover:bg-primary/90 disabled:opacity-50"
 					>
-						{isLoading ? "Running..." : "Run Algorithm"}
+						{isLoading ? "Computing..." : "Compute Longest Palindromic Subsequence"}
 					</button>
 				</div>
 
@@ -208,15 +143,13 @@ export default function DijkstraPage() {
 								</div>
 							)}
 
-							{/* Graph Visualization */}
+							{/* DP Grid Visualization */}
 							<div className="p-6 border border-border rounded-lg">
-								<div className="flex justify-center">
-									<GraphVisualizer
-										nodes={nodes}
-										edges={edges}
-										highlights={currentStepData?.highlights ?? []}
-									/>
-								</div>
+								<GridVisualizer
+									grid={(currentStepData?.state?.grid as number[][] | undefined) || []}
+									variant="table"
+									highlights={currentStepData?.highlights ?? []}
+								/>
 
 								{/* Step Description */}
 								<div className="mt-4 text-center">
@@ -229,30 +162,45 @@ export default function DijkstraPage() {
 								{/* Metadata */}
 								{currentStepData?.metadata && (
 									<div className="mt-4 flex justify-center gap-6 text-xs flex-wrap">
-										{currentStepData.metadata.current !== undefined && (
+										{currentStepData.metadata.char_i !== undefined && (
 											<div>
-												Current:{" "}
-												<span className="font-mono">{currentStepData.metadata.current}</span>
-											</div>
-										)}
-										{currentStepData.metadata.current_distance !== undefined && (
-											<div>
-												Distance:{" "}
+												Comparing:{" "}
 												<span className="font-mono">
-													{currentStepData.metadata.current_distance as number}
+													'{currentStepData.metadata.char_i as string}' vs '
+													{currentStepData.metadata.char_j as string}'
 												</span>
 											</div>
 										)}
-										{currentStepData.metadata.queue_size !== undefined && (
+										{currentStepData.metadata.operation_won !== undefined && (
 											<div>
-												Queue:{" "}
-												<span className="font-mono">{currentStepData.metadata.queue_size}</span>
+												Choice:{" "}
+												<span className="font-mono font-bold">
+													{currentStepData.metadata.operation_won as string}
+												</span>
 											</div>
 										)}
-										{currentStepData.metadata.visited_count !== undefined && (
+										{currentStepData.metadata.value !== undefined && (
 											<div>
-												Visited:{" "}
-												<span className="font-mono">{currentStepData.metadata.visited_count}</span>
+												Cell Value:{" "}
+												<span className="font-mono">
+													{currentStepData.metadata.value as number}
+												</span>
+											</div>
+										)}
+										{currentStepData.metadata.lps_length !== undefined && (
+											<div>
+												LPS Length:{" "}
+												<span className="font-mono font-bold">
+													{currentStepData.metadata.lps_length as number}
+												</span>
+											</div>
+										)}
+										{currentStepData.metadata.comparisons !== undefined && (
+											<div>
+												Comparisons:{" "}
+												<span className="font-mono">
+													{currentStepData.metadata.comparisons as number}
+												</span>
 											</div>
 										)}
 									</div>
@@ -261,22 +209,22 @@ export default function DijkstraPage() {
 						</div>
 
 						{/* Color Legend */}
-						<div className="flex items-center justify-center gap-6 text-xs">
+						<div className="flex items-center justify-center gap-6 text-xs flex-wrap">
 							<div className="flex items-center gap-2">
-								<div className="w-4 h-4 bg-blue-500 rounded-full" />
-								<span>Current</span>
+								<div className="w-4 h-4 bg-blue-500 rounded" />
+								<span>Current Cell</span>
 							</div>
 							<div className="flex items-center gap-2">
-								<div className="w-4 h-4 bg-yellow-500 rounded-full" />
-								<span>Comparing</span>
+								<div className="w-4 h-4 bg-yellow-500 rounded" />
+								<span>Winning Source</span>
 							</div>
 							<div className="flex items-center gap-2">
-								<div className="w-4 h-4 bg-purple-500 rounded-full" />
-								<span>Visited</span>
+								<div className="w-4 h-4 bg-purple-500 rounded" />
+								<span>Candidate / Base Case</span>
 							</div>
 							<div className="flex items-center gap-2">
-								<div className="w-4 h-4 bg-green-500 rounded-full" />
-								<span>Shortest Path</span>
+								<div className="w-4 h-4 bg-green-500 rounded" />
+								<span>Final Answer</span>
 							</div>
 						</div>
 
@@ -297,13 +245,18 @@ export default function DijkstraPage() {
 							<div>
 								<h3 className="font-medium mb-2">Time Complexity</h3>
 								<p className="text-sm">
-									O((V + E) log V) with min-heap
-									<br />V = vertices, E = edges
+									O(n²) where n = string length
+									<br />
+									(naive recursion is O(2ⁿ))
 								</p>
 							</div>
 							<div>
 								<h3 className="font-medium mb-2">Space Complexity</h3>
-								<p className="text-sm">O(V) for distances and priority queue</p>
+								<p className="text-sm">
+									O(n²) for DP table
+									<br />
+									(can be optimized to O(n) with a rolling array)
+								</p>
 							</div>
 						</div>
 					</div>
@@ -311,28 +264,62 @@ export default function DijkstraPage() {
 					<div className="p-6 border border-border rounded-lg">
 						<h2 className="text-2xl font-semibold mb-4">How It Works</h2>
 						<ol className="text-sm space-y-2 list-decimal list-inside">
-							<li>Initialize all distances to infinity except source (0)</li>
-							<li>Add source to priority queue with distance 0</li>
-							<li>While queue not empty: extract node with minimum distance</li>
-							<li>For each unvisited neighbor: calculate new distance</li>
-							<li>If new distance is shorter, update and add to queue</li>
-							<li>Repeat until target found or queue empty</li>
+							<li>
+								Create 2D DP table: dp[i][j] = length of the longest palindromic subsequence within
+								s[i..j]
+							</li>
+							<li>Base case: dp[i][i] = 1 — each single character is a palindrome of length 1</li>
+							<li>
+								Fill by increasing interval length (i from high to low, j from i upward) so
+								dependencies are ready:
+							</li>
+							<li className="ml-6">
+								If s[i] == s[j]: the ends wrap an inner palindrome, dp[i][j] = 2 + dp[i+1][j-1]
+							</li>
+							<li className="ml-6">
+								Otherwise: drop one end, dp[i][j] = max(dp[i+1][j], dp[i][j-1])
+							</li>
+							<li>The answer is dp[0][n-1] — the top-right cell (the whole string)</li>
 						</ol>
 					</div>
 
 					<div className="p-6 border border-border rounded-lg">
 						<h2 className="text-2xl font-semibold mb-4">Key Insights</h2>
 						<ul className="text-sm space-y-2">
-							<li>✅ Finds optimal shortest path (if one exists)</li>
-							<li>✅ Works with weighted graphs (non-negative weights only)</li>
-							<li>✅ Greedy algorithm - always picks minimum distance node</li>
-							<li>💡 Uses priority queue for efficiency (min-heap)</li>
-							<li>💡 Edge relaxation: try to improve distances by exploring edges</li>
-							<li>💡 Once a node is visited, its shortest path is guaranteed</li>
 							<li>
-								💡 Used in: GPS navigation, network routing, game pathfinding, flight planning
+								✅ Interval DP — subproblems are contiguous substrings s[i..j], solved shortest
+								first
 							</li>
-							<li>❌ Doesn't work with negative edge weights (use Bellman-Ford instead)</li>
+							<li>
+								✅ Matching ends add 2 and recurse inward; mismatched ends discard one character
+							</li>
+							<li>
+								💡 LPS(s) equals LCS(s, reverse(s)) — the same answer via a different classic DP
+							</li>
+							<li>💡 Minimum deletions to make s a palindrome is exactly n − LPS(s)</li>
+							<li>💡 Only the upper triangle (i ≤ j) of the table is ever used</li>
+						</ul>
+					</div>
+
+					<div className="p-6 border border-border rounded-lg">
+						<h2 className="text-2xl font-semibold mb-4">When to Use / Real-World Applications</h2>
+						<ul className="text-sm space-y-2">
+							<li>
+								<strong>Bioinformatics:</strong> Model RNA secondary structure, where complementary
+								bases pair like palindrome ends
+							</li>
+							<li>
+								<strong>Text Similarity:</strong> Measure symmetric structure within a single
+								sequence
+							</li>
+							<li>
+								<strong>String Editing:</strong> Compute minimum deletions (or insertions) to turn a
+								string into a palindrome
+							</li>
+							<li>
+								<strong>Interview Staple:</strong> A canonical interval-DP problem that generalizes
+								to matrix-chain and palindrome-partitioning variants
+							</li>
 						</ul>
 					</div>
 				</div>

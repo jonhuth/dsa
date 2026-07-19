@@ -2386,6 +2386,728 @@ export const ALGORITHMS: Record<string, AlgorithmMetadata> = {
 		path: "/algorithms/graphs/topological-sort",
 		pythonModule: "graphs.topological_sort",
 	},
+	bellman_ford: {
+		id: "bellman_ford",
+		name: "Bellman-Ford",
+		category: "graphs",
+		difficulty: "medium",
+		tags: [
+			"shortest-path",
+			"dynamic-programming",
+			"negative-weights",
+			"cycle-detection",
+			"graph",
+			"interview-favorite",
+		],
+		complexity: {
+			time: {
+				best: "O(V * E)",
+				average: "O(V * E)",
+				worst: "O(V * E)",
+			},
+			space: "O(V)",
+			explanation:
+				"Relaxes every edge (E) across V-1 passes, giving O(V * E). An optional early-exit stops once a pass makes no updates, but the worst case is still O(V * E). Space is O(V) for the distance and predecessor tables.",
+		},
+		description:
+			"Single-source shortest-path algorithm for weighted graphs that handles negative edge weights and detects negative-weight cycles.",
+		howItWorks:
+			"Bellman-Ford initializes the source distance to 0 and all others to infinity, then relaxes every edge V-1 times: for edge (u -> v, w), if dist[u] + w < dist[v] it updates dist[v]. Because a shortest path uses at most V-1 edges, V-1 passes settle every distance. A final pass that can still relax any edge proves a reachable negative-weight cycle exists.",
+		keyInsights: [
+			"Handles negative edge weights, unlike Dijkstra's greedy approach",
+			"A shortest path visits at most V-1 edges, so V-1 relaxation passes suffice",
+			"One extra pass detects negative-weight cycles reachable from the source",
+			"It is dynamic programming: each pass extends optimal paths by one more edge",
+		],
+		edgeCases: [
+			{
+				name: "Negative edge (no cycle)",
+				description:
+					"Negative weights are fine as long as no negative cycle is reachable; the shorter path via the negative edge wins.",
+				input: {
+					graph: {
+						"0": [
+							[1, 4],
+							[2, 5],
+						],
+						"1": [[3, 3]],
+						"2": [
+							[1, -2],
+							[3, 4],
+						],
+						"3": [],
+					},
+					start: 0,
+				},
+			},
+			{
+				name: "Negative-weight cycle",
+				description:
+					"A reachable cycle with net-negative weight has no well-defined shortest path; the extra pass flags it.",
+				input: { graph: { "0": [[1, 1]], "1": [[2, -1]], "2": [[0, -1]] }, start: 0 },
+			},
+			{
+				name: "Disconnected / unreachable nodes",
+				description:
+					"Nodes not reachable from the source keep distance infinity and are simply omitted from the final result.",
+				input: { graph: { "0": [[1, 2]], "1": [], "2": [[0, 1]] }, start: 0 },
+			},
+		],
+		whenToUse: [
+			"Shortest paths in graphs that contain negative edge weights",
+			"Detecting negative-weight cycles, e.g. currency-arbitrage detection",
+			"Distance-vector routing protocols such as RIP",
+			"As the reweighting subroutine inside Johnson's all-pairs shortest paths",
+		],
+		interviewTips: [
+			"Explain why V-1 passes suffice: a simple shortest path has at most V-1 edges",
+			"Contrast with Dijkstra: Bellman-Ford is slower (O(V*E)) but handles negatives",
+			"Describe the extra pass as the negative-cycle detector",
+			"Mention the early-exit optimization when a pass makes no updates",
+		],
+		prerequisites: ["bfs", "dijkstra"],
+		relatedAlgorithms: ["dijkstra", "bfs", "topological_sort"],
+		visualizationType: "graph",
+		path: "/algorithms/graphs/bellman-ford",
+		pythonModule: "graphs.bellman_ford_viz",
+	},
+	prim_mst: {
+		id: "prim_mst",
+		name: "Prim's Minimum Spanning Tree",
+		category: "graphs",
+		difficulty: "medium",
+		tags: [
+			"greedy",
+			"minimum-spanning-tree",
+			"graph",
+			"priority-queue",
+			"interview-favorite",
+			"real-world",
+		],
+		complexity: {
+			time: {
+				best: "O(E log V)",
+				average: "O(E log V)",
+				worst: "O(E log V)",
+			},
+			space: "O(V + E)",
+			explanation:
+				"With a binary-heap priority queue: O(E log V). Every edge is pushed onto the heap at most once and each push/pop costs O(log V), while every vertex is absorbed exactly once. Space is O(V) for the in-tree set and chosen MST edges plus O(E) for the heap of crossing edges (and O(V + E) to hold the adjacency list).",
+		},
+		description:
+			"Greedy algorithm that builds a minimum spanning tree of a connected, undirected, weighted graph by starting from one vertex and repeatedly adding the cheapest edge that crosses the cut between the tree and the rest of the graph.",
+		howItWorks:
+			"Prim's starts the tree with a single vertex and pushes all of its edges onto a min-heap. It repeatedly pops the cheapest crossing edge; if the far endpoint is already in the tree the (stale) edge is discarded, otherwise the edge is added to the MST, the new vertex is absorbed, and its edges are pushed. This continues until every vertex is in the tree (V - 1 edges chosen).",
+		keyInsights: [
+			"Relies on the cut property: the minimum-weight edge crossing any cut is always in some MST, so the greedy pick is provably safe",
+			"A lazy min-heap avoids decrease-key bookkeeping - just discard any popped edge whose target is already in the tree",
+			"Grows one connected tree outward, whereas Kruskal's sorts all edges globally and merges forests with union-find",
+			"Only defined on undirected graphs; a disconnected graph yields a spanning forest, not a single tree",
+		],
+		edgeCases: [
+			{
+				name: "Single-node graph",
+				description:
+					"No edges to choose - the MST is trivially the lone vertex with total weight 0",
+				input: { graph: { "0": [] }, start: 0 },
+			},
+			{
+				name: "Disconnected graph",
+				description:
+					"Prim's can only span the start vertex's connected component; unreachable nodes are never added, so the result is a spanning tree of that component (a forest overall)",
+				input: { graph: { "0": [[1, 4]], "1": [[0, 4]], "2": [] }, start: 0 },
+			},
+			{
+				name: "Parallel edges of different weight",
+				description:
+					"When two vertices are joined by more than one edge, only the cheapest is ever chosen; the heavier crossing edge is skipped or discarded as stale",
+				input: {
+					graph: {
+						"0": [
+							[1, 2],
+							[1, 9],
+						],
+						"1": [
+							[0, 2],
+							[0, 9],
+						],
+					},
+					start: 0,
+				},
+			},
+		],
+		whenToUse: [
+			"Designing least-cost networks - cabling, piping, or road layouts that must connect every site",
+			"Single-linkage / hierarchical clustering, which is built directly on a minimum spanning tree",
+			"Maze generation and image segmentation",
+			"Prefer Prim's on dense graphs; prefer Kruskal's on sparse, edge-list-shaped graphs",
+		],
+		interviewTips: [
+			"State the cut property up front - it's why the greedy choice is correct",
+			"Use a lazy heap and skip popped edges whose endpoint is already in the tree instead of implementing decrease-key",
+			"Compare with Kruskal's (global edge sort + union-find) and note Prim's edge on dense graphs",
+			"Clarify the graph is undirected and connected; call out the spanning-forest behavior otherwise",
+		],
+		prerequisites: ["bfs", "dijkstra"],
+		relatedAlgorithms: ["kruskal", "dijkstra", "bfs"],
+		usesDataStructures: ["priority-queue", "hash-set"],
+		visualizationType: "graph",
+		path: "/algorithms/graphs/prim-mst",
+		pythonModule: "graphs.prim_mst_viz",
+	},
+	astar_grid: {
+		id: "astar_grid",
+		name: "A* Pathfinding (Grid)",
+		category: "graphs",
+		difficulty: "hard",
+		tags: [
+			"pathfinding",
+			"shortest-path",
+			"graph",
+			"grid",
+			"heuristic",
+			"priority-queue",
+			"greedy",
+			"informed-search",
+		],
+		complexity: {
+			time: {
+				best: "O(E)",
+				average: "O(E log V)",
+				worst: "O(E log V)",
+			},
+			space: "O(V)",
+			explanation:
+				"On a grid V = R×C cells and E = O(V) edges. Each edge relaxation can push to a binary-heap open set costing O(log V), giving O(E log V) overall. With a strong heuristic the frontier stays small and search approaches O(V); with h = 0 it degrades to Dijkstra. Space is O(V) for the open set, closed set, g-scores, and came-from map.",
+		},
+		description:
+			"A* finds the lowest-cost path between two cells on a 4-connected grid by always expanding the open-set node with the smallest f = g + h, where g is the exact cost from the start and h is an admissible Manhattan-distance estimate to the goal. The admissible heuristic guarantees an optimal (shortest) path while guiding search toward the goal.",
+		howItWorks:
+			"Push the start cell onto a min-heap keyed by f = g + h. Repeatedly pop the lowest-f cell; if it is the goal, reconstruct the path via the came-from map. Otherwise mark it closed and relax each in-bounds, non-wall neighbor: when the path through the current cell is cheaper, update its g-score, record came-from, and push it with a fresh f. Continue until the goal is popped or the open set empties (no path).",
+		keyInsights: [
+			"f = g + h balances exact cost so far (g) with an optimistic estimate to the goal (h), focusing search toward the goal instead of exploring blindly.",
+			"An admissible heuristic (never overestimates) guarantees the optimal shortest path; Manhattan distance is the tightest admissible choice on a 4-connected grid.",
+			"With h = 0, A* degenerates into Dijkstra's algorithm; a perfect heuristic walks straight to the goal, so heuristic quality controls how much of the grid is explored.",
+			"A closed set prevents re-expanding cells, keeping search efficient even when many paths converge on the same cell.",
+		],
+		edgeCases: [
+			{
+				name: "No path exists",
+				description:
+					"Walls fully enclose the goal so the open set empties before the goal is reached; A* reports the goal is unreachable.",
+				input: {
+					grid: [
+						[0, 1, 0],
+						[0, 1, 0],
+					],
+					start: [0, 0],
+					goal: [0, 2],
+				},
+			},
+			{
+				name: "Start equals goal",
+				description:
+					"The start cell is popped immediately as the goal, yielding a trivial one-cell path with cost 0.",
+				input: {
+					grid: [
+						[0, 0],
+						[0, 0],
+					],
+					start: [0, 0],
+					goal: [0, 0],
+				},
+			},
+			{
+				name: "Start or goal on a wall",
+				description:
+					"An endpoint sitting on a wall (or out of bounds) is invalid, so search terminates immediately with no path.",
+				input: {
+					grid: [
+						[0, 0],
+						[1, 0],
+					],
+					start: [1, 0],
+					goal: [0, 1],
+				},
+			},
+		],
+		whenToUse: [
+			"Game AI navigation: moving units and NPCs around obstacles on tile maps.",
+			"Robotics motion planning: collision-free paths on occupancy grids.",
+			"GPS and routing when a good distance estimate to the destination is available.",
+			"Puzzle solving (e.g. the 15-puzzle) with an admissible heuristic.",
+			"Any shortest-path search where a reliable heuristic makes A* beat uninformed Dijkstra.",
+		],
+		interviewTips: [
+			"Be able to state why an admissible (and ideally consistent) heuristic guarantees optimality, and what happens when h overestimates.",
+			"Explain that A* with h = 0 is exactly Dijkstra, and greedy best-first is A* ignoring g — know the trade-offs.",
+			"Use a heap keyed by f with a tie-breaker/counter to avoid comparing cells, and skip stale heap entries via a closed set or best-g check.",
+			"Manhattan distance fits 4-connected grids; use Euclidean or Chebyshev/octile distance when diagonal moves are allowed.",
+			"Reconstruct the path by following came-from pointers from goal back to start, then reverse.",
+		],
+		prerequisites: ["bfs", "dijkstra"],
+		relatedAlgorithms: ["dijkstra", "bfs", "num_islands"],
+		visualizationType: "grid",
+		path: "/algorithms/graphs/astar-grid",
+		pythonModule: "graphs.astar_grid_viz",
+	},
+	exponential_search: {
+		id: "exponential_search",
+		name: "Exponential Search",
+		category: "searching",
+		difficulty: "medium",
+		tags: [
+			"searching",
+			"sorted-array",
+			"binary-search",
+			"divide-and-conquer",
+			"logarithmic",
+			"unbounded-search",
+		],
+		complexity: {
+			time: {
+				best: "O(1)",
+				average: "O(log i)",
+				worst: "O(log n)",
+			},
+			space: "O(1)",
+			explanation:
+				"Best case O(1) when the target is at index 0 or the first probe matches. The doubling phase finds a bracketing range in O(log i) probes, where i is the target's index, and the bounded binary search adds another O(log i); overall O(log i), which is O(log n) in the worst case (target near the end or absent). Space is O(1) iterative, using only a few index pointers.",
+		},
+		description:
+			"Search on a sorted array that first finds a range by starting at bound 1 and repeatedly doubling (1, 2, 4, 8, ...) until it overshoots the target, then binary searches within that range. Faster than plain binary search when the target is near the front, and ideal for unbounded or unknown-length inputs.",
+		howItWorks:
+			"Exponential search runs in two phases. Phase 1 (expand): after checking index 0, it sets bound = 1 and doubles it (1, 2, 4, 8, ...) as long as arr[bound] is still less than the target and stays within the array, which brackets the target inside a range of size at most 2i in O(log i) steps. Phase 2 (binary): it performs an ordinary binary search over the window [bound/2, min(bound, n-1)] where the target must lie, halving the range each step until the value is found or the window is empty (returning -1).",
+		keyInsights: [
+			"The doubling phase costs O(log i) where i is the target's index, so the runtime depends on the target's position rather than the full array length n.",
+			"It shines on unbounded or infinite sorted streams of unknown length: you never index past the first bound that overshoots the target.",
+			"When the target is near the front, it beats plain binary search by converging in O(log i) instead of O(log n).",
+			"The second phase reduces to a standard binary search confined to the last doubled window, so its correctness follows directly from binary search on a sorted range.",
+		],
+		edgeCases: [
+			{
+				name: "Target at index 0",
+				description: "Best case O(1) - matched by the initial index-0 probe before any doubling",
+				input: { array: [1, 3, 5, 7, 9], target: 1 },
+			},
+			{
+				name: "Target near the end",
+				description:
+					"Bound doubles past the array, so the binary-search window is clamped to [bound/2, n-1]",
+				input: { array: [1, 3, 5, 7, 9, 11, 13, 17, 21, 25], target: 25 },
+			},
+			{
+				name: "Target absent",
+				description: "Bounded binary search exhausts its window and returns -1",
+				input: { array: [1, 3, 5, 7, 9, 11, 13, 17, 21, 25], target: 4 },
+			},
+		],
+		whenToUse: [
+			"Searching unbounded or infinite sorted streams where the length is unknown in advance.",
+			"Sorted data where the target is expected near the beginning, making O(log i) beat O(log n).",
+			"As a range-finding front end that hands off to binary search on very large sorted arrays.",
+		],
+		interviewTips: [
+			"Explain the two phases clearly: exponential range-finding by doubling, then binary search within [bound/2, min(bound, n-1)].",
+			"State why the binary window starts at bound/2: the previous bound was known to be strictly less than the target, so no earlier index can hold it.",
+			"Emphasize the O(log i) advantage over binary search and its classic use case for unbounded/unknown-length inputs.",
+			"Watch the boundary: clamp the high end to n-1 when the bound doubles past the array, and require the array to be sorted.",
+		],
+		prerequisites: ["binary_search"],
+		relatedAlgorithms: ["binary_search", "linear_search", "rotated_search"],
+		visualizationType: "array",
+		path: "/algorithms/search/exponential-search",
+		pythonModule: "search.exponential_search_viz",
+	},
+	ternary_search: {
+		id: "ternary_search",
+		name: "Ternary Search",
+		category: "searching",
+		difficulty: "medium",
+		tags: ["divide-and-conquer", "logarithmic", "arrays", "unimodal-optimization", "binary-search"],
+		complexity: {
+			time: {
+				best: "O(1)",
+				average: "O(log₃ n)",
+				worst: "O(log₃ n)",
+			},
+			space: "O(1)",
+			explanation:
+				"Two split points cut the window into thirds and discard two of them each iteration, so the search space shrinks by a factor of 3 - giving O(log₃ n) iterations. Best case O(1) when the target lands on a split point immediately. Iterative implementation uses O(1) extra space. Note each iteration costs TWO comparisons, so total comparisons ≈ 2·log₃ n ≈ 1.26·log₂ n, MORE than binary search's ≈ log₂ n.",
+		},
+		description:
+			"A divide-and-conquer search that splits a sorted array into thirds with two midpoints, discarding two of the three segments per step. Mostly pedagogical - binary search is strictly faster on a sorted array; ternary search shines for unimodal optimization.",
+		howItWorks:
+			"Maintain a window [lo, hi]. Each iteration compute two split points, mid1 = lo + (hi-lo)/3 and mid2 = hi - (hi-lo)/3, dividing the window into three roughly equal thirds. Compare the target to arr[mid1] and arr[mid2]: if it equals either, you are done; if it is less than arr[mid1] keep only the first third, if greater than arr[mid2] keep only the last third, otherwise keep the middle third. Two of the three segments are discarded every step. Repeat until the target is found or the window is empty (return -1).",
+		keyInsights: [
+			"Each step shrinks the window to one-third (log base 3), but pays for it with TWO comparisons per step instead of one.",
+			"Net effect: ~2·log₃ n ≈ 1.26·log₂ n comparisons - about 26% MORE work than binary search, so binary search wins on a plain sorted array.",
+			"Its real purpose is unimodal optimization: finding the peak (or valley) of a function that strictly increases then decreases, where a single midpoint can't reveal which side the extremum lies on but two can.",
+			"Like binary search it requires sorted input and runs in O(1) extra space when written iteratively.",
+		],
+		edgeCases: [
+			{
+				name: "Target on a split point",
+				description:
+					"When the target equals arr[mid1] or arr[mid2] the search returns immediately - the O(1) best case.",
+				input: "[1, 3, 5, 7, 9, 11, 13, 15, 17, 19], target = 7",
+			},
+			{
+				name: "Target not present",
+				description:
+					"When the target does not exist the window keeps shrinking by thirds until it is empty and the search returns -1.",
+				input: "[1, 3, 5, 7, 9, 11, 13, 15, 17, 19], target = 4",
+			},
+			{
+				name: "Single element / empty array",
+				description:
+					"A one-element array returns index 0 if it matches else -1 (mid1 and mid2 collapse to the same index); an empty array immediately returns -1.",
+				input: "[5], target = 5",
+			},
+		],
+		whenToUse: [
+			"Ternary search on a unimodal function - locating the maximum or minimum of a curve that rises then falls (or vice versa).",
+			"Teaching how divide-and-conquer generalizes beyond halving, and why fewer iterations does not always mean fewer comparisons.",
+			"Almost never for plain sorted-array lookup - reach for binary search there, which does strictly fewer comparisons.",
+		],
+		interviewTips: [
+			"Be ready to explain why ternary search is asymptotically the same class as binary search yet slower in practice: log₃ n iterations but 2 comparisons each.",
+			"If asked to optimize a unimodal function over a range, ternary search (or its continuous variant on a real interval) is the expected answer.",
+			"Get the split points right: mid1 = lo + (hi-lo)/3 and mid2 = hi - (hi-lo)/3, and use inclusive bounds (lo <= hi).",
+			"Mention golden-section search as the constant-factor-better cousin for continuous unimodal optimization.",
+		],
+		prerequisites: ["binary_search"],
+		relatedAlgorithms: ["binary_search", "linear_search"],
+		visualizationType: "array",
+		path: "/algorithms/search/ternary-search",
+		pythonModule: "search.ternary_search_viz",
+	},
+	coin_change_2: {
+		id: "coin_change_2",
+		name: "Coin Change II (Count Ways)",
+		category: "dynamic_programming",
+		difficulty: "medium",
+		tags: [
+			"dynamic-programming",
+			"unbounded-knapsack",
+			"counting",
+			"combinatorics",
+			"2d-dp",
+			"grid",
+			"coins",
+		],
+		complexity: {
+			time: { best: "O(k × amount)", average: "O(k × amount)", worst: "O(k × amount)" },
+			space: "O(k × amount)",
+			explanation:
+				"Every cell of the (k+1)×(amount+1) DP table is computed exactly once in O(1), where k is the number of coin types. Space is the full 2D table but collapses to O(amount) with a rolling 1D array.",
+		},
+		description:
+			"Count the number of distinct combinations of coins (each usable unlimited times) that sum to a target amount, where order does not matter. Solved with a 2D counting DP where dp[i][j] is the number of ways to make amount j using the first i coin types.",
+		howItWorks:
+			"Build a DP table dp[i][j] = number of ways to form amount j using the first i coin types. Base case dp[i][0] = 1 (one way to make zero: the empty combination). Process one coin type at a time in the outer loop so permutations are never double-counted. For each cell, dp[i][j] = dp[i-1][j] (skip this coin, the cell above) + dp[i][j - coin] (use this coin at least once, the same-row cell 'coin' columns to the left, if it fits). The answer is the bottom-right cell dp[k][amount].",
+		keyInsights: [
+			"Iterating coins in the OUTER loop is what enforces combinations over permutations — {1,2} and {2,1} are counted once, unlike a naive amount-outer loop which would count both.",
+			"The 'use coin' transition reads from the SAME row (dp[i][j - coin]) because coins are reusable an unlimited number of times (unbounded knapsack).",
+			"It uses a SUM recurrence to count ways, in contrast to Coin Change (min coins) which uses a MIN(1 + subproblem) recurrence; unreachable amounts here are simply 0 ways rather than infinity.",
+			"Only the current and previous rows matter, so space optimizes to a single O(amount) 1D array updated left-to-right.",
+		],
+		edgeCases: [
+			{
+				name: "Amount is zero",
+				description:
+					"There is exactly one way to make amount 0 — pick no coins — so the answer is 1, not 0.",
+				input: "{ coins: [1, 2, 5], amount: 0 }",
+			},
+			{
+				name: "No coins provided",
+				description:
+					"With an empty coin set, any positive amount is unreachable (0 ways) while amount 0 still has 1 way.",
+				input: "{ coins: [], amount: 5 }",
+			},
+			{
+				name: "Amount not reachable by any combination",
+				description:
+					"When no combination sums to the target (e.g. only even coins for an odd amount), the count is 0.",
+				input: "{ coins: [2, 4], amount: 3 }",
+			},
+		],
+		whenToUse: [
+			"Counting how many distinct coin or note combinations produce a given total (making change).",
+			"Integer partition problems: counting ways to write a number as a sum from a fixed set of parts.",
+			"Any counting-DP that asks 'how many combinations sum to a target' with reusable items and order-independent selections.",
+			"Knapsack-style counting where items have unlimited supply and only the multiset of choices matters.",
+		],
+		interviewTips: [
+			"State clearly that order does NOT matter (combinations), which is why the coin loop must be the outer loop — swapping loop order silently switches to counting permutations.",
+			"Contrast it with Coin Change (min coins): same unbounded-knapsack structure but SUM vs MIN, and 0-ways vs infinity for unreachable amounts.",
+			"Mention the O(amount) 1D space optimization and why the inner amount loop goes left-to-right (so each coin can be reused).",
+			"Watch the base case: dp[*][0] = 1; forgetting it makes every count collapse to 0.",
+		],
+		prerequisites: ["fibonacci", "coin_change"],
+		relatedAlgorithms: ["coin_change", "knapsack", "edit_distance"],
+		visualizationType: "grid",
+		path: "/algorithms/dynamic-programming/coin-change-2",
+		pythonModule: "dynamic_programming.coin_change_2_viz",
+	},
+	longest_palindromic_subsequence: {
+		id: "longest_palindromic_subsequence",
+		name: "Longest Palindromic Subsequence",
+		category: "dynamic_programming",
+		difficulty: "medium",
+		tags: [
+			"dynamic-programming",
+			"strings",
+			"interval-dp",
+			"palindrome",
+			"subsequence",
+			"two-dimensional-dp",
+		],
+		complexity: {
+			time: { best: "O(n²)", average: "O(n²)", worst: "O(n²)" },
+			space: "O(n²)",
+			explanation:
+				"Every (i, j) interval with i ≤ j is filled exactly once, giving O(n²) time and O(n²) space; the table can be collapsed to O(n) with a rolling 1D array.",
+		},
+		description:
+			"Find the length of the longest subsequence of a string that reads the same forwards and backwards, using interval dynamic programming over substrings.",
+		howItWorks:
+			"Define dp[i][j] as the length of the longest palindromic subsequence within s[i..j]. Base case: dp[i][i] = 1 since every single character is a palindrome. Fill the table by increasing interval length (i from high to low, j from i upward). If s[i] == s[j], the matching ends wrap an inner palindrome: dp[i][j] = 2 + dp[i+1][j-1]. Otherwise drop one end: dp[i][j] = max(dp[i+1][j], dp[i][j-1]). The answer is dp[0][n-1].",
+		keyInsights: [
+			"Interval DP: subproblems are contiguous substrings s[i..j], solved shortest-first so each cell's dependencies are already computed.",
+			"Matching end characters contribute 2 and recurse inward; mismatched ends discard one character and take the better side.",
+			"LPS(s) is exactly LCS(s, reverse(s)) — the same value reachable through the longest common subsequence DP.",
+			"The minimum number of deletions to make s a palindrome equals n − LPS(s).",
+		],
+		edgeCases: [
+			{
+				name: "Empty string",
+				description: "No characters, so the longest palindromic subsequence has length 0.",
+				input: "",
+			},
+			{
+				name: "Single character",
+				description: "Any single character is itself a palindrome of length 1.",
+				input: "a",
+			},
+			{
+				name: "No repeats",
+				description: "When all characters are distinct the answer is 1 — any single character.",
+				input: "abcd",
+			},
+		],
+		whenToUse: [
+			"Computing the minimum insertions or deletions to turn a string into a palindrome (n − LPS).",
+			"Modeling RNA secondary structure where complementary bases pair like palindrome ends.",
+			"Interview problems that call for interval DP over substrings.",
+			"Measuring symmetric internal structure within a single sequence.",
+		],
+		interviewTips: [
+			"State the recurrence in terms of intervals dp[i][j], not prefixes — this distinguishes it from LCS/edit-distance style DP.",
+			"Get the fill order right: iterate i downward and j upward (or by increasing length) so dp[i+1][j-1] is ready.",
+			"Mention the LCS(s, reverse(s)) equivalence as an alternative O(n²) solution.",
+			"If asked for the actual subsequence, backtrack from dp[0][n-1] following the choices that built each cell.",
+		],
+		prerequisites: ["longest_common_subsequence", "edit_distance"],
+		relatedAlgorithms: ["longest_common_subsequence", "edit_distance"],
+		visualizationType: "grid",
+		path: "/algorithms/dynamic-programming/longest-palindromic-subsequence",
+		pythonModule: "dynamic_programming.lps_viz",
+	},
+	max_product_subarray: {
+		id: "max_product_subarray",
+		name: "Maximum Product Subarray",
+		category: "dynamic_programming",
+		difficulty: "medium",
+		tags: [
+			"dynamic-programming",
+			"array",
+			"subarray",
+			"kadane",
+			"running-optimum",
+			"negatives",
+			"sign-flip",
+			"linear-scan",
+		],
+		complexity: {
+			time: { best: "O(n)", average: "O(n)", worst: "O(n)" },
+			space: "O(1)",
+			explanation:
+				"A single left-to-right pass tracks the max and min product ending at each index, so time is linear in the array length and only a constant number of scalars are stored.",
+		},
+		description:
+			"Given an integer array that may contain negatives and zeros, find the contiguous subarray with the largest product. A Kadane-style DP that carries two running values because a negative can flip the smallest product into the largest.",
+		howItWorks:
+			"Initialize cur_max, cur_min, and best to nums[0]. For each element x from index 1: compute candidates x, cur_max*x, and cur_min*x from the OLD running values, then set cur_max to their maximum and cur_min to their minimum. A negative x swaps the roles of max and min; a zero collapses both to 0 and restarts the window. Update best whenever cur_max exceeds it. best is the maximum contiguous product.",
+		keyInsights: [
+			"You must track BOTH the maximum and minimum product ending at each index - the minimum is a candidate maximum waiting for a sign flip.",
+			"Multiplying by a negative number swaps largest and smallest, so the previous minimum can become the new maximum.",
+			"A zero resets both running products to 0 and effectively restarts the window after it.",
+			"Initialize best to nums[0] (not 1) so single-element and all-negative arrays return the correct answer.",
+		],
+		edgeCases: [
+			{
+				name: "Contains zeros",
+				description:
+					"A zero forces any crossing subarray's product to 0; both running products collapse and the window restarts after the zero.",
+				input: "[-2, 0, -1]",
+			},
+			{
+				name: "All negative / single element",
+				description:
+					"With an odd count of negatives or a lone element, the best product may be a single element; initializing best to nums[0] handles this.",
+				input: "[-2]",
+			},
+			{
+				name: "Double negative flip",
+				description:
+					"Two negatives multiply to a large positive, so the running minimum becomes the new maximum.",
+				input: "[2, -5, -2, -4, 3]",
+			},
+		],
+		whenToUse: [
+			"Maximizing multiplicative gain over a contiguous window, such as compounded growth or scaling factors.",
+			"Any 'largest contiguous product' subproblem where negative values and zeros interact.",
+			"As a follow-up to Kadane's sum problem that tests handling of sign changes and resets.",
+		],
+		interviewTips: [
+			"State up front that you must track both max and min because of sign flips - this is the core insight interviewers look for.",
+			"Compute the new max and min from the old values before overwriting either, or you will corrupt the second computation.",
+			"Handle zeros and initialize best to nums[0] to avoid returning 1 for an empty subarray on all-negative inputs.",
+			"Contrast it with Kadane: sum needs one running value, product needs two.",
+		],
+		prerequisites: ["kadane"],
+		relatedAlgorithms: ["kadane"],
+		visualizationType: "array",
+		path: "/algorithms/dynamic-programming/max-product-subarray",
+		pythonModule: "dynamic_programming.max_product_subarray_viz",
+	},
+	tree_diameter: {
+		id: "tree_diameter",
+		name: "Binary Tree Diameter",
+		category: "trees",
+		difficulty: "medium",
+		tags: ["tree", "binary-tree", "dfs", "post-order", "recursion", "tree-dp", "height"],
+		complexity: {
+			time: { best: "O(n)", average: "O(n)", worst: "O(n)" },
+			space: "O(h)",
+			explanation:
+				"A single post-order DFS visits every one of the n nodes exactly once, so time is O(n) regardless of tree shape. Space is O(h) for the recursion stack, where h is the tree height - O(log n) for a balanced tree and O(n) for a skewed/degenerate one.",
+		},
+		description:
+			"Compute the diameter of a binary tree: the number of edges on the longest path between any two nodes. That path may or may not pass through the root, which is the classic trap.",
+		howItWorks:
+			"Run a post-order DFS that returns each node's height in edges (leaf = 0, missing child = -1). At every node, the longest path passing THROUGH it is height(left) + height(right) + 2 edges; keep a running maximum of that value across all nodes. The function returns 1 + max(height(left), height(right)) to its parent while side-effecting the best diameter, so height and diameter are found together in one pass.",
+		keyInsights: [
+			"The diameter need not pass through the root - you must take the maximum through-path over every node, not just the root.",
+			"Height and diameter are computed in a single post-order pass: the recursive call returns the height while side-effecting the best diameter.",
+			"A node's through-path length in edges equals height(left) + height(right); an absent subtree (height -1) contributes 0 edges.",
+			"Diameter is measured in edges, not nodes - a path over k nodes has k-1 edges, a common off-by-one bug.",
+		],
+		edgeCases: [
+			{
+				name: "Empty tree",
+				description: "No nodes at all - the diameter is 0 (there are no edges).",
+				input: "",
+			},
+			{
+				name: "Single node",
+				description: "One node has no edges, so the diameter is 0.",
+				input: "1",
+			},
+			{
+				name: "Diameter skips the root",
+				description:
+					"The longest path can lie entirely inside one subtree and never touch the root.",
+				input: "1, 2, 3, null, null, 4, 5",
+			},
+		],
+		whenToUse: [
+			"Interview classic (LeetCode 543) testing the post-order 'return one value, track another' pattern.",
+			"Measuring the worst-case span or width of a hierarchy or dependency tree.",
+			"Bounding maximum hop count / latency across a tree-structured network.",
+			"As a template for tree DP that combines left and right subtree results at each node.",
+		],
+		interviewTips: [
+			"State up front that the answer is max over all nodes of height(left) + height(right) - this shows you know the path can avoid the root.",
+			"Use a nonlocal/instance variable for the best diameter and have the recursion return only the height; do not try to return both as the primary result.",
+			"Be explicit about the edges-vs-nodes convention (leaf height 0) to avoid an off-by-one.",
+			"Mention the complexity is O(n) time and O(h) stack space, and that h is n in the worst (skewed) case.",
+		],
+		prerequisites: ["tree_max_depth", "tree_postorder"],
+		relatedAlgorithms: ["tree_max_depth", "tree_postorder", "validate_bst", "invert_binary_tree"],
+		visualizationType: "tree",
+		path: "/algorithms/trees/tree-diameter",
+		pythonModule: "trees.tree_diameter_viz",
+	},
+	tree_path_sum: {
+		id: "tree_path_sum",
+		name: "Path Sum (Root-to-Leaf)",
+		category: "trees",
+		difficulty: "easy",
+		tags: [
+			"trees",
+			"binary-tree",
+			"depth-first-search",
+			"recursion",
+			"backtracking",
+			"interview-favorite",
+		],
+		complexity: {
+			time: { best: "O(1)", average: "O(n)", worst: "O(n)" },
+			space: "O(h)",
+			explanation:
+				"A depth-first search visits each of the n nodes at most once and does O(1) work per node, so the search is O(n); it short-circuits on the first matching leaf (O(1) best case, e.g. a single-node tree that equals the target). Space is O(h) for the recursion stack, where h is the tree height - O(log n) for a balanced tree and O(n) for a degenerate/skewed one.",
+		},
+		description:
+			"Given a binary tree and a target sum, determine whether any root-to-leaf path has node values that add up exactly to the target. A leaf is a node with no children, so a valid path must run from the root all the way down to a leaf. The clean approach is a depth-first search that carries a running sum down the recursion and compares it to the target only at the leaves.",
+		howItWorks:
+			"Run a depth-first search from the root with a running sum of 0. At each node, add its value to the running sum and record the node on the current path, then recurse into its children passing running_sum + node.val down to each. Only at a leaf (a node with no left or right child) compare the accumulated sum to the target: if they are equal a valid root-to-leaf path exists and you can stop immediately; otherwise backtrack and try the next branch. Because node values may be negative, you cannot prune a branch just because the running sum already overshot the target.",
+		keyInsights: [
+			"Carry the running sum DOWN the recursion so each child sees parent_sum + node.val - there is no need to collect every path and re-sum it from scratch.",
+			"The target check happens ONLY at a leaf; a prefix that already equals the target on an internal node does not count as a root-to-leaf path.",
+			"Short-circuit on the first matching leaf: once a valid path is found you never need to explore the rest of the tree.",
+			"Values can be negative, so a running sum that overshoots the target is not a reason to prune - a later negative node could bring it back to the target.",
+		],
+		edgeCases: [
+			{
+				name: "Empty tree",
+				description:
+					"A tree with no nodes has no root-to-leaf path, so no target (not even 0) can be matched.",
+				input: "{ values: [], target: 0 }",
+			},
+			{
+				name: "Single node equals target",
+				description:
+					"A one-node tree is itself a leaf; it matches only when the root value equals the target.",
+				input: "{ values: [7], target: 7 }",
+			},
+			{
+				name: "Prefix matches but leaf does not",
+				description:
+					"An internal node whose running sum already equals the target does not count - the path must reach a leaf, so negative or extra child values can push the leaf total off target.",
+				input: "{ values: [5, 4, 8, 11, null, 13, 4, 7, 2, null, null, null, 1], target: 9 }",
+			},
+		],
+		whenToUse: [
+			"Interview classic (LeetCode 112) - a clean introduction to DFS with an accumulator carried down the recursion.",
+			"Decision-tree and game-tree evaluation, where each root-to-leaf path is a full scenario whose cost or score you total.",
+			"Budget or resource checks that ask whether any sequence of choices hits an exact target total.",
+			"As a stepping stone to variants: counting all matching paths, returning the paths themselves (Path Sum II), or any-node-to-any-node sums (Path Sum III).",
+		],
+		interviewTips: [
+			"Emphasize that the check must happen at a leaf, not on any node whose running sum equals the target - state the leaf definition (no left and no right child) explicitly.",
+			"Prefer carrying the running sum (or the remaining target) down the recursion over building and summing each path separately.",
+			"Call out that node values may be negative, which rules out pruning a branch just because the running sum overshot the target.",
+			"Mention early termination - you can stop at the first matching leaf instead of exploring the whole tree.",
+			"Be ready to extend to Path Sum II (return every matching path via backtracking) or Path Sum III (any node to any descendant, often with a prefix-sum hash map).",
+		],
+		prerequisites: ["tree_traversals", "tree_max_depth"],
+		relatedAlgorithms: ["tree_max_depth", "tree_traversals", "validate_bst", "level_order"],
+		visualizationType: "tree",
+		path: "/algorithms/trees/path-sum",
+		pythonModule: "trees.path_sum_viz",
+	},
 };
 
 /**

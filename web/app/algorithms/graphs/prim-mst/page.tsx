@@ -6,7 +6,7 @@ import { GraphVisualizer } from "@/components/visualizers/GraphVisualizer";
 import { PlaybackControls } from "@/components/visualizers/PlaybackControls";
 import type { AlgorithmStep } from "@/lib/types";
 
-export default function DijkstraPage() {
+export default function PrimMstPage() {
 	const [steps, setSteps] = useState<AlgorithmStep[]>([]);
 	const [currentStep, setCurrentStep] = useState(0);
 	const [isLoading, setIsLoading] = useState(false);
@@ -14,29 +14,40 @@ export default function DijkstraPage() {
 		JSON.stringify(
 			{
 				0: [
-					[1, 4],
-					[2, 1],
-				],
-				1: [[3, 1]],
-				2: [
 					[1, 2],
-					[3, 5],
+					[3, 6],
 				],
-				3: [],
+				1: [
+					[0, 2],
+					[2, 3],
+					[3, 8],
+					[4, 5],
+				],
+				2: [
+					[1, 3],
+					[4, 7],
+				],
+				3: [
+					[0, 6],
+					[1, 8],
+				],
+				4: [
+					[1, 5],
+					[2, 7],
+				],
 			},
 			null,
 			2,
 		),
 	);
 	const [startNode, setStartNode] = useState("0");
-	const [targetNode, setTargetNode] = useState("3");
 	const [sourceCode, setSourceCode] = useState<string>("");
 	const [showCode, setShowCode] = useState(true);
 
 	useEffect(() => {
 		const fetchSource = async () => {
 			try {
-				const response = await fetch("/api/algorithms/dijkstra/source");
+				const response = await fetch("/api/algorithms/prim_mst/source");
 				const data = await response.json();
 				setSourceCode(data.source || "");
 			} catch (error) {
@@ -51,15 +62,14 @@ export default function DijkstraPage() {
 		try {
 			const graph = JSON.parse(graphInput);
 			const start = parseInt(startNode, 10);
-			const target = targetNode ? parseInt(targetNode, 10) : null;
 
-			const response = await fetch("/api/algorithms/dijkstra/execute", {
+			const response = await fetch("/api/algorithms/prim_mst/execute", {
 				method: "POST",
 				headers: {
 					"Content-Type": "application/json",
 				},
 				body: JSON.stringify({
-					input: { graph, start, target },
+					input: { graph, start },
 				}),
 			});
 
@@ -77,18 +87,38 @@ export default function DijkstraPage() {
 	const currentStepData = steps[currentStep];
 	const currentLine = currentStepData?.metadata?.source_line;
 
-	// Extract nodes and edges from weighted graph
+	// Extract nodes and edges from the weighted graph. The graph is UNDIRECTED,
+	// so each edge is drawn once (u-v and v-u collapse to a single line, keeping
+	// the smaller weight if listed twice) with its weight as the label. Nodes
+	// that only appear as neighbors are added so every vertex renders.
 	const getNodesAndEdges = () => {
 		try {
 			const graph = JSON.parse(graphInput);
-			const nodes = Object.keys(graph).map((id) => ({ id: parseInt(id, 10) }));
-			const edges: Array<{ from: number; to: number; label?: string }> = [];
+			const nodeIds = new Set<number>();
+			const edgeWeights = new Map<string, number>();
 
 			for (const [from, neighbors] of Object.entries(graph)) {
+				const fromId = parseInt(from, 10);
+				nodeIds.add(fromId);
 				for (const [to, weight] of neighbors as Array<[number, number]>) {
-					edges.push({ from: parseInt(from, 10), to, label: String(weight) });
+					nodeIds.add(to);
+					const key = fromId < to ? `${fromId}-${to}` : `${to}-${fromId}`;
+					const existing = edgeWeights.get(key);
+					if (existing === undefined || weight < existing) {
+						edgeWeights.set(key, weight);
+					}
 				}
 			}
+
+			const edges: Array<{ from: number; to: number; label?: string }> = [];
+			for (const [key, weight] of edgeWeights) {
+				const [from, to] = key.split("-").map((n) => parseInt(n, 10));
+				edges.push({ from, to, label: String(weight) });
+			}
+
+			const nodes = Array.from(nodeIds)
+				.sort((a, b) => a - b)
+				.map((id) => ({ id }));
 
 			return { nodes, edges };
 		} catch {
@@ -97,6 +127,51 @@ export default function DijkstraPage() {
 	};
 
 	const { nodes, edges } = getNodesAndEdges();
+
+	// Build highlights from metadata that survives serialization (the pydantic
+	// Highlight model strips the type/id fields, so we reconstruct here from the
+	// metadata the Python step emits). Node priority: current > in-tree > frontier
+	// (GraphVisualizer's .find picks the first matching entry, so order matters).
+	const meta = currentStepData?.metadata;
+	const treeNodes = (meta?.tree_nodes as number[] | undefined) ?? [];
+	const frontierNodes = (meta?.frontier_nodes as number[] | undefined) ?? [];
+	const current = meta?.current as number | null | undefined;
+	const mstEdges = (meta?.mst_edges as Array<[number, number, number]> | undefined) ?? [];
+	const candidateEdges =
+		(meta?.candidate_edges as Array<[number, number, number]> | undefined) ?? [];
+
+	const pairKey = (a: number, b: number) => (a < b ? `${a}-${b}` : `${b}-${a}`);
+	const mstEdgeKeys = new Set(mstEdges.map(([a, b]) => pairKey(a, b)));
+	const candidateEdgeKeys = new Set(candidateEdges.map(([a, b]) => pairKey(a, b)));
+
+	const highlights: Array<{ type: "node" | "edge"; id: number | string; color: string }> = [];
+
+	// Nodes.
+	if (current !== undefined && current !== null) {
+		highlights.push({ type: "node", id: current, color: "active" });
+	}
+	for (const n of treeNodes) {
+		if (n === current) continue;
+		highlights.push({ type: "node", id: n, color: "visited" });
+	}
+	for (const n of frontierNodes) {
+		if (n === current || treeNodes.includes(n)) continue;
+		highlights.push({ type: "node", id: n, color: "comparing" });
+	}
+
+	// Edges - matched against the drawn edge ids (from-to) in either direction.
+	for (const edge of edges) {
+		const key = pairKey(edge.from, edge.to);
+		const edgeId = `${edge.from}-${edge.to}`;
+		if (mstEdgeKeys.has(key)) {
+			highlights.push({ type: "edge", id: edgeId, color: "path" });
+		} else if (candidateEdgeKeys.has(key)) {
+			highlights.push({ type: "edge", id: edgeId, color: "active" });
+		}
+	}
+
+	const mstWeight = meta?.mst_weight as number | undefined;
+	const edgesInMst = meta?.edges_in_mst as number | undefined;
 
 	return (
 		<div className="min-h-screen p-4 sm:p-6 lg:p-8">
@@ -110,17 +185,17 @@ export default function DijkstraPage() {
 					<a href="/algorithms/graphs" className="hover:underline">
 						Graphs
 					</a>{" "}
-					/ Dijkstra's Algorithm
+					/ Prim's Minimum Spanning Tree
 				</div>
 
 				{/* Header */}
 				<div className="flex items-start justify-between">
 					<div>
 						<h1 className="text-2xl sm:text-3xl lg:text-4xl font-bold mb-2">
-							Dijkstra's Algorithm
+							Prim's Minimum Spanning Tree
 						</h1>
 						<p className="text-muted-foreground">
-							Shortest path algorithm for weighted graphs with non-negative edges
+							Grow a minimum spanning tree from a start node, one cheapest crossing edge at a time
 						</p>
 					</div>
 					{steps.length > 0 && (
@@ -144,32 +219,23 @@ export default function DijkstraPage() {
 							value={graphInput}
 							onChange={(e) => setGraphInput(e.target.value)}
 							className="w-full px-4 py-2 bg-background border border-border rounded font-mono text-sm"
-							rows={10}
-							placeholder='{"0": [[1, 4], [2, 1]], "1": [[3, 1]], "2": [[1, 2], [3, 5]], "3": []}'
+							rows={12}
+							placeholder='{"0": [[1, 2], [3, 6]], "1": [[0, 2], [2, 3]]}'
 						/>
 						<p className="text-xs text-muted-foreground mt-1">
-							Format: {`{node: [[neighbor, weight], ...], ...}`}
+							Format: {`{node: [[neighbor, weight], ...], ...}`}. Edges are UNDIRECTED (u-v is
+							symmetric), so listing an edge on either endpoint is enough.
 						</p>
 					</label>
 					<div className="grid grid-cols-2 gap-4">
 						<label className="block">
 							<span className="block text-sm font-medium mb-2">Start Node</span>
 							<input
-								type="text"
+								type="number"
 								value={startNode}
 								onChange={(e) => setStartNode(e.target.value)}
 								className="w-full px-4 py-2 bg-background border border-border rounded"
 								placeholder="0"
-							/>
-						</label>
-						<label className="block">
-							<span className="block text-sm font-medium mb-2">Target Node (optional)</span>
-							<input
-								type="text"
-								value={targetNode}
-								onChange={(e) => setTargetNode(e.target.value)}
-								className="w-full px-4 py-2 bg-background border border-border rounded"
-								placeholder="3"
 							/>
 						</label>
 					</div>
@@ -211,11 +277,7 @@ export default function DijkstraPage() {
 							{/* Graph Visualization */}
 							<div className="p-6 border border-border rounded-lg">
 								<div className="flex justify-center">
-									<GraphVisualizer
-										nodes={nodes}
-										edges={edges}
-										highlights={currentStepData?.highlights ?? []}
-									/>
+									<GraphVisualizer nodes={nodes} edges={edges} highlights={highlights} />
 								</div>
 
 								{/* Step Description */}
@@ -229,30 +291,30 @@ export default function DijkstraPage() {
 								{/* Metadata */}
 								{currentStepData?.metadata && (
 									<div className="mt-4 flex justify-center gap-6 text-xs flex-wrap">
-										{currentStepData.metadata.current !== undefined && (
+										{mstWeight !== undefined && (
 											<div>
-												Current:{" "}
-												<span className="font-mono">{currentStepData.metadata.current}</span>
+												MST Weight: <span className="font-mono">{mstWeight}</span>
 											</div>
 										)}
-										{currentStepData.metadata.current_distance !== undefined && (
+										{edgesInMst !== undefined && (
 											<div>
-												Distance:{" "}
+												Edges in MST: <span className="font-mono">{edgesInMst}</span>
+											</div>
+										)}
+										{currentStepData.metadata.total_nodes !== undefined && (
+											<div>
+												Tree Size:{" "}
 												<span className="font-mono">
-													{currentStepData.metadata.current_distance as number}
+													{treeNodes.length} / {currentStepData.metadata.total_nodes as number}
 												</span>
 											</div>
 										)}
-										{currentStepData.metadata.queue_size !== undefined && (
+										{currentStepData.metadata.edges_considered !== undefined && (
 											<div>
-												Queue:{" "}
-												<span className="font-mono">{currentStepData.metadata.queue_size}</span>
-											</div>
-										)}
-										{currentStepData.metadata.visited_count !== undefined && (
-											<div>
-												Visited:{" "}
-												<span className="font-mono">{currentStepData.metadata.visited_count}</span>
+												Edges Considered:{" "}
+												<span className="font-mono">
+													{currentStepData.metadata.edges_considered as number}
+												</span>
 											</div>
 										)}
 									</div>
@@ -261,22 +323,26 @@ export default function DijkstraPage() {
 						</div>
 
 						{/* Color Legend */}
-						<div className="flex items-center justify-center gap-6 text-xs">
+						<div className="flex items-center justify-center gap-6 text-xs flex-wrap">
 							<div className="flex items-center gap-2">
 								<div className="w-4 h-4 bg-blue-500 rounded-full" />
-								<span>Current</span>
-							</div>
-							<div className="flex items-center gap-2">
-								<div className="w-4 h-4 bg-yellow-500 rounded-full" />
-								<span>Comparing</span>
+								<span>Just added / candidate edge</span>
 							</div>
 							<div className="flex items-center gap-2">
 								<div className="w-4 h-4 bg-purple-500 rounded-full" />
-								<span>Visited</span>
+								<span>In MST (tree node)</span>
+							</div>
+							<div className="flex items-center gap-2">
+								<div className="w-4 h-4 bg-yellow-500 rounded-full" />
+								<span>Frontier candidate node</span>
 							</div>
 							<div className="flex items-center gap-2">
 								<div className="w-4 h-4 bg-green-500 rounded-full" />
-								<span>Shortest Path</span>
+								<span>MST edge</span>
+							</div>
+							<div className="flex items-center gap-2">
+								<div className="w-4 h-4 bg-gray-500 rounded-full" />
+								<span>Not yet reached</span>
 							</div>
 						</div>
 
@@ -297,13 +363,15 @@ export default function DijkstraPage() {
 							<div>
 								<h3 className="font-medium mb-2">Time Complexity</h3>
 								<p className="text-sm">
-									O((V + E) log V) with min-heap
+									O(E log V) with a binary heap
 									<br />V = vertices, E = edges
 								</p>
 							</div>
 							<div>
 								<h3 className="font-medium mb-2">Space Complexity</h3>
-								<p className="text-sm">O(V) for distances and priority queue</p>
+								<p className="text-sm">
+									O(V + E) for the in-tree set, chosen edges, and the heap of crossing edges
+								</p>
 							</div>
 						</div>
 					</div>
@@ -311,28 +379,50 @@ export default function DijkstraPage() {
 					<div className="p-6 border border-border rounded-lg">
 						<h2 className="text-2xl font-semibold mb-4">How It Works</h2>
 						<ol className="text-sm space-y-2 list-decimal list-inside">
-							<li>Initialize all distances to infinity except source (0)</li>
-							<li>Add source to priority queue with distance 0</li>
-							<li>While queue not empty: extract node with minimum distance</li>
-							<li>For each unvisited neighbor: calculate new distance</li>
-							<li>If new distance is shorter, update and add to queue</li>
-							<li>Repeat until target found or queue empty</li>
+							<li>Treat the graph as undirected - make the weighted adjacency list symmetric</li>
+							<li>Start the tree with a single node and push all of its edges onto a min-heap</li>
+							<li>Pop the cheapest edge that crosses the cut (tree vs. everything else)</li>
+							<li>
+								If its far endpoint is already in the tree, discard the stale edge and pop again
+							</li>
+							<li>Otherwise add the edge to the MST, absorb the new node, and push its edges</li>
+							<li>Repeat until every node is in the tree (V - 1 edges chosen)</li>
 						</ol>
 					</div>
 
 					<div className="p-6 border border-border rounded-lg">
 						<h2 className="text-2xl font-semibold mb-4">Key Insights</h2>
 						<ul className="text-sm space-y-2">
-							<li>✅ Finds optimal shortest path (if one exists)</li>
-							<li>✅ Works with weighted graphs (non-negative weights only)</li>
-							<li>✅ Greedy algorithm - always picks minimum distance node</li>
-							<li>💡 Uses priority queue for efficiency (min-heap)</li>
-							<li>💡 Edge relaxation: try to improve distances by exploring edges</li>
-							<li>💡 Once a node is visited, its shortest path is guaranteed</li>
 							<li>
-								💡 Used in: GPS navigation, network routing, game pathfinding, flight planning
+								💡 The <strong>cut property</strong>: the minimum-weight edge crossing any cut is
+								always in some MST - Prim's greedily adds exactly that edge at every step
 							</li>
-							<li>❌ Doesn't work with negative edge weights (use Bellman-Ford instead)</li>
+							<li>
+								✅ A lazy min-heap avoids decrease-key bookkeeping - just discard any popped edge
+								whose target is already in the tree
+							</li>
+							<li>
+								💡 Prim's grows ONE connected tree outward; Kruskal's instead sorts all edges
+								globally and merges forests with union-find
+							</li>
+							<li>
+								❌ The graph must be UNDIRECTED and connected - a disconnected graph has no single
+								spanning tree (only a spanning forest)
+							</li>
+						</ul>
+					</div>
+
+					<div className="p-6 border border-border rounded-lg">
+						<h2 className="text-2xl font-semibold mb-4">When to Use / Real-World</h2>
+						<ul className="text-sm space-y-2">
+							<li>
+								🔌 Network design - laying cable, pipes, or roads to connect sites at least cost
+							</li>
+							<li>📡 Cluster analysis - single-linkage clustering is built on an MST</li>
+							<li>🖼️ Image segmentation and maze generation use spanning trees</li>
+							<li>
+								⚡ Prefer Prim's on dense graphs; Kruskal's shines on sparse, edge-list graphs
+							</li>
 						</ul>
 					</div>
 				</div>
