@@ -42,11 +42,24 @@ class AlgorithmRegistry:
         bst_module = importlib.util.module_from_spec(spec)
         spec.loader.exec_module(bst_module)
         BSTClass = bst_module.BST
+        from algorithms.dynamic_programming.climbing_stairs_viz import ClimbingStairs
+        from algorithms.dynamic_programming.coin_change_viz import CoinChange
+        from algorithms.dynamic_programming.edit_distance_viz import EditDistance
         from algorithms.dynamic_programming.fibonacci import Fibonacci
+        from algorithms.dynamic_programming.house_robber_viz import HouseRobber
+
+        # Wave 1 exhibits (uniform run(input_data) generator interface)
+        from algorithms.dynamic_programming.kadane_viz import Kadane
         from algorithms.dynamic_programming.knapsack import Knapsack
         from algorithms.dynamic_programming.lcs import LCS
+        from algorithms.dynamic_programming.unique_paths_viz import UniquePaths
         from algorithms.graphs.num_islands import NumIslands
+        from algorithms.graphs.topological_sort import TopologicalSort
+        from algorithms.sorting.counting_sort import CountingSort
+        from algorithms.sorting.radix_sort import RadixSort
+        from algorithms.trees.invert_binary_tree_viz import InvertBinaryTree
         from algorithms.trees.traversals import TreeTraversals
+        from algorithms.trees.validate_bst_viz import ValidateBST
 
         self._algorithms["bubble_sort"] = {
             "id": "bubble_sort",
@@ -216,6 +229,109 @@ class AlgorithmRegistry:
             "visualizer_type": TreeTraversals.visualizer_type.value,
         }
 
+        self._algorithms["kadane"] = {
+            "id": "kadane",
+            "name": "Kadane's Maximum Subarray",
+            "category": "dynamic_programming",
+            "class": Kadane,
+            "visualizer_type": Kadane.visualizer_type.value,
+        }
+
+        self._algorithms["coin_change"] = {
+            "id": "coin_change",
+            "name": "Coin Change",
+            "category": "dynamic_programming",
+            "class": CoinChange,
+            "visualizer_type": CoinChange.visualizer_type.value,
+        }
+
+        self._algorithms["climbing_stairs"] = {
+            "id": "climbing_stairs",
+            "name": "Climbing Stairs",
+            "category": "dynamic_programming",
+            "class": ClimbingStairs,
+            "visualizer_type": ClimbingStairs.visualizer_type.value,
+        }
+
+        self._algorithms["house_robber"] = {
+            "id": "house_robber",
+            "name": "House Robber",
+            "category": "dynamic_programming",
+            "class": HouseRobber,
+            "visualizer_type": HouseRobber.visualizer_type.value,
+        }
+
+        self._algorithms["edit_distance"] = {
+            "id": "edit_distance",
+            "name": "Edit Distance (Levenshtein)",
+            "category": "dynamic_programming",
+            "class": EditDistance,
+            "visualizer_type": EditDistance.visualizer_type.value,
+        }
+
+        self._algorithms["unique_paths"] = {
+            "id": "unique_paths",
+            "name": "Unique Paths",
+            "category": "dynamic_programming",
+            "class": UniquePaths,
+            "visualizer_type": UniquePaths.visualizer_type.value,
+        }
+
+        self._algorithms["counting_sort"] = {
+            "id": "counting_sort",
+            "name": "Counting Sort",
+            "category": "sorting",
+            "class": CountingSort,
+            "visualizer_type": CountingSort.visualizer_type.value,
+        }
+
+        self._algorithms["radix_sort"] = {
+            "id": "radix_sort",
+            "name": "Radix Sort",
+            "category": "sorting",
+            "class": RadixSort,
+            "visualizer_type": RadixSort.visualizer_type.value,
+        }
+
+        self._algorithms["validate_bst"] = {
+            "id": "validate_bst",
+            "name": "Validate BST",
+            "category": "trees",
+            "class": ValidateBST,
+            "visualizer_type": ValidateBST.visualizer_type.value,
+        }
+
+        self._algorithms["invert_binary_tree"] = {
+            "id": "invert_binary_tree",
+            "name": "Invert Binary Tree",
+            "category": "trees",
+            "class": InvertBinaryTree,
+            "visualizer_type": InvertBinaryTree.visualizer_type.value,
+        }
+
+        self._algorithms["topological_sort"] = {
+            "id": "topological_sort",
+            "name": "Topological Sort (Kahn's)",
+            "category": "graphs",
+            "class": TopologicalSort,
+            "visualizer_type": TopologicalSort.visualizer_type.value,
+        }
+
+    # Wave 1 exhibits use a uniform run(input_data) generator interface
+    _RUN_BASED = {
+        "kadane",
+        "coin_change",
+        "climbing_stairs",
+        "house_robber",
+        "edit_distance",
+        "unique_paths",
+        "counting_sort",
+        "radix_sort",
+        "validate_bst",
+        "invert_binary_tree",
+        "topological_sort",
+    }
+
     def get_algorithm(self, algorithm_id: str) -> dict[str, Any] | None:
         """Get algorithm metadata by ID."""
         return self._algorithms.get(algorithm_id)
@@ -251,7 +367,10 @@ class AlgorithmRegistry:
         instance = algo_class()
 
         # Execute based on algorithm type
-        if algorithm_id in [
+        if algorithm_id in self._RUN_BASED:
+            # Uniform interface: each class parses input_data itself
+            steps = list(instance.run(input_data))
+        elif algorithm_id in [
             "bubble_sort",
             "quick_sort",
             "merge_sort",

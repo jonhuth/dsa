@@ -959,6 +959,753 @@ export const ALGORITHMS: Record<string, AlgorithmMetadata> = {
 		path: "/algorithms/dynamic-programming/lcs",
 		pythonModule: "dynamic_programming.lcs",
 	},
+	kadane: {
+		id: "kadane",
+		name: "Kadane's Maximum Subarray",
+		category: "dynamic_programming",
+		difficulty: "medium",
+		tags: [
+			"dynamic-programming",
+			"arrays",
+			"greedy",
+			"kadane",
+			"maximum-subarray",
+			"interview-favorite",
+			"optimization",
+		],
+		complexity: {
+			time: {
+				best: "O(n)",
+				average: "O(n)",
+				worst: "O(n)",
+			},
+			space: "O(1)",
+			explanation:
+				"A single left-to-right pass computes the answer, tracking only a few running scalars (current_sum, best_sum, and window indices), so time is linear and extra space is constant.",
+		},
+		description:
+			"Kadane's algorithm finds the contiguous subarray with the largest sum in an integer array (which may contain negatives) in a single linear pass. It maintains current_sum, the best subarray sum ending at the current index, and resets the window whenever the running sum drops below the current element.",
+		howItWorks:
+			"Initialize current_sum and best_sum to the first element. For each subsequent element i, set current_sum = max(nums[i], current_sum + nums[i]): if the running prefix has gone negative it can only reduce future sums, so drop it and restart the window at i. Whenever current_sum exceeds best_sum, record best_sum and the window [best_start, best_end]. After one pass, best_sum is the maximum contiguous subarray sum.",
+		keyInsights: [
+			"current_sum represents the maximum subarray sum that ENDS at the current index i.",
+			"A negative running prefix can only hurt future sums, so it is optimal to discard it and start a fresh window at nums[i].",
+			"Initialize best_sum to the first element (not 0) so all-negative arrays correctly return the largest single element rather than an empty subarray.",
+			"Tracking start/end indices alongside the sum lets you recover the actual subarray, not just its total.",
+		],
+		edgeCases: [
+			{
+				name: "All negative numbers",
+				description:
+					"When every element is negative, the answer is the single largest element; initializing best to the first element (not 0) handles this correctly.",
+				input: "[-5, -2, -8, -1]",
+			},
+			{
+				name: "Single element",
+				description: "An array with one element returns that element as the maximum subarray sum.",
+				input: "[7]",
+			},
+			{
+				name: "Mixed positives and negatives",
+				description:
+					"The canonical case where the running window resets after negative dips, e.g. the maximum subarray is [4, -1, 2, 1] with sum 6.",
+				input: "[-2, 1, -3, 4, -1, 2, 1, -5, 4]",
+			},
+		],
+		whenToUse: [
+			"Finding the maximum profit over a contiguous window (e.g. the best run of daily gains).",
+			"Any 'largest contiguous sum' subproblem embedded in a larger DP or greedy solution.",
+			"The 2D maximum-sum-rectangle problem, which runs Kadane over collapsed column sums.",
+			"When you need linear time and constant space instead of an explicit DP table.",
+		],
+		interviewTips: [
+			"Explicitly state the reset rule: current_sum = max(nums[i], current_sum + nums[i]).",
+			"Call out the all-negative edge case and why best must start at nums[0], not 0.",
+			"If asked to return the subarray itself (not just the sum), track start/end indices as the window updates.",
+			"Mention that Kadane is the classic O(1)-space DP and generalizes to the 2D max-rectangle problem.",
+		],
+		prerequisites: ["arrays", "dynamic-programming"],
+		relatedAlgorithms: ["fibonacci_tab", "knapsack", "lcs"],
+		visualizationType: "array",
+		path: "/algorithms/dynamic-programming/kadane",
+		pythonModule: "dynamic_programming.kadane_viz",
+	},
+	coin_change: {
+		id: "coin_change",
+		name: "Coin Change",
+		category: "dynamic_programming",
+		difficulty: "medium",
+		tags: [
+			"dynamic-programming",
+			"bottom-up",
+			"tabulation",
+			"unbounded-knapsack",
+			"optimization",
+			"interview-favorite",
+		],
+		complexity: {
+			time: { best: "O(amount * coins)", average: "O(amount * coins)", worst: "O(amount * coins)" },
+			space: "O(amount)",
+			explanation:
+				"A 1D DP table of size (amount + 1) is filled once; for each amount every denomination is tried a single time, giving O(amount * number_of_coins) time and O(amount) space.",
+		},
+		description:
+			"Given a set of coin denominations and a target amount, find the minimum number of coins needed to make that amount (or -1 if it is impossible). Coins may be reused an unlimited number of times, making this a classic unbounded-knapsack dynamic programming problem.",
+		howItWorks:
+			"Build a 1D table dp where dp[a] is the minimum number of coins to make amount a. Initialize dp[0] = 0 and every other amount as unreachable (infinity, shown as -1). For each amount a from 1 to the target, try every coin c <= a: if dp[a - c] is reachable, then dp[a - c] + 1 is a candidate, and dp[a] keeps the smallest candidate. After filling the table, dp[amount] is the answer, or -1 if it stayed unreachable. The chosen coins can be reconstructed by tracing which coin last improved each cell.",
+		keyInsights: [
+			"Optimal substructure: dp[a] = 1 + min(dp[a - c]) over all coins c <= a, so the best solution is built from best sub-solutions.",
+			"Overlapping subproblems: each dp[a] is reused by every larger amount, which is exactly what makes tabulation efficient.",
+			"Greedy (always take the largest coin) can fail — e.g. coins [1,3,4] for amount 6 gives 4+1+1=3 greedily but DP finds 3+3=2.",
+			"Iterating amount in the outer loop and coins in the inner loop naturally allows each denomination to be reused an unlimited number of times.",
+		],
+		edgeCases: [
+			{
+				name: "Amount is zero",
+				description:
+					"Making amount 0 always needs 0 coins; dp[0] is the base case and the answer is 0.",
+				input: "coins = [1, 2, 5], amount = 0",
+			},
+			{
+				name: "Impossible amount",
+				description:
+					"When no combination of coins can sum to the target, every candidate stays unreachable and the result is -1.",
+				input: "coins = [2], amount = 3",
+			},
+			{
+				name: "Greedy would fail",
+				description:
+					"Denominations where the largest-coin-first heuristic is not optimal, proving DP is required.",
+				input: "coins = [1, 3, 4], amount = 6",
+			},
+		],
+		whenToUse: [
+			"Making change with the fewest coins or bills at a register or vending machine",
+			"ATM / cash-dispensing systems that must minimize the number of notes handed out",
+			"Any 'minimum items to reach a target sum' unbounded-knapsack style optimization",
+			"Teaching or interviewing on bottom-up DP over a 1D table",
+		],
+		interviewTips: [
+			"State the recurrence explicitly: dp[a] = min(dp[a - c] + 1) over all coins c <= a, base case dp[0] = 0.",
+			"Use amount + 1 (or infinity) as the 'unreachable' sentinel so a real minimum always beats it, then map it back to -1 at the end.",
+			"Call out that greedy fails for arbitrary denominations — this is the most common follow-up.",
+			"Know the variants: 'coin change II' counts the number of ways instead of the minimum, and the bounded version limits coin counts.",
+			"Mention reconstruction (tracking the chosen coin per cell) if asked which coins were used, not just how many.",
+		],
+		prerequisites: ["fibonacci_tab"],
+		relatedAlgorithms: ["fibonacci_tab", "knapsack", "lcs"],
+		visualizationType: "array",
+		path: "/algorithms/dynamic-programming/coin-change",
+		pythonModule: "dynamic_programming.coin_change_viz",
+	},
+	climbing_stairs: {
+		id: "climbing_stairs",
+		name: "Climbing Stairs",
+		category: "dynamic_programming",
+		difficulty: "easy",
+		tags: [
+			"dynamic-programming",
+			"recurrence",
+			"fibonacci",
+			"counting",
+			"bottom-up",
+			"interview-favorite",
+			"beginner-friendly",
+		],
+		complexity: {
+			time: { best: "O(n)", average: "O(n)", worst: "O(n)" },
+			space: "O(n)",
+			explanation:
+				"Each step's count is computed exactly once by summing the two previous counts, giving linear time. The dp array uses O(n) space, reducible to O(1) by keeping only the last two values.",
+		},
+		description:
+			"Count the number of distinct ways to climb a staircase of n steps when you can take either 1 or 2 steps at a time. It is the Fibonacci recurrence framed as a staircase: ways[i] = ways[i-1] + ways[i-2].",
+		howItWorks:
+			"Set the base cases ways[0] = 1 (stand still, one way) and ways[1] = 1 (a single 1-step). Then fill the table bottom-up: to reach step i you must have arrived from step i-1 (a 1-step) or step i-2 (a 2-step), so ways[i] = ways[i-1] + ways[i-2]. The answer is ways[n].",
+		keyInsights: [
+			"This is the Fibonacci sequence in disguise: ways[n] equals Fibonacci(n+1).",
+			"Exhibits the two hallmarks of DP: optimal substructure (ways[i] built from smaller subproblems) and overlapping subproblems (each ways[i] reused twice).",
+			"Bottom-up tabulation replaces exponential O(2^n) naive recursion with linear O(n) time.",
+			"Space can be optimized from O(n) to O(1) by tracking only the previous two counts.",
+		],
+		edgeCases: [
+			{
+				name: "Zero steps",
+				description:
+					"A staircase with no steps has exactly one way to 'climb' it: do nothing. ways[0] = 1.",
+				input: "0",
+			},
+			{
+				name: "Single step",
+				description: "With one step there is exactly one way: a single 1-step. ways[1] = 1.",
+				input: "1",
+			},
+			{
+				name: "Two steps",
+				description:
+					"First case where the recurrence kicks in: 1+1 or a single 2-step, giving 2 ways.",
+				input: "2",
+			},
+		],
+		whenToUse: [
+			"As a first introduction to 1D dynamic programming and recurrence relations.",
+			"Counting-paths problems where each state depends additively on a few prior states.",
+			"Interview warm-ups that lead into harder DP such as coin change, tiling, and grid path counting.",
+			"Any decomposition where choices at each stage combine by summing sub-counts.",
+		],
+		interviewTips: [
+			"Recognize immediately that this is Fibonacci shifted by one; state that relationship up front.",
+			"Start from the recurrence ways[i] = ways[i-1] + ways[i-2] and nail down the base cases before coding.",
+			"Mention the O(1) space optimization (two rolling variables) as a follow-up improvement.",
+			"Be ready for the generalization to steps of size 1, 2, or k, where you sum the last k counts.",
+		],
+		prerequisites: ["fibonacci_tab"],
+		relatedAlgorithms: ["fibonacci_tab", "fibonacci_memo", "num_ways_to_make_change"],
+		visualizationType: "array",
+		path: "/algorithms/dynamic-programming/climbing-stairs",
+		pythonModule: "dynamic_programming.climbing_stairs_viz",
+	},
+	house_robber: {
+		id: "house_robber",
+		name: "House Robber",
+		category: "dynamic_programming",
+		difficulty: "medium",
+		tags: [
+			"dynamic-programming",
+			"1d-dp",
+			"array",
+			"optimization",
+			"interview-favorite",
+			"bottom-up",
+		],
+		complexity: {
+			time: { best: "O(n)", average: "O(n)", worst: "O(n)" },
+			space: "O(n)",
+			explanation:
+				"One left-to-right pass makes a single O(1) decision per house, so time is linear in the number of houses. The dp table uses O(n) space, which can be reduced to O(1) by keeping only the last two dp values.",
+		},
+		description:
+			"Given a row of houses each holding some money, find the maximum amount you can rob without ever robbing two adjacent houses (adjacent alarms are linked). A classic 1D dynamic programming problem solved with the recurrence dp[i] = max(dp[i-1], dp[i-2] + nums[i]).",
+		howItWorks:
+			"Set base cases dp[0] = nums[0] and dp[1] = max(nums[0], nums[1]). Then for each house i from 2 onward, choose the better of two mutually exclusive options: SKIP house i and inherit the best-so-far dp[i-1], or ROB house i by taking nums[i] plus dp[i-2] (the best total that skips the immediate neighbor). Record dp[i] = max(dp[i-1], dp[i-2] + nums[i]). The maximum loot is dp[n-1].",
+		keyInsights: [
+			"Each house reduces to a binary choice: rob it (and skip its neighbor) or skip it.",
+			"The 'rob' branch reaches back to dp[i-2], never dp[i-1], because adjacent houses cannot both be taken.",
+			"dp[i] represents the optimal loot considering only houses 0..i, giving optimal substructure over overlapping subproblems.",
+			"Only the last two dp values are ever needed, so the O(n) table collapses to O(1) space.",
+		],
+		edgeCases: [
+			{
+				name: "Empty street",
+				description: "No houses to rob, so the maximum loot is 0.",
+				input: "[]",
+			},
+			{
+				name: "Single house",
+				description:
+					"With one house the answer is simply its value; no adjacency constraint applies.",
+				input: "[5]",
+			},
+			{
+				name: "Two houses",
+				description: "Cannot rob both, so pick the larger of the two.",
+				input: "[2, 1]",
+			},
+		],
+		whenToUse: [
+			"When maximizing a sum of non-adjacent elements in a sequence.",
+			"Scheduling non-overlapping jobs or bookings along a timeline for maximum value.",
+			"Selecting items under a 'no two in a row' or cooldown constraint.",
+			"As the foundation for related variants like House Robber II (circular street) and House Robber III (binary tree).",
+		],
+		interviewTips: [
+			"State the recurrence dp[i] = max(dp[i-1], dp[i-2] + nums[i]) before coding; it signals you see the rob-vs-skip choice.",
+			"Mention you can optimize space from O(n) to O(1) using two rolling variables (prev, prev2).",
+			"Handle empty and single-element inputs explicitly to avoid index errors on the base cases.",
+			"Be ready to extend to House Robber II by running the linear solution twice: once excluding the first house and once excluding the last, then taking the max.",
+		],
+		prerequisites: ["fibonacci_tab"],
+		relatedAlgorithms: [
+			"fibonacci_tab",
+			"fibonacci_memo",
+			"max_subset_sum_no_adjacent",
+			"kadanes_algorithm",
+		],
+		visualizationType: "array",
+		path: "/algorithms/dynamic-programming/house-robber",
+		pythonModule: "dynamic_programming.house_robber_viz",
+	},
+	edit_distance: {
+		id: "edit_distance",
+		name: "Edit Distance (Levenshtein)",
+		category: "dynamic_programming",
+		difficulty: "hard",
+		tags: [
+			"dynamic-programming",
+			"strings",
+			"grid",
+			"2d-dp",
+			"interview-favorite",
+			"levenshtein",
+			"sequence-alignment",
+		],
+		complexity: {
+			time: { best: "O(m × n)", average: "O(m × n)", worst: "O(m × n)" },
+			space: "O(m × n)",
+			explanation:
+				"Fills an (m+1)×(n+1) DP table with one O(1) transition per cell, giving O(m × n) time in all cases. Space is O(m × n) for the full table, reducible to O(min(m, n)) with a rolling one-row array since each cell depends only on the previous row and the current row's left neighbor.",
+		},
+		description:
+			"Compute the minimum number of single-character edits — insertions, deletions, or replacements — needed to transform one string into another. A canonical 2D dynamic programming problem where dp[i][j] is the edit distance between the first i characters of word1 and the first j characters of word2.",
+		howItWorks:
+			"Build a 2D table where dp[i][j] = edit distance between word1[:i] and word2[:j]. Base cases: dp[i][0] = i (delete i chars) and dp[0][j] = j (insert j chars). For each cell, if word1[i-1] == word2[j-1] the characters match and you inherit the diagonal for free (dp[i][j] = dp[i-1][j-1]); otherwise dp[i][j] = 1 + min(dp[i][j-1] insert, dp[i-1][j] delete, dp[i-1][j-1] replace). The final answer is the bottom-right cell dp[m][n].",
+		keyInsights: [
+			"Each cell depends only on its left, top, and top-left neighbors — the three edit operations map to insert (left), delete (top), and replace (diagonal).",
+			"A matching character is 'free': you inherit the diagonal value with no added cost, which is what makes common substrings cheap.",
+			"Only the previous row is ever needed, so the O(m × n) space collapses to O(min(m, n)) with a rolling array.",
+			"Backtracking from dp[m][n] through the winning choices reconstructs the actual sequence of edits (the diff), and the metric is symmetric: distance(A, B) == distance(B, A).",
+		],
+		edgeCases: [
+			{
+				name: "Identical strings",
+				description:
+					"When both words are equal, every character matches along the diagonal and the edit distance is 0.",
+				input: '{ word1: "apple", word2: "apple" }',
+			},
+			{
+				name: "One empty string",
+				description:
+					"If a string is empty, the distance equals the length of the other string (pure insertions or deletions) — exercised by the base-case row/column.",
+				input: '{ word1: "", word2: "abc" }',
+			},
+			{
+				name: "No characters in common",
+				description:
+					"When the strings share no characters, the distance is max(m, n): replace the overlapping length then insert/delete the remainder.",
+				input: '{ word1: "abc", word2: "xyz" }',
+			},
+		],
+		whenToUse: [
+			"Spell checkers and 'did you mean?' suggestions — rank dictionary words by closeness to a misspelling.",
+			"DNA, RNA, and protein sequence alignment in bioinformatics.",
+			"Diff and merge tools that compute the minimal set of changes between two versions of text.",
+			"Fuzzy search, autocomplete, and record deduplication where approximate string matching is required.",
+			"Post-processing OCR or speech-recognition output against a known vocabulary.",
+		],
+		interviewTips: [
+			"State the recurrence clearly before coding: match → diagonal, else 1 + min(insert, delete, replace). Interviewers want the transition articulated.",
+			"Get the base cases right first — dp[i][0] = i and dp[0][j] = j — since off-by-one errors on the padding row/column are the most common bug.",
+			"Mention the O(min(m, n)) space optimization with a rolling array as a follow-up; it's the standard 'can you do better on space?' answer.",
+			"Be ready to extend it: weighted operations (different costs per edit) or reconstructing the actual edit sequence via backtracking are frequent follow-ups.",
+		],
+		prerequisites: ["fibonacci", "lcs"],
+		relatedAlgorithms: ["lcs", "knapsack", "fibonacci"],
+		visualizationType: "grid",
+		path: "/algorithms/dynamic-programming/edit-distance",
+		pythonModule: "dynamic_programming.edit_distance_viz",
+	},
+	unique_paths: {
+		id: "unique_paths",
+		name: "Unique Paths",
+		category: "dynamic_programming",
+		difficulty: "medium",
+		tags: ["dynamic-programming", "grid", "combinatorics", "2d-dp", "interview-favorite"],
+		complexity: {
+			time: { best: "O(m*n)", average: "O(m*n)", worst: "O(m*n)" },
+			space: "O(m*n)",
+			explanation:
+				"Each of the m*n grid cells is computed exactly once from its top and left neighbors, giving O(m*n) time. The DP grid uses O(m*n) space, reducible to O(n) with a single rolling row. Naive recursion without memoization is exponential, O(2^(m+n)).",
+		},
+		description:
+			"A robot starts in the top-left corner of an m x n grid and can move only right or down. Unique Paths counts how many distinct routes reach the bottom-right corner, solved with a 2D dynamic-programming table where each cell sums the paths arriving from above and from the left.",
+		howItWorks:
+			"Build a DP grid where dp[i][j] is the number of unique paths from (0,0) to (i,j). Every cell in the first row and first column has exactly one path (a single straight line along the edge), so they are initialized to 1. For every interior cell, paths can only arrive from directly above or directly to the left, giving the recurrence dp[i][j] = dp[i-1][j] + dp[i][j-1]. Filling the grid top-to-bottom and left-to-right ensures both dependencies are ready before each cell is computed, and the final answer is the bottom-right cell dp[m-1][n-1].",
+		keyInsights: [
+			"Each cell depends only on its top and left neighbors, so one row-major pass fills the entire grid.",
+			"The first row and first column are always 1 because there is exactly one straight-line way to reach any edge cell.",
+			"There is a closed-form combinatorial answer: C(m+n-2, m-1), choosing which of the total moves are downward.",
+			"Space collapses to O(n) since each row only needs the row directly above it (rolling array).",
+		],
+		edgeCases: [
+			{
+				name: "Single row or single column",
+				description:
+					"A 1 x n or m x 1 grid has exactly one path since the robot can only travel in a straight line.",
+				input: "{ rows: 1, cols: 5 }",
+			},
+			{
+				name: "1 x 1 grid",
+				description:
+					"The start cell is also the destination, so there is exactly one (trivial) path.",
+				input: "{ rows: 1, cols: 1 }",
+			},
+			{
+				name: "Square grid growth",
+				description:
+					"Path counts grow combinatorially; a 3 x 7 grid already yields 28 paths, illustrating why naive recursion blows up.",
+				input: "{ rows: 3, cols: 7 }",
+			},
+		],
+		whenToUse: [
+			"Counting monotone lattice paths in robot or grid path-planning problems.",
+			"Combinatorics problems that map to choosing an ordering of right/down moves.",
+			"As a canonical first 2D DP problem before tackling Unique Paths II (obstacles) or Minimum Path Sum.",
+			"Probability lattices and warehouse/logistics routing where movement is restricted to forward directions.",
+		],
+		interviewTips: [
+			"State the recurrence dp[i][j] = dp[i-1][j] + dp[i][j-1] and justify the first row/column base case of 1.",
+			"Mention the O(n) space optimization using a single rolling row to show you understand the dependency structure.",
+			"Bring up the closed-form C(m+n-2, m-1) as an O(min(m,n)) alternative that impresses interviewers.",
+			"Note the natural follow-up Unique Paths II, where blocked cells are set to 0 while the recurrence stays the same.",
+		],
+		prerequisites: ["recursion", "dynamic_programming"],
+		relatedAlgorithms: ["knapsack", "coin_change", "num_islands"],
+		visualizationType: "grid",
+		path: "/algorithms/dynamic-programming/unique-paths",
+		pythonModule: "dynamic_programming.unique_paths_viz",
+	},
+	counting_sort: {
+		id: "counting_sort",
+		name: "Counting Sort",
+		category: "sorting",
+		difficulty: "medium",
+		tags: [
+			"sorting",
+			"non-comparison-sort",
+			"integer-sort",
+			"stable-sort",
+			"linear-time",
+			"radix-building-block",
+			"interview-favorite",
+		],
+		complexity: {
+			time: { best: "O(n + k)", average: "O(n + k)", worst: "O(n + k)" },
+			space: "O(n + k)",
+			explanation:
+				"n is the number of elements and k is the range of input values (max + 1). Counting Sort never compares elements: it tallies occurrences into a count array of size k, prefix-sums the counts into positions, then places each element in one pass. All three cases are O(n + k); it stays linear only while k is comparable to n and degrades in both time and space when k is much larger than n.",
+		},
+		description:
+			"A non-comparison, stable integer sorting algorithm that counts how many times each value occurs, converts those counts into positions via a prefix sum, and places each element directly into its sorted slot in linear O(n + k) time.",
+		howItWorks:
+			"1. Scan the input to find the maximum value and allocate a count array of size k = max + 1. 2. Count phase: for each element, increment the bucket at counts[value]. 3. Prefix-sum phase: accumulate the counts so counts[v] holds the number of elements <= v, i.e. the end position for value v. 4. Placement phase: iterate the input right-to-left, place each element at counts[value] - 1, and decrement the bucket. Going right-to-left preserves the relative order of equal keys, making the sort stable. The output array is now fully sorted.",
+		keyInsights: [
+			"Non-comparison sort: it derives positions arithmetically instead of comparing elements, so it beats the O(n log n) comparison lower bound.",
+			"Runs in linear O(n + k) time when the value range k is comparable to n, but wastes memory and time when k is much larger than n (sparse or large-valued data).",
+			"Stability comes from the prefix-summed count array plus right-to-left placement, which keeps equal elements in their original relative order.",
+			"It only works on non-negative integers (or keys mappable to a bounded integer range), and it is the stable per-digit subroutine that makes Radix Sort possible.",
+		],
+		edgeCases: [
+			{
+				name: "Empty or single-element array",
+				description:
+					"An array with 0 or 1 elements is already sorted and is returned immediately without allocating a count array.",
+				input: "[]",
+			},
+			{
+				name: "Duplicate values",
+				description:
+					"Multiple equal keys land in adjacent slots; stability guarantees they keep their original relative order.",
+				input: "[3, 0, 3, 1, 0]",
+			},
+			{
+				name: "Large value range (k >> n)",
+				description:
+					"A single large value forces a huge count array, blowing up space and time even for few elements - the classic failure mode.",
+				input: "[0, 1000000]",
+			},
+		],
+		whenToUse: [
+			"Sorting integers confined to a small, known range such as ages, exam scores, or byte values.",
+			"When guaranteed linear-time sorting is needed and the key range is bounded.",
+			"As the stable digit-sorting pass inside Radix Sort.",
+			"Avoid when values are large, sparse, floating-point, or arbitrary comparable objects - use Merge Sort or Quick Sort instead.",
+		],
+		interviewTips: [
+			"Be ready to state the O(n + k) time and O(n + k) space trade-off and explain when k >> n makes it worse than a comparison sort.",
+			"Explain why the prefix sum plus right-to-left iteration makes the sort stable - a very common follow-up.",
+			"Mention that Counting Sort is the building block of Radix Sort, which extends it to large-ranged integers digit by digit.",
+			"Handle negative numbers by offsetting values by the minimum, and clarify the non-negative-integer precondition up front.",
+		],
+		prerequisites: ["arrays", "prefix-sum"],
+		relatedAlgorithms: ["radix_sort", "bucket_sort", "merge_sort"],
+		visualizationType: "array",
+		path: "/algorithms/sorting/counting-sort",
+		pythonModule: "sorting.counting_sort",
+	},
+	radix_sort: {
+		id: "radix_sort",
+		name: "Radix Sort",
+		category: "sorting",
+		difficulty: "medium",
+		tags: [
+			"non-comparison",
+			"stable",
+			"linear-time",
+			"integer-sort",
+			"counting-sort",
+			"out-of-place",
+		],
+		complexity: {
+			time: {
+				best: "O(d·(n + k))",
+				average: "O(d·(n + k))",
+				worst: "O(d·(n + k))",
+			},
+			space: "O(n + k)",
+			explanation:
+				"d digit passes, each a stable counting sort over n elements with radix k (=10). With d treated as a small constant for fixed-width integers this is effectively linear O(n). Space is O(n + k) for the output buffer plus the k digit buckets; the sort is not in-place.",
+		},
+		description:
+			"Non-comparison integer sort that processes numbers one digit at a time, from least to most significant, using a stable counting sort per digit to achieve linear-time performance.",
+		howItWorks:
+			"LSD radix sort finds the largest value to determine the digit count, then makes one pass per digit position starting at the ones place. Each pass distributes every element into one of 10 buckets (0-9) based on its current digit while preserving relative order (stable), then concatenates the buckets back into the array. Because each pass is stable, once the most significant digit is processed the array is fully sorted.",
+		keyInsights: [
+			"Never compares two elements directly, so it sidesteps the O(n log n) comparison-sort lower bound",
+			"Stability of the per-digit counting sort is what makes the multi-pass LSD approach correct",
+			"Runs in linear O(d·(n + k)) time when the number of digits d is a small constant",
+			"Ideal for fixed-width keys like integers or fixed-length strings, but the classic form assumes non-negative integers",
+		],
+		edgeCases: [
+			{
+				name: "Values with differing digit counts",
+				description:
+					"Shorter numbers are treated as having leading zeros, so passes continue until the largest value's most significant digit",
+				input: [170, 45, 75, 90, 2, 802, 24, 66],
+			},
+			{
+				name: "All equal elements",
+				description:
+					"Every element lands in the same bucket each pass; stability keeps their order and the result is correct",
+				input: [7, 7, 7, 7, 7],
+			},
+			{
+				name: "Contains zero and single digits",
+				description: "Zero and single-digit values finish sorting in the first (ones) pass",
+				input: [0, 5, 3, 0, 9, 1],
+			},
+		],
+		whenToUse: [
+			"Sorting large sets of fixed-width integers or fixed-length strings",
+			"When keys have a bounded number of digits and a small radix",
+			"When a stable, linear-time sort is worth the extra O(n + k) memory",
+			"Bucketing keys (e.g. dates, IDs, IP addresses) that decompose cleanly into digits",
+		],
+		interviewTips: [
+			"Explain LSD vs MSD radix sort and why LSD relies on a stable per-digit sort",
+			"State the complexity as O(d·(n + k)) and clarify when it beats comparison sorts",
+			"Mention it needs O(n + k) extra space and is not in-place",
+			"Note the non-negative-integer assumption and how to extend it (offset by min, or split sign) for negatives",
+		],
+		prerequisites: ["insertion_sort"],
+		relatedAlgorithms: ["merge_sort", "quick_sort", "heap_sort"],
+		visualizationType: "array",
+		path: "/algorithms/sorting/radix-sort",
+		pythonModule: "sorting.radix_sort",
+	},
+	validate_bst: {
+		id: "validate_bst",
+		name: "Validate BST",
+		category: "trees",
+		difficulty: "medium",
+		tags: [
+			"binary-search-tree",
+			"trees",
+			"recursion",
+			"depth-first-search",
+			"interview-favorite",
+			"validation",
+		],
+		complexity: {
+			time: { best: "O(1)", average: "O(n)", worst: "O(n)" },
+			space: "O(h)",
+			explanation:
+				"Each of the n nodes is checked once against its (low, high) bounds, so validation is O(n); it can reject early on the first violation (O(1) best case when the root already breaks its bound). Space is O(h) for the recursion stack, where h is the tree height - O(log n) for a balanced tree and O(n) for a degenerate/skewed one.",
+		},
+		description:
+			"Determine whether a binary tree satisfies the binary-search-tree property: for every node, all values in its left subtree are strictly smaller and all values in its right subtree are strictly larger. The clean approach carries a running (low, high) allowed range down the recursion, catching the classic trap that the constraint is global rather than a simple parent-child comparison.",
+		howItWorks:
+			"Recurse from the root with the widest allowed range (-∞, +∞). At each node, verify its value lies strictly inside the current (low, high) range. Descend left with the upper bound tightened to the node's value - range (low, node.val) - and descend right with the lower bound raised to the node's value - range (node.val, high). If any node falls outside its range the tree is not a BST; otherwise every node passing its bound check confirms a valid BST. An equivalent formulation checks that an in-order traversal produces a strictly increasing sequence.",
+		keyInsights: [
+			"The BST property is GLOBAL, not local: comparing a node only against its direct children gives false positives - a value can satisfy its parent yet violate a distant ancestor's bound.",
+			"Passing (low, high) bounds down the recursion compresses every ancestor constraint into just two numbers, so each node needs only one O(1) check.",
+			"Inequalities are strict for a canonical BST; if duplicate keys are allowed you must relax exactly one side to >= or <= to decide which subtree they belong in.",
+			"Validation is equivalent to asking whether the in-order traversal is strictly increasing, since an in-order walk of a BST yields sorted order.",
+		],
+		edgeCases: [
+			{
+				name: "Empty tree",
+				description: "A tree with no nodes is vacuously a valid BST.",
+				input: "[]",
+			},
+			{
+				name: "Single node",
+				description: "Any single-node tree is a valid BST regardless of value.",
+				input: "[1]",
+			},
+			{
+				name: "Local-check trap",
+				description:
+					"A node valid against its immediate parent but violating an ancestor's bound - the case that breaks naive parent-child validation.",
+				input: "[5, 3, 8, 1, 6, 7, 9]",
+			},
+			{
+				name: "Duplicate values",
+				description:
+					"Equal keys break a strict BST unless duplicates are explicitly allowed on one side.",
+				input: "[2, 2, 2]",
+			},
+		],
+		whenToUse: [
+			"Verifying search-tree integrity after inserts, deletes, or rotations, especially in tests or invariant assertions.",
+			"As a prerequisite guard before BST-only operations (kth smallest, range queries, ordered iteration) that assume the ordering holds.",
+			"Validating tree-structured indexes in databases and filesystems that depend on ordered invariants.",
+			"Interview settings (LeetCode 98) where the local-vs-global distinction is the point being tested.",
+		],
+		interviewTips: [
+			"State up front that the property is global and that a parent-child-only comparison is the classic wrong answer.",
+			"Prefer the (low, high) bounds recursion; use None/±infinity sentinels for the root's open bounds and keep the inequalities strict.",
+			"Mention the in-order alternative: validate by confirming the in-order sequence is strictly increasing (track only the previous value for O(1) extra space beyond the stack).",
+			"Clarify the duplicates policy with the interviewer, since it changes whether you use < or <=.",
+			"Note early termination - you can bail on the first out-of-bounds node instead of walking the whole tree.",
+		],
+		prerequisites: ["binary_search_tree", "tree_traversals"],
+		relatedAlgorithms: ["binary_search_tree", "tree_traversals", "binary_search"],
+		visualizationType: "tree",
+		path: "/algorithms/trees/validate-bst",
+		pythonModule: "trees.validate_bst_viz",
+	},
+	invert_binary_tree: {
+		id: "invert_binary_tree",
+		name: "Invert Binary Tree",
+		category: "trees",
+		difficulty: "easy",
+		tags: ["trees", "recursion", "binary-tree", "interview-favorite", "foundational"],
+		complexity: {
+			time: {
+				best: "O(n)",
+				average: "O(n)",
+				worst: "O(n)",
+			},
+			space: "O(h)",
+			explanation:
+				"Every node is visited exactly once to swap its children, giving O(n) time. Space is O(h) for the recursion stack where h is the tree height — O(log n) for a balanced tree, O(n) for a skewed one.",
+		},
+		description:
+			"Produce the mirror image of a binary tree by recursively swapping the left and right children of every node. The famous 'Homebrew' whiteboard question.",
+		howItWorks:
+			"Starting at the root, swap the node's left and right child pointers, then recursively invert the left subtree and the right subtree. Null nodes and leaves are the base case and need no swap. The order of swap-then-recurse vs recurse-then-swap does not matter — both yield the same mirrored tree.",
+		keyInsights: [
+			"The whole algorithm is one idea — swap a node's two children — applied recursively to every node.",
+			"It has the same traversal shape as any tree walk, so it runs in O(n) time.",
+			"Swap the child pointers, not the values — swapping values would force you to touch every descendant.",
+			"Inverting a tree twice restores the original: the operation is its own inverse.",
+		],
+		edgeCases: [
+			{
+				name: "Empty tree",
+				description: "A null root has nothing to invert; the algorithm returns immediately.",
+				input: "[]",
+			},
+			{
+				name: "Single node",
+				description: "A lone root has no children, so no swap occurs and the tree is unchanged.",
+				input: "[1]",
+			},
+			{
+				name: "Skewed tree",
+				description:
+					"A fully one-sided tree still inverts correctly but drives recursion depth to O(n) — a candidate for an iterative queue/stack version.",
+				input: "[1, 2, null, 3]",
+			},
+		],
+		whenToUse: [
+			"Producing a mirror image of a tree for symmetry checks or right-to-left UI layout flipping.",
+			"As a building block for testing whether a tree is symmetric (a tree is symmetric iff it equals its own inversion).",
+			"Rendering mirrored hierarchical data such as flipped org charts or file trees.",
+			"A canonical warm-up for mastering recursion patterns that apply an operation to every tree node.",
+		],
+		interviewTips: [
+			"State the recursive insight up front: swap children, then recurse — it's shorter than it looks.",
+			"Mention that swapping pointers (not values) keeps it O(n) and avoids touching descendants.",
+			"Offer the iterative BFS (queue) or DFS (stack) variant to sidestep recursion depth on skewed trees.",
+			"Nod to the Homebrew story — interviewers love that this 'trick question' is genuinely simple.",
+		],
+		prerequisites: ["tree_traversals"],
+		relatedAlgorithms: ["tree_traversals", "bfs", "dfs"],
+		visualizationType: "tree",
+		path: "/algorithms/trees/invert-binary-tree",
+		pythonModule: "trees.invert_binary_tree_viz",
+	},
+	topological_sort: {
+		id: "topological_sort",
+		name: "Topological Sort (Kahn's)",
+		category: "graphs",
+		difficulty: "medium",
+		tags: [
+			"graph",
+			"topological-sort",
+			"bfs",
+			"dag",
+			"in-degree",
+			"cycle-detection",
+			"scheduling",
+			"interview-favorite",
+		],
+		complexity: {
+			time: { best: "O(V + E)", average: "O(V + E)", worst: "O(V + E)" },
+			space: "O(V + E)",
+			explanation:
+				"Every vertex is enqueued and dequeued exactly once (O(V)) and every edge is relaxed exactly once when its source node is removed (O(E)), giving O(V + E) time. Space is O(V + E) for the in-degree map, the ready queue, the output order, and the adjacency list.",
+		},
+		description:
+			"Kahn's algorithm produces a linear ordering of a Directed Acyclic Graph (DAG) so that for every edge u → v, u appears before v. It works by repeatedly removing nodes that have no remaining incoming edges (in-degree 0) and decrementing their neighbors' in-degrees.",
+		howItWorks:
+			"Compute the in-degree of every node. Enqueue all nodes with in-degree 0 (nothing must come before them). Repeatedly pop a node, append it to the output order, and decrement the in-degree of each of its neighbors; whenever a neighbor's in-degree drops to 0 it becomes ready and is enqueued. When the queue empties, if fewer than V nodes were placed the graph contains a cycle and has no valid ordering.",
+		keyInsights: [
+			"In-degree 0 means a node has no unmet dependencies, so it is always safe to place next.",
+			"Cycle detection comes for free: if the algorithm cannot place every node, the remaining nodes are part of (or depend on) a cycle.",
+			"The topological ordering is not unique — whenever multiple nodes have in-degree 0, any of them may be chosen next.",
+			"Kahn's is iterative (BFS on in-degrees), so unlike the DFS-based topological sort it has no recursion-depth limit.",
+		],
+		edgeCases: [
+			{
+				name: "Cyclic graph",
+				description:
+					"A graph with a cycle has no valid topological order; Kahn's places fewer than V nodes and reports the leftover nodes as a detected cycle.",
+				input: '{ "0": [1], "1": [2], "2": [0] }',
+			},
+			{
+				name: "Disconnected DAG / isolated nodes",
+				description:
+					"Nodes with no incoming or outgoing edges start ready and are placed immediately; multiple independent components are all ordered correctly.",
+				input: '{ "0": [1], "1": [], "2": [], "3": [] }',
+			},
+			{
+				name: "Node appearing only as a neighbor",
+				description:
+					"A target that is never a key (e.g. a leaf) is still normalized into the graph so it receives an in-degree and appears in the final order.",
+				input: '{ "0": [1, 5] }',
+			},
+		],
+		whenToUse: [
+			"Resolving dependency install/build order in package managers and build systems (make, npm, Bazel).",
+			"Scheduling tasks or jobs that have prerequisite constraints.",
+			"Course scheduling where classes have prerequisites.",
+			"Evaluating spreadsheet formulas or computation graphs in dependency order.",
+			"Detecting circular dependencies such as import cycles or deadlocks.",
+		],
+		interviewTips: [
+			"State up front that a topological order only exists for a DAG, and mention Kahn's detects cycles when it can't place all V nodes.",
+			"Remember to add nodes that only appear as neighbors — forgetting them is a common off-by-one bug in the node count / cycle check.",
+			"Be ready to contrast Kahn's (BFS, in-degree queue) with the DFS + post-order-reversal approach, and note the order isn't unique.",
+			"Using a min-heap instead of a plain queue yields the lexicographically smallest ordering — a frequent follow-up.",
+		],
+		prerequisites: ["bfs", "dfs"],
+		relatedAlgorithms: ["dfs", "bfs"],
+		visualizationType: "graph",
+		path: "/algorithms/graphs/topological-sort",
+		pythonModule: "graphs.topological_sort",
+	},
 };
 
 /**
