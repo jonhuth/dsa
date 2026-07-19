@@ -8,6 +8,12 @@ interface GridVisualizerProps {
 	}>;
 	width?: number;
 	height?: number;
+	/**
+	 * "islands" (default): 0/1 grids colored land/water, only 1s labelled.
+	 * "table": arbitrary-valued DP tables — every cell shows its numeric value
+	 * and unhighlighted cells use a neutral default color.
+	 */
+	variant?: "islands" | "table";
 }
 
 export function GridVisualizer({
@@ -15,6 +21,7 @@ export function GridVisualizer({
 	highlights = [],
 	width = 600,
 	height = 400,
+	variant = "islands",
 }: GridVisualizerProps) {
 	if (!grid || grid.length === 0 || grid[0].length === 0) {
 		return (
@@ -52,7 +59,11 @@ export function GridVisualizer({
 		if (highlight) {
 			return colorClasses[highlight.color] || colorClasses.default;
 		}
-		// Default coloring based on cell value
+		// Table mode: neutral default, let highlights drive the color.
+		if (variant === "table") {
+			return colorClasses.default;
+		}
+		// Islands mode: color by cell value.
 		return grid[row][col] === 1 ? colorClasses.land : colorClasses.water;
 	};
 
@@ -76,7 +87,7 @@ export function GridVisualizer({
 								height: `${cellSize}px`,
 							}}
 						>
-							{cell === 1 ? "1" : ""}
+							{variant === "table" ? String(cell) : cell === 1 ? "1" : ""}
 						</div>
 					)),
 				)}
