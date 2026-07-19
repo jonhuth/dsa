@@ -52,12 +52,24 @@ class AlgorithmRegistry:
         from algorithms.dynamic_programming.kadane_viz import Kadane
         from algorithms.dynamic_programming.knapsack import Knapsack
         from algorithms.dynamic_programming.lcs import LCS
+        from algorithms.dynamic_programming.lis_viz import LongestIncreasingSubsequence
+        from algorithms.dynamic_programming.min_path_sum_viz import MinPathSum
         from algorithms.dynamic_programming.unique_paths_viz import UniquePaths
+        from algorithms.dynamic_programming.word_break_viz import WordBreak
+        from algorithms.graphs.connected_components_viz import ConnectedComponents
+        from algorithms.graphs.course_schedule_viz import CourseSchedule
         from algorithms.graphs.num_islands import NumIslands
         from algorithms.graphs.topological_sort import TopologicalSort
+
+        # Wave 2 exhibits (uniform run(input_data) generator interface)
+        from algorithms.search.quickselect_viz import QuickSelect
+        from algorithms.search.rotated_array_search_viz import RotatedArraySearch
         from algorithms.sorting.counting_sort import CountingSort
         from algorithms.sorting.radix_sort import RadixSort
         from algorithms.trees.invert_binary_tree_viz import InvertBinaryTree
+        from algorithms.trees.lca_viz import LowestCommonAncestor
+        from algorithms.trees.level_order_viz import LevelOrder
+        from algorithms.trees.max_depth_viz import MaxDepth
         from algorithms.trees.traversals import TreeTraversals
         from algorithms.trees.validate_bst_viz import ValidateBST
 
@@ -317,7 +329,87 @@ class AlgorithmRegistry:
             "visualizer_type": TopologicalSort.visualizer_type.value,
         }
 
-    # Wave 1 exhibits use a uniform run(input_data) generator interface
+        self._algorithms["quickselect"] = {
+            "id": "quickselect",
+            "name": "Quickselect (Kth Smallest)",
+            "category": "searching",
+            "class": QuickSelect,
+            "visualizer_type": QuickSelect.visualizer_type.value,
+        }
+
+        self._algorithms["rotated_search"] = {
+            "id": "rotated_search",
+            "name": "Search in Rotated Sorted Array",
+            "category": "searching",
+            "class": RotatedArraySearch,
+            "visualizer_type": RotatedArraySearch.visualizer_type.value,
+        }
+
+        self._algorithms["lis"] = {
+            "id": "lis",
+            "name": "Longest Increasing Subsequence",
+            "category": "dynamic_programming",
+            "class": LongestIncreasingSubsequence,
+            "visualizer_type": LongestIncreasingSubsequence.visualizer_type.value,
+        }
+
+        self._algorithms["word_break"] = {
+            "id": "word_break",
+            "name": "Word Break",
+            "category": "dynamic_programming",
+            "class": WordBreak,
+            "visualizer_type": WordBreak.visualizer_type.value,
+        }
+
+        self._algorithms["min_path_sum"] = {
+            "id": "min_path_sum",
+            "name": "Minimum Path Sum",
+            "category": "dynamic_programming",
+            "class": MinPathSum,
+            "visualizer_type": MinPathSum.visualizer_type.value,
+        }
+
+        self._algorithms["lca"] = {
+            "id": "lca",
+            "name": "Lowest Common Ancestor (BST)",
+            "category": "trees",
+            "class": LowestCommonAncestor,
+            "visualizer_type": LowestCommonAncestor.visualizer_type.value,
+        }
+
+        self._algorithms["tree_max_depth"] = {
+            "id": "tree_max_depth",
+            "name": "Maximum Depth of Binary Tree",
+            "category": "trees",
+            "class": MaxDepth,
+            "visualizer_type": MaxDepth.visualizer_type.value,
+        }
+
+        self._algorithms["level_order"] = {
+            "id": "level_order",
+            "name": "Binary Tree Level-Order Traversal (BFS)",
+            "category": "trees",
+            "class": LevelOrder,
+            "visualizer_type": LevelOrder.visualizer_type.value,
+        }
+
+        self._algorithms["course_schedule"] = {
+            "id": "course_schedule",
+            "name": "Course Schedule (Cycle Detection)",
+            "category": "graphs",
+            "class": CourseSchedule,
+            "visualizer_type": CourseSchedule.visualizer_type.value,
+        }
+
+        self._algorithms["connected_components"] = {
+            "id": "connected_components",
+            "name": "Connected Components (DFS)",
+            "category": "graphs",
+            "class": ConnectedComponents,
+            "visualizer_type": ConnectedComponents.visualizer_type.value,
+        }
+
+    # Wave 1 & 2 exhibits use a uniform run(input_data) generator interface
     _RUN_BASED = {
         "kadane",
         "coin_change",
@@ -330,6 +422,16 @@ class AlgorithmRegistry:
         "validate_bst",
         "invert_binary_tree",
         "topological_sort",
+        "quickselect",
+        "rotated_search",
+        "lis",
+        "word_break",
+        "min_path_sum",
+        "lca",
+        "tree_max_depth",
+        "level_order",
+        "course_schedule",
+        "connected_components",
     }
 
     def get_algorithm(self, algorithm_id: str) -> dict[str, Any] | None:

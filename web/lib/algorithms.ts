@@ -1364,6 +1364,686 @@ export const ALGORITHMS: Record<string, AlgorithmMetadata> = {
 		path: "/algorithms/dynamic-programming/unique-paths",
 		pythonModule: "dynamic_programming.unique_paths_viz",
 	},
+	quickselect: {
+		id: "quickselect",
+		name: "Quickselect (Kth Smallest)",
+		category: "searching",
+		difficulty: "medium",
+		tags: [
+			"divide-and-conquer",
+			"partition",
+			"selection",
+			"in-place",
+			"randomized",
+			"linear-time",
+			"quick-sort-family",
+		],
+		complexity: {
+			time: {
+				best: "O(n)",
+				average: "O(n)",
+				worst: "O(n²)",
+			},
+			space: "O(1)",
+			explanation:
+				"Expected O(n) because each partition discards one side, giving n + n/2 + n/4 + ... = O(n). Worst case O(n²) arises from consistently poor pivots (e.g. sorted input with a last-element pivot); a random pivot or median-of-medians restores linear behavior. Space is O(1) for the in-place iterative form (O(log n) if written recursively).",
+		},
+		description:
+			"Selection algorithm that finds the k-th smallest element in average linear time by reusing Quick Sort's partition step but recursing into only the single side that must contain the target rank, leaving the array only partially ordered.",
+		howItWorks:
+			"Convert the 1-indexed k to a 0-indexed target rank (k − 1). Pick a pivot and Lomuto-partition the active window so elements ≤ pivot go left and elements > pivot go right; the pivot then sits at its final sorted index p, meaning it is exactly the (p+1)-th smallest element. If p equals the target rank, the pivot is the answer. If the target is less than p, recurse into the left partition; otherwise recurse into the right partition, discarding the other half entirely. Repeat until the pivot lands on the target rank.",
+		keyInsights: [
+			"Uses the same partition as Quick Sort but recurses into only ONE side, which turns O(n log n) into an expected O(n)",
+			"After partitioning, the pivot's index IS its rank: everything to the left is smaller and everything to the right is larger",
+			"The array is left only partially ordered — just enough to place the k-th element — unlike a full sort",
+			"A random pivot or the median-of-medians strategy avoids the O(n²) worst case; median-of-medians guarantees O(n) worst case",
+		],
+		edgeCases: [
+			{
+				name: "k out of range",
+				description:
+					"k < 1 or k > n has no valid answer; the algorithm reports the input is invalid",
+				input: { array: [3, 1, 2], k: 5 },
+			},
+			{
+				name: "Single element",
+				description: "n = 1 with k = 1 immediately returns the only element",
+				input: { array: [42], k: 1 },
+			},
+			{
+				name: "Median with duplicates",
+				description:
+					"Duplicate values are handled correctly by the ≤ partition; k targets a stable rank",
+				input: { array: [4, 2, 4, 2, 4], k: 3 },
+			},
+		],
+		whenToUse: [
+			"You need the k-th smallest/largest element or the median but do NOT need the whole array sorted",
+			"One-off order-statistic queries where average O(n) beats O(n log n) full sorting",
+			"As a subroutine inside other algorithms (e.g. choosing a good pivot, introselect, median-of-medians)",
+			"Avoid it for many repeated order-statistic queries on the same data — sort once or use an order-statistic tree instead",
+		],
+		interviewTips: [
+			"State that partition places the pivot at its final rank, so comparing that index to k−1 decides which side to keep",
+			"Explain why recursing into one side gives expected O(n) via the geometric series n + n/2 + n/4 + ...",
+			"Mention the O(n²) worst case and that randomizing the pivot (or median-of-medians) fixes it",
+			"Clarify 1-indexed vs 0-indexed k up front — off-by-one on the rank is the most common bug",
+			"Note that Quickselect mutates/partially sorts the input; call it out if the interviewer needs the original order preserved",
+		],
+		prerequisites: ["quick_sort", "binary_search"],
+		relatedAlgorithms: ["quick_sort", "heap_sort", "merge_sort"],
+		visualizationType: "array",
+		path: "/algorithms/search/quickselect",
+		pythonModule: "search.quickselect_viz",
+	},
+	rotated_search: {
+		id: "rotated_search",
+		name: "Search in Rotated Sorted Array",
+		category: "searching",
+		difficulty: "medium",
+		tags: ["binary-search", "divide-and-conquer", "interview-favorite", "logarithmic", "arrays"],
+		complexity: {
+			time: {
+				best: "O(1)",
+				average: "O(log n)",
+				worst: "O(log n)",
+			},
+			space: "O(1)",
+			explanation:
+				"A modified binary search halves the search space every iteration, giving O(log n) time. Best case O(1) when the target sits at the first midpoint. Iterative implementation uses O(1) extra space. Requires distinct values; duplicates degrade the worst case to O(n).",
+		},
+		description:
+			"Find a target value in a sorted array that has been rotated at an unknown pivot, in O(log n) time, without first restoring the original order.",
+		howItWorks:
+			"At each step compute the middle index and check it against the target. Because the array was sorted then rotated, at least one half around mid is still fully sorted. Compare arr[lo] with arr[mid] to identify the sorted half, then test whether the target falls inside that half's value range: if so, discard the other half; otherwise search the rotated half. Repeat until the target is found or the window is empty (return -1).",
+		keyInsights: [
+			"A rotated sorted array always contains at least one fully sorted half around the midpoint.",
+			"Comparing arr[lo] with arr[mid] reliably tells you which half is sorted.",
+			"Only check membership against the sorted half's known range; recurse into the other half otherwise.",
+			"No need to find the pivot first - the halves can be classified inline while searching.",
+		],
+		edgeCases: [
+			{
+				name: "Zero rotation",
+				description:
+					"An array rotated by 0 (or n) positions is just a normal sorted array; the algorithm still works and behaves like plain binary search.",
+				input: "[1, 2, 3, 4, 5], target = 4",
+			},
+			{
+				name: "Target not present",
+				description:
+					"When the target does not exist the window shrinks to empty and the search returns -1.",
+				input: "[4, 5, 6, 7, 0, 1, 2], target = 3",
+			},
+			{
+				name: "Single element / empty array",
+				description:
+					"A one-element array returns index 0 if it matches else -1; an empty array immediately returns -1.",
+				input: "[1], target = 0",
+			},
+		],
+		whenToUse: [
+			"Searching a sorted dataset that has been cyclically shifted (e.g. a circular buffer or log rotated by an offset).",
+			"When you need O(log n) lookup and cannot afford to re-sort or un-rotate the data first.",
+			"As a building block for finding the rotation pivot or the minimum of a rotated array.",
+		],
+		interviewTips: [
+			"State the invariant out loud: one half around mid is always sorted - that is the whole trick.",
+			"Use inclusive bounds (lo <= hi) and be careful with the strict vs non-strict comparisons (arr[lo] <= arr[mid]).",
+			"Clarify whether values are distinct; duplicates force an O(n) worst case and change the branch logic.",
+			"Mention the sibling problems: find minimum in rotated array, and search when duplicates are allowed.",
+		],
+		prerequisites: ["binary_search"],
+		relatedAlgorithms: ["binary_search", "linear_search"],
+		visualizationType: "array",
+		path: "/algorithms/search/rotated-array-search",
+		pythonModule: "search.rotated_array_search_viz",
+	},
+	lis: {
+		id: "lis",
+		name: "Longest Increasing Subsequence",
+		category: "dynamic_programming",
+		difficulty: "medium",
+		tags: [
+			"dynamic-programming",
+			"arrays",
+			"subsequence",
+			"optimal-substructure",
+			"reconstruction",
+			"binary-search",
+		],
+		complexity: {
+			time: { best: "O(n²)", average: "O(n²)", worst: "O(n²)" },
+			space: "O(n)",
+			explanation:
+				"The classic DP fills dp[i] = longest increasing subsequence ending at index i by scanning every earlier index j < i, giving O(n²) time. It stores one dp entry per index plus a parent array for reconstruction, using O(n) space. A patience-sorting variant with binary search reduces the time to O(n log n).",
+		},
+		description:
+			"Find the length of the longest strictly increasing subsequence of an array (elements keep their original order but need not be contiguous), using bottom-up dynamic programming.",
+		howItWorks:
+			"Define dp[i] as the length of the longest increasing subsequence that ends at index i, initialized to 1 for every element. For each i, compare nums[i] against every earlier nums[j]; whenever nums[j] < nums[i] and dp[j] + 1 > dp[i], extend that run by setting dp[i] = dp[j] + 1 and recording j as i's parent. The answer is max(dp) because the subsequence can end at any index, and the actual subsequence is recovered by walking the parent pointers back from the best index.",
+		keyInsights: [
+			"dp[i] is the length of the best increasing subsequence that ENDS at index i — a per-index subproblem that composes into the global answer.",
+			"Each dp[i] reuses previously computed dp[j] values instead of recomputing them: textbook optimal substructure plus overlapping subproblems.",
+			"The result is max(dp), not dp[n-1], because the longest run may end anywhere in the array.",
+			"Storing a parent pointer per index lets you reconstruct one actual subsequence, not merely its length.",
+		],
+		edgeCases: [
+			{ name: "Empty array", description: "No elements, so the LIS length is 0.", input: [] },
+			{
+				name: "Strictly decreasing",
+				description:
+					"No element can extend another, so every dp[i] stays 1 and the LIS length is 1.",
+				input: [5, 4, 3, 2, 1],
+			},
+			{
+				name: "Duplicates",
+				description:
+					"Strictly increasing means equal values cannot chain; runs of duplicates do not lengthen the subsequence.",
+				input: [2, 2, 2, 2],
+			},
+		],
+		whenToUse: [
+			"Box, envelope, or Russian-doll stacking problems — sort by one dimension, then run LIS on the other.",
+			"Bioinformatics: finding the longest chain of ordered matches in sequence alignment.",
+			"Detecting the longest run of monotonically improving metrics over time.",
+			"A classic interview problem that teaches the 'dp ending at index i' framing and subsequence reconstruction.",
+		],
+		interviewTips: [
+			"State the recurrence clearly: dp[i] = 1 + max(dp[j] for j < i where nums[j] < nums[i]).",
+			"Remember the answer is max(dp) over all indices, not the last dp value.",
+			"Mention the O(n log n) patience-sorting / binary-search optimization that keeps the smallest tail for each length.",
+			"Clarify strictly increasing vs. non-decreasing with the interviewer, since it changes the comparison from < to <=.",
+		],
+		prerequisites: ["fibonacci_tab", "kadane"],
+		relatedAlgorithms: ["lcs", "kadane", "coin_change"],
+		visualizationType: "array",
+		path: "/algorithms/dynamic-programming/longest-increasing-subsequence",
+		pythonModule: "dynamic_programming.lis_viz",
+	},
+	word_break: {
+		id: "word_break",
+		name: "Word Break",
+		category: "dynamic_programming",
+		difficulty: "medium",
+		tags: [
+			"dynamic-programming",
+			"strings",
+			"hash-set",
+			"1d-dp",
+			"bottom-up",
+			"segmentation",
+			"memoization",
+		],
+		complexity: {
+			time: { best: "O(n)", average: "O(n^2 * k)", worst: "O(n^2 * k)" },
+			space: "O(n + W)",
+			explanation:
+				"For each of n end positions the algorithm tries every earlier split point and compares a substring of length up to k against a hash set of the dictionary, giving O(n^2 * k) time. Space is the boolean ok[] table of size n+1 plus the word set holding W total characters.",
+		},
+		description:
+			"Given a string s and a dictionary of words, determine whether s can be segmented into a space-separated sequence of one or more dictionary words. Solved with bottom-up boolean DP where ok[i] is true when the prefix s[:i] can be fully segmented.",
+		howItWorks:
+			"Define ok[i] = true if the prefix s[:i] can be split into dictionary words. The base case is ok[0] = true because the empty prefix needs no words. For each end position i from 1 to n, scan every split point j < i where ok[j] is already true; if the substring s[j:i] is in the dictionary, set ok[i] = true and stop scanning that i. The final answer is ok[n].",
+		keyInsights: [
+			"ok[i] captures 'the prefix of length i is segmentable', a clean optimal-substructure formulation solved left to right so every ok[j] needed is already computed.",
+			"Only split points j with ok[j] = true can extend a segmentation, so unreachable prefixes are skipped instead of re-checked.",
+			"Storing the dictionary in a hash set turns each 'is this substring a word?' test into an O(k) lookup rather than a scan of the whole dictionary.",
+			"A single valid split is enough to mark ok[i] true, so you can break out of the inner loop the moment one witness is found.",
+		],
+		edgeCases: [
+			{
+				name: "Empty string",
+				description: "The empty string is vacuously segmentable, so the answer is true.",
+				input: 's = "", words = ["a", "b"]',
+			},
+			{
+				name: "Reusable words",
+				description:
+					"Dictionary words may be reused any number of times; DP naturally allows repeated use.",
+				input: 's = "aaaaaaa", words = ["aaaa", "aaa"]',
+			},
+			{
+				name: "Unsegmentable tail",
+				description:
+					"A greedy longest-match can fail where DP succeeds or correctly reports false, e.g. a leftover suffix with no matching word.",
+				input: 's = "catsandog", words = ["cats", "dog", "sand", "and", "cat"]',
+			},
+		],
+		whenToUse: [
+			"Tokenizing text that has no spaces, such as some East Asian scripts, URLs, or hashtags.",
+			"Spell-check and autocomplete features that must split concatenated user input into valid words.",
+			"As a foundation for Word Break II, which enumerates all possible segmentations rather than just feasibility.",
+			"Interview settings testing 1D dynamic programming combined with set-based substring lookups.",
+		],
+		interviewTips: [
+			"State the DP definition explicitly: ok[i] = can s[:i] be segmented, with ok[0] = true.",
+			"Convert the word list to a set up front and mention the O(k) lookup versus scanning the list.",
+			"Note the outer loop is over end positions i and the inner loop over split points j, giving O(n^2 * k).",
+			"Mention memoized recursion as an equivalent top-down alternative, and Word Break II as the follow-up that returns all segmentations.",
+		],
+		prerequisites: ["fibonacci", "climbing_stairs"],
+		relatedAlgorithms: ["coin_change", "lcs", "edit_distance"],
+		visualizationType: "array",
+		path: "/algorithms/dynamic-programming/word-break",
+		pythonModule: "dynamic_programming.word_break_viz",
+	},
+	min_path_sum: {
+		id: "min_path_sum",
+		name: "Minimum Path Sum",
+		category: "dynamic_programming",
+		difficulty: "medium",
+		tags: [
+			"dynamic-programming",
+			"grid",
+			"2d-dp",
+			"matrix",
+			"pathfinding",
+			"prefix-sum",
+			"optimization",
+			"bottom-up",
+		],
+		complexity: {
+			time: { best: "O(m*n)", average: "O(m*n)", worst: "O(m*n)" },
+			space: "O(m*n)",
+			explanation:
+				"Each of the m*n cells is computed exactly once from its top and left neighbors, giving O(m*n) time. The cost table uses O(m*n) space, reducible to O(n) with a single rolling row since each cell only depends on the previous row and the current row's previous cell.",
+		},
+		description:
+			"Given an m×n grid of non-negative costs, find a path from the top-left cell to the bottom-right cell that minimizes the sum of numbers along the path, moving only down or right. Solved with classic 2D bottom-up dynamic programming.",
+		howItWorks:
+			"Build a cost table where cost[i][j] is the minimum sum to reach cell (i, j) from the top-left. The start cell is grid[0][0]. The first row is a prefix sum (only right moves reach it) and the first column is a prefix sum (only down moves reach it). Every interior cell is cost[i][j] = grid[i][j] + min(cost[i-1][j] above, cost[i][j-1] left). The answer is the bottom-right cell cost[m-1][n-1].",
+		keyInsights: [
+			"Each cell depends only on the cell directly above and the cell directly to its left, making it a clean 2D DP with non-overlapping conflicting subproblems.",
+			"Because movement is restricted to down and right, a single forward sweep is optimal — no backtracking or search is needed.",
+			"All costs are non-negative and moves are monotone, so a plain DP suffices; Dijkstra or a priority queue is unnecessary.",
+			"Only the previous row is needed at any moment, so space collapses from O(m*n) to O(n) with a rolling array, and remembering the winning neighbor lets you reconstruct the actual path.",
+		],
+		edgeCases: [
+			{
+				name: "Single cell",
+				description:
+					"A 1×1 grid has only the start cell, so the minimum path sum is that cell's value.",
+				input: "[[5]]",
+			},
+			{
+				name: "Single row or single column",
+				description:
+					"With one row (or one column) there is only one possible path, so the answer is the sum of all cells — a pure prefix sum.",
+				input: "[[1, 2, 3, 4]]",
+			},
+			{
+				name: "All zeros",
+				description: "A grid of all zeros yields a minimum path sum of 0 regardless of dimensions.",
+				input: "[[0, 0], [0, 0]]",
+			},
+		],
+		whenToUse: [
+			"Finding the cheapest route through a weighted grid when movement is limited to down/right or another monotone direction.",
+			"Image seam carving for content-aware resizing, which uses the same minimum-energy DP recurrence.",
+			"Robotics or logistics traversal of a cost map under monotone movement constraints.",
+			"As a canonical teaching example for 2D grid dynamic programming and space optimization.",
+		],
+		interviewTips: [
+			"State the recurrence cost[i][j] = grid[i][j] + min(cost[i-1][j], cost[i][j-1]) and handle the first row and first column as prefix sums before touching interior cells.",
+			"Mention the O(n) space optimization using a rolling row — interviewers often ask for it as a follow-up.",
+			"Clarify the movement constraint (down/right only) and that costs are non-negative to justify plain DP over Dijkstra.",
+			"Be ready to extend to path reconstruction by tracking which neighbor was chosen, and to variants like allowing diagonal moves or counting the number of minimum paths.",
+		],
+		prerequisites: ["prefix-sum", "recursion", "dynamic-programming-intro"],
+		relatedAlgorithms: ["unique_paths", "edit_distance", "coin_change", "lcs"],
+		visualizationType: "grid",
+		path: "/algorithms/dynamic-programming/min-path-sum",
+		pythonModule: "dynamic_programming.min_path_sum_viz",
+	},
+	lca: {
+		id: "lca",
+		name: "Lowest Common Ancestor (BST)",
+		category: "trees",
+		difficulty: "medium",
+		tags: ["tree", "binary-search-tree", "recursion", "traversal", "divide-and-conquer"],
+		complexity: {
+			time: { best: "O(1)", average: "O(log n)", worst: "O(n)" },
+			space: "O(1)",
+			explanation:
+				"A single top-down walk uses the BST ordering to descend one level per comparison, so the cost is O(h) - the tree height. That is O(log n) for a balanced BST and O(n) for a degenerate/skewed one. The iterative descent keeps only a pointer to the current node, giving O(1) extra space (O(h) if written recursively for the call stack).",
+		},
+		description:
+			"Find the lowest common ancestor of two nodes p and q in a binary search tree - the deepest node that has both p and q as descendants (a node may be a descendant of itself). The BST ordering turns this into a single top-down walk: if both targets are smaller than the current node go left, if both are larger go right, and the first node where they split is the answer.",
+		howItWorks:
+			"Start at the root and compare both targets to the current node's value. If both p and q are smaller, the LCA lies in the left subtree, so move left; if both are larger, move right. Otherwise the targets straddle the current node (one is <= it, the other >= it, or one equals it), which means the current node is the lowest common ancestor. Each step discards an entire subtree, so the walk runs in O(h) with no backtracking.",
+		keyInsights: [
+			"The BST ordering is itself the decision function - the sign of the comparison tells you go left, go right, or stop.",
+			"The LCA is exactly the first (highest) node where the root-to-p and root-to-q paths diverge; before that split they share the same path.",
+			"A node can be its own ancestor: if p or q equals the current node, that node is immediately the LCA.",
+			"Because every step drops a whole subtree, the BST version costs O(h), far cheaper than the O(n) search a general binary tree requires.",
+		],
+		edgeCases: [
+			{
+				name: "One node is an ancestor of the other",
+				description:
+					"If p is an ancestor of q (or p equals the current node during descent), the descent stops at p and returns it as the LCA, since a node is a descendant of itself.",
+				input: "values=[6,2,8,0,4,7,9], p=2, q=4",
+			},
+			{
+				name: "Both targets in the same subtree",
+				description:
+					"When both p and q are smaller (or both larger) than the root, the walk descends several levels before finding the split node deeper in the tree.",
+				input: "values=[6,2,8,0,4,7,9], p=0, q=4",
+			},
+			{
+				name: "Targets straddle the root",
+				description:
+					"If p and q fall on opposite sides of the root, the root is the LCA and the algorithm finishes after a single comparison.",
+				input: "values=[6,2,8,0,4,7,9], p=2, q=8",
+			},
+		],
+		whenToUse: [
+			"Interview classic (LeetCode 235) - the BST-specialized twist on the general lowest-common-ancestor problem",
+			"Range and interval queries where the LCA marks the point at which two ordered keys branch apart in an index",
+			"Navigating hierarchies or taxonomies stored as ordered trees to find the nearest shared parent of two entries",
+			"As a building block for tree-distance and path queries between two nodes in ordered structures",
+		],
+		interviewTips: [
+			"State the BST shortcut up front: you do NOT need the general O(n) recursion - use the ordering to walk down in O(h).",
+			"Handle the equality case explicitly - a node is a descendant of itself, so if p or q equals the current node it is the LCA.",
+			"Prefer the iterative version for O(1) space; mention the recursive form and its O(h) call stack as the alternative.",
+			"Contrast with LCA in a general binary tree (LeetCode 236), where you must search both subtrees because there is no ordering to exploit.",
+		],
+		prerequisites: ["binary-search-tree", "validate-bst"],
+		relatedAlgorithms: ["validate-bst", "bst-search", "bst-insert"],
+		visualizationType: "tree",
+		path: "/algorithms/trees/lowest-common-ancestor",
+		pythonModule: "trees.lca_viz",
+	},
+	tree_max_depth: {
+		id: "tree_max_depth",
+		name: "Maximum Depth of Binary Tree",
+		category: "trees",
+		difficulty: "easy",
+		tags: [
+			"tree",
+			"binary-tree",
+			"recursion",
+			"dfs",
+			"depth-first-search",
+			"post-order",
+			"height",
+			"divide-and-conquer",
+		],
+		complexity: {
+			time: { best: "O(n)", average: "O(n)", worst: "O(n)" },
+			space: "O(h)",
+			explanation:
+				"Every node is visited exactly once with no early exit, so time is O(n) where n is the node count. Space is O(h) for the recursion stack, where h is the tree height - O(log n) for a balanced tree and O(n) for a degenerate/skewed one.",
+		},
+		description:
+			"Compute the maximum depth (height) of a binary tree: the number of nodes along the longest path from the root down to the farthest leaf. Solved with a recursive post-order DFS where each node's depth is 1 + max(left depth, right depth) and an empty child contributes 0.",
+		howItWorks:
+			"Define depth recursively with an empty child having depth 0. At each node, recurse into the left subtree and then the right subtree to learn both child heights, then combine them on the way up as depth = 1 + max(left, right). That value bubbles up to the parent, which repeats the same combination one level higher. The depth returned by the root is the maximum depth - the length of the longest root-to-leaf path.",
+		keyInsights: [
+			"The answer is computed on the way UP: a node cannot know its height until both children have reported theirs, so all real work happens as the call stack unwinds.",
+			"This is a textbook post-order traversal - resolve both children fully before finalizing the parent.",
+			"Every node is touched exactly once and there is no way to short-circuit, so computing height is inherently O(n).",
+			"Swapping the recursion for a BFS level-count yields the same answer iteratively - useful when a very deep tree could overflow the call stack.",
+		],
+		edgeCases: [
+			{
+				name: "Empty tree",
+				description: "A null root has no nodes, so the maximum depth is 0.",
+				input: "null",
+			},
+			{
+				name: "Single node",
+				description: "A lone root with no children has depth 1.",
+				input: "42",
+			},
+			{
+				name: "Skewed tree",
+				description:
+					"A completely one-sided (degenerate) tree behaves like a linked list, giving depth n and O(n) recursion-stack space.",
+				input: "1, 2, null, 3, null, 4",
+			},
+		],
+		whenToUse: [
+			"Interview classic (LeetCode 104) - the canonical introduction to tree recursion",
+			"Determining whether a tree is height-balanced by comparing left and right subtree heights",
+			"Sizing UI/DOM trees, scene graphs, and file-system hierarchies",
+			"As a building block for harder tree problems (diameter, balanced-tree checks, level-order layout) that reuse the post-order height computation",
+		],
+		interviewTips: [
+			"State the recurrence up front: depth(node) = 1 + max(depth(left), depth(right)) with base case depth(null) = 0.",
+			"Call out that the work happens post-order (on the way up), which distinguishes it from pre-order traversals.",
+			"Mention the O(h) stack space and the trade-off between a balanced (O(log n)) and skewed (O(n)) tree.",
+			"Offer the iterative BFS level-count alternative to avoid stack overflow on very deep trees.",
+			"Clarify the definition being used - depth counted in nodes vs edges - since off-by-one bugs come from mixing the two conventions.",
+		],
+		prerequisites: [
+			"Binary tree structure and terminology (root, leaf, height, depth)",
+			"Recursion and the call stack",
+			"Depth-first traversal (pre/in/post-order)",
+		],
+		relatedAlgorithms: [
+			"tree_min_depth",
+			"validate_bst",
+			"binary_tree_inorder",
+			"tree_diameter",
+			"balanced_binary_tree",
+		],
+		visualizationType: "tree",
+		path: "/algorithms/trees/max-depth",
+		pythonModule: "trees.max_depth_viz",
+	},
+	level_order: {
+		id: "level_order",
+		name: "Binary Tree Level-Order Traversal (BFS)",
+		category: "trees",
+		difficulty: "easy",
+		tags: [
+			"tree",
+			"binary-tree",
+			"bfs",
+			"breadth-first-search",
+			"queue",
+			"traversal",
+			"graph-traversal",
+		],
+		complexity: {
+			time: { best: "O(n)", average: "O(n)", worst: "O(n)" },
+			space: "O(n)",
+			explanation:
+				"Every node is enqueued and dequeued exactly once, so time is O(n) for n nodes. Space is O(n) for the queue, since the widest level of a balanced tree holds roughly n/2 nodes at once.",
+		},
+		description:
+			"Level-order traversal walks a binary tree breadth-first: it visits the root, then every node at depth 1 left-to-right, then depth 2, and so on. A FIFO queue drives it - dequeue a node, record it, enqueue its children - and snapshotting the queue size at the start of each round groups the flat stream into per-level lists.",
+		howItWorks:
+			"Seed a FIFO queue with the root. At the start of each round, snapshot the queue length - that count is exactly the number of nodes on the current level. Dequeue that many nodes one at a time, recording each into the current level's list, and as you dequeue each node enqueue its left child then its right child (preserving left-to-right order). When the queue empties, every level has been collected into the result list of levels.",
+		keyInsights: [
+			"A FIFO queue is what makes traversal breadth-first: children enqueued now are only visited after every node already waiting, so visit order equals depth order.",
+			"Snapshot the queue length before each round - that count is exactly the size of the current level, which is how a flat BFS becomes a list of levels.",
+			"Always enqueue the left child before the right child to keep every level ordered left-to-right.",
+			"Swap the queue for a stack (LIFO) and the same skeleton becomes a depth-first traversal - the data structure alone dictates the strategy.",
+		],
+		edgeCases: [
+			{
+				name: "Empty tree",
+				description:
+					"A null root yields an empty result - the queue never gets seeded, so no levels are produced.",
+				input: [],
+			},
+			{
+				name: "Single node",
+				description: "A lone root produces a single level containing just that node.",
+				input: [1],
+			},
+			{
+				name: "Skewed tree",
+				description:
+					"A tree where every node has only one child degenerates into one node per level, giving n levels of size 1 and a queue that never holds more than one node.",
+				input: [1, 2, null, 3, null, 4],
+			},
+		],
+		whenToUse: [
+			"Finding the shortest path in an unweighted graph or grid, where BFS reaches nearer nodes first",
+			"Rendering or serializing a tree level by level (org charts, UI component trees, printing)",
+			"Computing tree width, minimum depth, or connecting nodes at the same level",
+			"As the basis for zigzag traversal, right-side-view, and per-level average/min/max variants",
+		],
+		interviewTips: [
+			"Track the level boundary by capturing len(queue) before the inner loop rather than pushing sentinel markers - it's cleaner and avoids null bookkeeping.",
+			"State the queue invariant out loud: at the top of each round the queue holds exactly one complete level, in left-to-right order.",
+			"If asked for a flat traversal instead of grouped levels, drop the level-size snapshot; if asked for zigzag, reverse alternate levels before appending.",
+			"Mention that BFS uses O(n) space (the widest level) versus DFS's O(h) recursion stack - the tradeoff often decides which to pick.",
+		],
+		prerequisites: ["binary_tree", "queue"],
+		relatedAlgorithms: [
+			"binary_tree_inorder",
+			"binary_tree_preorder",
+			"bfs",
+			"dfs",
+			"validate_bst",
+		],
+		visualizationType: "tree",
+		path: "/algorithms/trees/level-order",
+		pythonModule: "trees.level_order_viz",
+	},
+	course_schedule: {
+		id: "course_schedule",
+		name: "Course Schedule (Cycle Detection)",
+		category: "graphs",
+		difficulty: "medium",
+		tags: [
+			"graph",
+			"directed-graph",
+			"dfs",
+			"cycle-detection",
+			"topological-sort",
+			"recursion",
+			"back-edge",
+			"dependency-resolution",
+		],
+		complexity: {
+			time: { best: "O(V + E)", average: "O(V + E)", worst: "O(V + E)" },
+			space: "O(V + E)",
+			explanation:
+				"DFS colors each of the V courses at most once and examines each of the E prerequisite edges once, giving O(V + E) time. Space is O(V) for the color map and the recursion stack plus O(V + E) to hold the adjacency list.",
+		},
+		description:
+			"Given courses and their prerequisites as a directed graph, determine whether every course can be finished. It is possible exactly when the prerequisite graph is a Directed Acyclic Graph (DAG); a cycle means a group of courses transitively depend on one another so none can be taken first. Detected with DFS three-color marking, where a back edge to a node still on the recursion stack proves a cycle.",
+		howItWorks:
+			"Mark every course WHITE (unvisited). Run DFS from each unvisited course, coloring it GRAY when it enters the current path. For each edge, inspect the neighbor's color: a GRAY neighbor is a back edge to a node still on the stack and proves a cycle, so the schedule cannot be finished; a BLACK neighbor is already proven cycle-free and is skipped; a WHITE neighbor is recursed into. When all of a course's neighbors are explored it turns BLACK and is recorded. If DFS completes with no back edge, reversing the order in which nodes turned BLACK (post-order) yields a valid course schedule.",
+		keyInsights: [
+			"'Can finish all courses' is exactly 'the prerequisite graph is acyclic' - cycle detection and schedulability are the same question.",
+			"A back edge - an edge to a GRAY node still on the recursion stack - is the definitive signature of a cycle; an edge to a BLACK node is safe because that subtree is already known to be cycle-free.",
+			"Two colors (visited / unvisited) are not enough: you must distinguish 'done' (BLACK) from 'on the current path' (GRAY), otherwise cross edges get mistaken for cycles.",
+			"When no cycle exists, reversing the post-order gives a valid topological ordering for free - the same DFS both answers the yes/no question and produces the schedule.",
+		],
+		edgeCases: [
+			{
+				name: "Self-loop",
+				description:
+					"A course that lists itself as a prerequisite forms a length-1 cycle and is immediately unschedulable.",
+				input: '{ "0": [0] }',
+			},
+			{
+				name: "Disconnected components",
+				description:
+					"Multiple independent prerequisite chains: DFS is launched from every unvisited node so all components are checked, and a cycle in any one makes the whole schedule impossible.",
+				input: '{ "0": [1], "1": [], "2": [3], "3": [] }',
+			},
+			{
+				name: "Empty graph / no prerequisites",
+				description:
+					"Zero courses or courses with no edges are trivially finishable; the algorithm returns can_finish true with a valid (possibly empty) order.",
+				input: "{}",
+			},
+		],
+		whenToUse: [
+			"Course scheduling where classes have prerequisites (the canonical LeetCode problem).",
+			"Build systems and package managers detecting circular dependencies before resolving install order.",
+			"Import / module cycle detection in compilers, linkers, and bundlers.",
+			"Deadlock detection in resource-allocation graphs.",
+			"Any feasibility check of the form 'can these mutually dependent tasks be ordered?'",
+		],
+		interviewTips: [
+			"State up front that 'can finish all courses' reduces to 'is the directed graph acyclic' - the interviewer wants to hear that reduction.",
+			"Be explicit about needing three colors (WHITE/GRAY/BLACK) or an on-stack set; the classic bug is using a single visited set, which false-positives on already-finished nodes.",
+			"Mention the two standard approaches - DFS back-edge detection vs. Kahn's BFS in-degree counting - and that Kahn's naturally avoids recursion depth limits.",
+			"Note that Course Schedule II is the same algorithm but also returns the order (reverse post-order for DFS), so lead with the version that produces the ordering.",
+		],
+		prerequisites: ["dfs", "topological_sort"],
+		relatedAlgorithms: ["topological_sort", "dfs", "bfs"],
+		visualizationType: "graph",
+		path: "/algorithms/graphs/course-schedule",
+		pythonModule: "graphs.course_schedule_viz",
+	},
+	connected_components: {
+		id: "connected_components",
+		name: "Connected Components (DFS)",
+		category: "graphs",
+		difficulty: "medium",
+		tags: [
+			"graph",
+			"dfs",
+			"undirected-graph",
+			"connectivity",
+			"traversal",
+			"flood-fill",
+			"components",
+		],
+		complexity: {
+			time: { best: "O(V + E)", average: "O(V + E)", worst: "O(V + E)" },
+			space: "O(V + E)",
+			explanation:
+				"Every vertex is pushed and popped from the DFS stack exactly once (O(V)) and every edge is examined once from each endpoint (O(E)); the visited set keeps the outer scan over all nodes linear. Space is O(V) for the visited set, component labels, and the DFS stack, plus O(V + E) to hold the symmetric adjacency list.",
+		},
+		description:
+			"Counts and labels the connected pieces of an undirected graph. It scans every node; each time it reaches a node no previous search has visited, that node opens a brand-new component and a depth-first search floods outward to label the entire component before the scan continues.",
+		howItWorks:
+			"Treat the graph as undirected by making the adjacency list symmetric, then scan every node in order while keeping a visited set and a component counter. When the scan reaches an unvisited node it opens a new component and runs a depth-first search from there, giving every node it reaches the same component id and marking it visited. Because the visited set blocks re-exploration, each node is processed once no matter how many times the outer loop touches it, so the total work stays O(V + E). When the scan finishes, the component counter is the number of connected components.",
+		keyInsights: [
+			"A single DFS only explores ONE component - the outer loop over all nodes is what lets you discover, count, and label every disconnected piece.",
+			"It stays O(V + E) even though the outer loop visits all V nodes, because the visited set guarantees no node is ever explored twice.",
+			"Isolated nodes with no edges are valid components of size 1 - the outer scan finds them even though their DFS explores nothing.",
+			"This is defined for UNDIRECTED graphs; directed graphs need strongly connected components (Tarjan's or Kosaraju's), which is a different algorithm.",
+		],
+		edgeCases: [
+			{
+				name: "Empty graph",
+				description: "No nodes at all yields zero components.",
+				input: { graph: {} },
+			},
+			{
+				name: "All isolated nodes",
+				description:
+					"Nodes with no edges each form their own size-1 component, so the count equals the number of nodes.",
+				input: { graph: { "0": [], "1": [], "2": [] } },
+			},
+			{
+				name: "Fully connected graph",
+				description:
+					"When every node is reachable from every other, the answer is exactly one component.",
+				input: { graph: { "0": [1, 2], "1": [0, 2], "2": [0, 1] } },
+			},
+		],
+		whenToUse: [
+			"Image processing - counting distinct blobs or regions of connected pixels.",
+			"Network / social-graph analysis - finding isolated clusters or friend groups.",
+			"Counting separate landmasses, islands, or reachable regions on a map or grid.",
+			"Checking whether a graph is fully connected (exactly one component).",
+		],
+		interviewTips: [
+			"State up front that a lone DFS/BFS only covers one component and that the outer loop over all nodes is the key to counting them all.",
+			"Remember to symmetrize edges for undirected input, and be ready to contrast this with strongly connected components for directed graphs.",
+			"Mention Union-Find (disjoint set) as the go-to alternative when edges arrive incrementally / online connectivity.",
+			"Don't forget isolated nodes - they each count as a component and are a common off-by-one source.",
+		],
+		prerequisites: ["dfs", "bfs"],
+		relatedAlgorithms: ["dfs", "bfs", "num_islands", "topological_sort"],
+		visualizationType: "graph",
+		path: "/algorithms/graphs/connected-components",
+		pythonModule: "graphs.connected_components_viz",
+	},
 	counting_sort: {
 		id: "counting_sort",
 		name: "Counting Sort",
