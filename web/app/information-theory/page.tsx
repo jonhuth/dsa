@@ -112,6 +112,32 @@ export default function InformationTheoryPage() {
 							<span className="mt-3 inline-block text-sm text-violet-400">Open exhibit →</span>
 						</Link>
 						<Link
+							href="/information-theory/mutual-information"
+							className="group rounded-2xl border border-border p-6 transition-colors hover:bg-accent"
+						>
+							<h3 className="text-xl font-semibold group-hover:text-violet-400">
+								Mutual Information
+							</h3>
+							<p className="mt-2 text-sm text-muted-foreground">
+								Edit a joint distribution and watch the entropy circles overlap: I(X;Y) = H(X) +
+								H(Y) − H(X,Y). The shared bits, the data-processing inequality, and the link to
+								channel capacity.
+							</p>
+							<span className="mt-3 inline-block text-sm text-violet-400">Open exhibit →</span>
+						</Link>
+						<Link
+							href="/information-theory/max-entropy"
+							className="group rounded-2xl border border-border p-6 transition-colors hover:bg-accent"
+						>
+							<h3 className="text-xl font-semibold group-hover:text-violet-400">Maximum Entropy</h3>
+							<p className="mt-2 text-sm text-muted-foreground">
+								Constrain a die&rsquo;s mean and drag it: the honest, least-committal distribution
+								emerges as the Boltzmann form p ∝ e^(λx). How constraints pick uniform, exponential,
+								and Gaussian — and why softmax is a max-ent model.
+							</p>
+							<span className="mt-3 inline-block text-sm text-violet-400">Open exhibit →</span>
+						</Link>
+						<Link
 							href="/information-theory/kolmogorov"
 							className="group rounded-2xl border border-border p-6 transition-colors hover:bg-accent sm:col-span-2"
 						>

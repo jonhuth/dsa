@@ -86,3 +86,99 @@ export function fmt(x: number, digits = 3): string {
 	if (!Number.isFinite(x)) return x > 0 ? "∞" : "−∞";
 	return x.toFixed(digits).replace(/\.?0+$/, "") || "0";
 }
+
+// ── Joint distributions & mutual information ──────────────────────────────
+
+/** Row (X) and column (Y) marginals of a joint distribution P(X, Y). */
+export function marginals(joint: number[][]): { px: number[]; py: number[] } {
+	const rows = joint.length;
+	const cols = joint[0]?.length ?? 0;
+	const px = new Array(rows).fill(0);
+	const py = new Array(cols).fill(0);
+	for (let i = 0; i < rows; i++) {
+		for (let j = 0; j < cols; j++) {
+			px[i] += joint[i][j];
+			py[j] += joint[i][j];
+		}
+	}
+	return { px, py };
+}
+
+/** Joint entropy H(X, Y) — entropy of the flattened joint distribution. */
+export function jointEntropy(joint: number[][], base = 2): number {
+	return entropy(joint.flat(), base);
+}
+
+/**
+ * Mutual information I(X; Y) = Σ p(x,y) log( p(x,y) / (p(x)p(y)) ) ≥ 0.
+ * Equals H(X) + H(Y) − H(X, Y). Zero iff X and Y are independent.
+ */
+export function mutualInformation(joint: number[][], base = 2): number {
+	const { px, py } = marginals(joint);
+	let mi = 0;
+	for (let i = 0; i < joint.length; i++) {
+		for (let j = 0; j < joint[i].length; j++) {
+			const p = joint[i][j];
+			if (p > 0 && px[i] > 0 && py[j] > 0) {
+				mi += p * logBase(p / (px[i] * py[j]), base);
+			}
+		}
+	}
+	return Math.max(0, mi); // clamp away tiny negative float error
+}
+
+/**
+ * Set entry `index` of a distribution to probability `p`, redistributing the
+ * remaining mass across the others in proportion to their current mass
+ * (uniformly if they are all zero). Keeps the distribution summing to 1.
+ */
+export function redistribute(probs: number[], index: number, p: number): number[] {
+	const clamped = Math.max(0, Math.min(0.999, p));
+	const remaining = 1 - clamped;
+	const othersSum = probs.reduce((acc, v, i) => (i === index ? acc : acc + v), 0);
+	return probs.map((v, i) => {
+		if (i === index) return clamped;
+		if (othersSum <= 0) return remaining / (probs.length - 1);
+		return (v / othersSum) * remaining;
+	});
+}
+
+// ── Maximum entropy ───────────────────────────────────────────────────────
+
+/**
+ * The maximum-entropy distribution over `values` subject to a fixed mean.
+ * The solution is the Boltzmann/Gibbs form p_i ∝ exp(λ·x_i); we solve for λ
+ * so that E[X] = targetMean. With no effective constraint (target = the
+ * unconstrained mean) this returns the uniform distribution.
+ */
+export function maxEntByMean(
+	values: number[],
+	targetMean: number,
+	base = 2,
+): { probs: number[]; lambda: number; achievedMean: number; entropy: number } {
+	const lo = Math.min(...values);
+	const hi = Math.max(...values);
+	const target = Math.max(lo + 1e-6, Math.min(hi - 1e-6, targetMean));
+
+	// probs and mean for a given λ (numerically stable via max-subtraction).
+	const dist = (lambda: number): { probs: number[]; mean: number } => {
+		const m = Math.max(...values.map((v) => lambda * v));
+		const w = values.map((v) => Math.exp(lambda * v - m));
+		const z = w.reduce((a, b) => a + b, 0);
+		const probs = w.map((wi) => wi / z);
+		const mean = probs.reduce((acc, pi, i) => acc + pi * values[i], 0);
+		return { probs, mean };
+	};
+
+	// mean(λ) is monotonically increasing in λ → bisection.
+	let lambdaLo = -60;
+	let lambdaHi = 60;
+	for (let iter = 0; iter < 100; iter++) {
+		const mid = (lambdaLo + lambdaHi) / 2;
+		if (dist(mid).mean < target) lambdaLo = mid;
+		else lambdaHi = mid;
+	}
+	const lambda = (lambdaLo + lambdaHi) / 2;
+	const { probs, mean } = dist(lambda);
+	return { probs, lambda, achievedMean: mean, entropy: entropy(probs, base) };
+}

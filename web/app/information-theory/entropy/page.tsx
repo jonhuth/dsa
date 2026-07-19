@@ -184,7 +184,7 @@ export default function EntropyPage() {
 						<div className="h-3 w-full overflow-hidden rounded-full bg-muted">
 							<div
 								className="h-full rounded-full bg-gradient-to-r from-violet-600 to-fuchsia-500 transition-[width] duration-150"
-								style={{ width: `${(h / hMax) * 100}%` }}
+								style={{ width: `${((h / hMax) * 100).toFixed(4)}%` }}
 							/>
 						</div>
 					</div>
