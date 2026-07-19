@@ -144,7 +144,7 @@ export default function KolmogorovPage() {
 						<div className="h-3 w-full overflow-hidden rounded-full bg-muted">
 							<div
 								className="h-full rounded-full bg-gradient-to-r from-rose-500 via-amber-500 to-emerald-500 transition-[width] duration-150"
-								style={{ width: `${compressibility * 100}%` }}
+								style={{ width: `${(compressibility * 100).toFixed(4)}%` }}
 							/>
 						</div>
 					</div>

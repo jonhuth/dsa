@@ -119,7 +119,7 @@ export function EntropyBars({
 									className={`w-full rounded-t-md ${color} transition-[height] duration-75 ${
 										editable ? "cursor-ns-resize hover:brightness-110" : ""
 									}`}
-									style={{ height: `${Math.max(pct, 1.5)}%`, touchAction: "none" }}
+									style={{ height: `${Math.max(pct, 1.5).toFixed(4)}%`, touchAction: "none" }}
 								/>
 							</div>
 							<span className="mt-2 font-mono text-xs tabular-nums">{fmt(p * 100, 1)}%</span>

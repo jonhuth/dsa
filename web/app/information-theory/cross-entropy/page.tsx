@@ -118,14 +118,14 @@ export default function CrossEntropyPage() {
 						<div className="flex h-10 w-full overflow-hidden rounded-lg bg-muted text-xs font-medium">
 							<div
 								className="flex items-center justify-center bg-emerald-500/80 transition-[width] duration-150"
-								style={{ width: `${hPct}%` }}
+								style={{ width: `${hPct.toFixed(4)}%` }}
 								title="H(p): bits you could never avoid"
 							>
 								{hPct > 12 ? "H(p)" : ""}
 							</div>
 							<div
 								className="flex items-center justify-center bg-amber-500/80 transition-[width] duration-150"
-								style={{ width: `${Math.max(klPct, 0)}%` }}
+								style={{ width: `${Math.max(klPct, 0).toFixed(4)}%` }}
 								title="KL(p‖q): wasted bits from the wrong model"
 							>
 								{klPct > 12 ? (ceInfinite ? "∞" : "KL") : ""}
