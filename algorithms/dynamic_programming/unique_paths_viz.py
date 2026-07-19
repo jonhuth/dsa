@@ -27,6 +27,10 @@ class UniquePaths(StepTracker):
 
     visualizer_type = VisualizerType.GRID
 
+    # Upper bound on visualized grid size (keeps the emitted step count sane).
+    # Chosen well above the exhibit's UI inputs so normal use is never capped.
+    MAX_DIM = 20
+
     def __init__(self):
         super().__init__()
         self.cells_filled = 0
@@ -35,7 +39,10 @@ class UniquePaths(StepTracker):
         """Count unique top-left -> bottom-right paths in a grid.
 
         Args:
-            input_data: dict with "rows" and "cols" (each clamped to 1..10)
+            input_data: dict with "rows" and "cols" (positive ints). Very large
+                grids are capped at ``MAX_DIM`` purely to keep the step count
+                visualizable; when that happens the answer is for the capped
+                grid and the step descriptions say so explicitly.
 
         Yields:
             Step objects for visualization
@@ -43,23 +50,37 @@ class UniquePaths(StepTracker):
         self.reset()
         self.cells_filled = 0
 
-        # Clamp inputs to a sane, visualizable range
-        rows = max(1, min(10, int(input_data.get("rows", 3))))
-        cols = max(1, min(10, int(input_data.get("cols", 7))))
+        # Requested dimensions (at least 1x1). We compute the exact answer for
+        # whatever grid we actually render -- never silently truncate a valid
+        # count. MAX_DIM only bounds how big a grid we visualize.
+        req_rows = max(1, int(input_data.get("rows", 3)))
+        req_cols = max(1, int(input_data.get("cols", 7)))
+        rows = min(self.MAX_DIM, req_rows)
+        cols = min(self.MAX_DIM, req_cols)
+        capped = rows != req_rows or cols != req_cols
 
         # dp[i][j] = number of unique paths from (0, 0) to (i, j)
         dp = [[0 for _ in range(cols)] for _ in range(rows)]
 
+        cap_note = (
+            f" (requested {req_rows}x{req_cols}, capped to {rows}x{cols} for visualization)"
+            if capped
+            else ""
+        )
         yield self.emit_step(
             operation="init",
             description=(
-                f"Counting unique paths in a {rows}x{cols} grid (moving only right or down)"
+                f"Counting unique paths in a {rows}x{cols} grid "
+                f"(moving only right or down){cap_note}"
             ),
             state={"type": "grid", "grid": [row.copy() for row in dp]},
             highlights=[],
             metadata={
                 "rows": rows,
                 "cols": cols,
+                "requested_rows": req_rows,
+                "requested_cols": req_cols,
+                "capped": capped,
                 "cells_filled": self.cells_filled,
             },
         )

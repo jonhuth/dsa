@@ -117,6 +117,14 @@ def test_unique_paths():
     assert "28" in _final(UniquePaths, {"rows": 3, "cols": 7})
 
 
+def test_unique_paths_no_silent_clamp():
+    # Regression: dimensions > 10 must not be silently clamped (an 11x2 grid
+    # has exactly 11 paths, not 10). See Codex audit finding.
+    steps = _collect(UniquePaths, {"rows": 11, "cols": 2})
+    assert steps[0]["metadata"]["capped"] is False
+    assert steps[-1]["state"]["grid"][10][1] == 11
+
+
 @pytest.mark.parametrize(
     "arr",
     [[4, 2, 8, 3, 1, 4, 7, 2], [], [5], [1, 1, 1], [9, 8, 7, 6, 5]],
