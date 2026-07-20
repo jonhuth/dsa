@@ -37,6 +37,22 @@ export function Header() {
 						</span>
 					</Link>
 
+					{/* Section nav — the only in-UI entry point to each section */}
+					<nav className="hidden items-center gap-1 md:flex shrink-0">
+						<Link
+							href="/algorithms"
+							className="px-3 py-2 text-sm text-muted-foreground rounded-lg hover:bg-accent hover:text-foreground transition-colors"
+						>
+							Algorithms
+						</Link>
+						<Link
+							href="/information-theory"
+							className="px-3 py-2 text-sm text-muted-foreground rounded-lg hover:bg-accent hover:text-foreground transition-colors"
+						>
+							Information Theory
+						</Link>
+					</nav>
+
 					{/* Centered Search Button */}
 					<button
 						type="button"
@@ -44,7 +60,7 @@ export function Header() {
 						className="flex items-center gap-2 px-3 sm:px-4 py-2 text-sm text-muted-foreground border border-border rounded-lg hover:bg-accent transition-colors flex-1 max-w-md mx-auto touch-manipulation"
 					>
 						<Search className="w-4 h-4 shrink-0" />
-						<span className="flex-1 text-left truncate">Search algorithms...</span>
+						<span className="flex-1 text-left truncate">Search algorithms &amp; concepts...</span>
 						<kbd className="pointer-events-none hidden sm:inline-flex h-5 select-none items-center gap-1 rounded border border-border bg-muted px-1.5 font-mono text-[10px] font-medium opacity-100">
 							<span className="text-xs">⌘</span>K
 						</kbd>
