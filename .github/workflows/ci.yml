@@ -38,6 +38,23 @@ jobs:
       - name: Set up Python
         run: uv python install 3.12
       
+      # Lockfile drift previously only surfaced as a failed Railway deploy (Railway
+      # sets CI=true, which makes bun default to --frozen-lockfile). Validate every
+      # bun.lock here so a human/agent commit that forgets to regenerate one fails CI.
+      #
+      # Dependabot bumps package.json without regenerating bun.lock, so a hard
+      # frozen check would re-break every dependabot PR — see 37c79d8. For those PRs
+      # the same check runs as a non-blocking warning instead of a gate, so the drift
+      # is still visible in the logs without turning the PR red.
+      - name: Validate bun lockfiles
+        if: github.actor != 'dependabot[bot]' && !startsWith(github.head_ref, 'dependabot/')
+        run: bash .github/scripts/check-lockfiles.sh
+
+      - name: Validate bun lockfiles (dependabot, non-blocking)
+        if: github.actor == 'dependabot[bot]' || startsWith(github.head_ref, 'dependabot/')
+        continue-on-error: true
+        run: bash .github/scripts/check-lockfiles.sh
+
       - name: Install web dependencies
         run: cd web && bun install --no-save
       
