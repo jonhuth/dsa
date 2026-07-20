@@ -23,14 +23,8 @@ export default function HomePage() {
 					</p>
 				</div>
 
-				{/* Algorithms List */}
-				<div className="space-y-3 sm:space-y-4">
-					<h2 className="text-xl sm:text-2xl font-semibold">All Algorithms</h2>
-
-					<AlgorithmSearch initialAlgorithms={allAlgorithms} />
-				</div>
-
-				{/* Foundations: Information Theory */}
+				{/* Foundations: Information Theory — kept above the algorithm list, which
+				    renders all 55 entries unpaginated and would otherwise bury this. */}
 				<Link
 					href="/information-theory"
 					className="group block rounded-2xl border border-violet-500/30 bg-gradient-to-br from-violet-500/10 to-fuchsia-500/5 p-6 transition-colors hover:border-violet-500/60"
@@ -51,6 +45,13 @@ export default function HomePage() {
 						<span className="hidden shrink-0 text-3xl sm:block">📊</span>
 					</div>
 				</Link>
+
+				{/* Algorithms List */}
+				<div className="space-y-3 sm:space-y-4">
+					<h2 className="text-xl sm:text-2xl font-semibold">All Algorithms</h2>
+
+					<AlgorithmSearch initialAlgorithms={allAlgorithms} />
+				</div>
 
 				{/* Quick Stats */}
 				<div className="grid grid-cols-3 gap-2 sm:gap-4 pt-6 sm:pt-8 border-t border-border">

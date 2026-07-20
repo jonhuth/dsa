@@ -1,6 +1,6 @@
 "use client";
 
-import { Binary, Calculator, GitBranch, Search, TreePine, TrendingUp } from "lucide-react";
+import { Binary, Calculator, GitBranch, Search, Sigma, TreePine, TrendingUp } from "lucide-react";
 import { useRouter } from "next/navigation";
 import { useEffect } from "react";
 import {
@@ -185,6 +185,54 @@ const algorithms: Algorithm[] = [
 		description: "Find longest subsequence common to two strings using 2D DP",
 		path: "/algorithms/dynamic-programming/lcs",
 	},
+	// Information Theory exhibits. These are hand-written pages rather than
+	// registry algorithms, so they have no complexity/difficulty of their own —
+	// the fields below are display-only labels for the command palette.
+	{
+		id: "entropy",
+		name: "Shannon Entropy",
+		category: "Information Theory",
+		difficulty: "Foundations",
+		timeComplexity: "bits",
+		description: "Surprise measured in bits — drag a distribution and watch H change",
+		path: "/information-theory/entropy",
+	},
+	{
+		id: "cross-entropy",
+		name: "Cross-Entropy & KL Divergence",
+		category: "Information Theory",
+		difficulty: "Foundations",
+		timeComplexity: "bits",
+		description: "The cost of believing the wrong distribution, and the gap it opens",
+		path: "/information-theory/cross-entropy",
+	},
+	{
+		id: "mutual-information",
+		name: "Mutual Information",
+		category: "Information Theory",
+		difficulty: "Foundations",
+		timeComplexity: "bits",
+		description: "How much knowing one variable tells you about another",
+		path: "/information-theory/mutual-information",
+	},
+	{
+		id: "max-entropy",
+		name: "Maximum Entropy",
+		category: "Information Theory",
+		difficulty: "Foundations",
+		timeComplexity: "bits",
+		description: "The least-committal distribution consistent with what you know",
+		path: "/information-theory/max-entropy",
+	},
+	{
+		id: "kolmogorov",
+		name: "Kolmogorov Complexity",
+		category: "Information Theory",
+		difficulty: "Foundations",
+		timeComplexity: "incomputable",
+		description: "The shortest program that reproduces a string",
+		path: "/information-theory/kolmogorov",
+	},
 ];
 
 const categoryIcons: Record<string, React.ComponentType<{ className?: string }>> = {
@@ -193,6 +241,16 @@ const categoryIcons: Record<string, React.ComponentType<{ className?: string }>>
 	Search: Binary,
 	Trees: TreePine,
 	"Dynamic Programming": Calculator,
+	"Information Theory": Sigma,
+};
+
+// Difficulty badge colors. "Foundations" marks the Information Theory exhibits,
+// which aren't graded Easy/Medium/Hard — without its own case it would fall
+// through to the red "Hard" styling.
+const difficultyClass: Record<string, string> = {
+	Easy: "bg-green-500/10 text-green-500",
+	Medium: "bg-yellow-500/10 text-yellow-500",
+	Foundations: "bg-violet-500/10 text-violet-400",
 };
 
 // Group algorithms by category
@@ -226,9 +284,9 @@ export function SearchDialog({ open, onOpenChange }: SearchDialogProps) {
 
 	return (
 		<CommandDialog open={open} onOpenChange={onOpenChange}>
-			<CommandInput placeholder="Search algorithms..." />
+			<CommandInput placeholder="Search algorithms & concepts..." />
 			<CommandList className="max-h-[60vh] sm:max-h-[400px]">
-				<CommandEmpty>No algorithms found.</CommandEmpty>
+				<CommandEmpty>No results found.</CommandEmpty>
 
 				{categories.map((category) => {
 					const categoryAlgos = algorithms.filter((a) => a.category === category);
@@ -254,11 +312,7 @@ export function SearchDialog({ open, onOpenChange }: SearchDialogProps) {
 											</span>
 											<span
 												className={`text-[10px] sm:text-xs px-1.5 sm:px-2 py-0.5 rounded ${
-													algo.difficulty === "Easy"
-														? "bg-green-500/10 text-green-500"
-														: algo.difficulty === "Medium"
-															? "bg-yellow-500/10 text-yellow-500"
-															: "bg-red-500/10 text-red-500"
+													difficultyClass[algo.difficulty] ?? "bg-red-500/10 text-red-500"
 												}`}
 											>
 												{algo.difficulty}
