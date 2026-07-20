@@ -9,6 +9,14 @@ import {
 	searchAlgorithms,
 } from "./algorithms";
 import { getActiveCategories, getAllCategories, getCategory } from "./categories";
+import {
+	getAllConceptCollections,
+	getAllConcepts,
+	getConcept,
+	getConceptCollection,
+	getConceptsByCollection,
+	searchConcepts,
+} from "./concepts";
 import type { DataStructureMetadata, MiniSystemMetadata, ProblemMetadata } from "./types";
 
 /**
@@ -26,6 +34,18 @@ export const registry = {
 		getByDifficulty: getAlgorithmsByDifficulty,
 		getByTag: getAlgorithmsByTag,
 		search: searchAlgorithms,
+	},
+
+	// Concepts — interactive explainers (Information Theory). Deliberately kept
+	// out of `algorithms` so the homepage algorithm count stays accurate and the
+	// algorithm-shaped UI is not handed Big-O-less entries.
+	concepts: {
+		get: getConcept,
+		getAll: getAllConcepts,
+		getByCollection: getConceptsByCollection,
+		search: searchConcepts,
+		getCollection: getConceptCollection,
+		getAllCollections: getAllConceptCollections,
 	},
 
 	// Categories

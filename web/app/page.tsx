@@ -10,6 +10,10 @@ export default function HomePage() {
 	// Get active categories
 	const activeCategories = registry.categories.getActive();
 
+	// Concepts are counted separately from algorithms on purpose — they have no
+	// Big-O or difficulty grade, and folding them in would overstate "Algorithms".
+	const allConcepts = registry.concepts.getAll();
+
 	return (
 		<div className="min-h-screen p-4 sm:p-6 lg:p-8">
 			<div className="max-w-6xl mx-auto space-y-6 sm:space-y-8">
@@ -54,12 +58,18 @@ export default function HomePage() {
 				</div>
 
 				{/* Quick Stats */}
-				<div className="grid grid-cols-3 gap-2 sm:gap-4 pt-6 sm:pt-8 border-t border-border">
+				<div className="grid grid-cols-2 sm:grid-cols-4 gap-2 sm:gap-4 pt-6 sm:pt-8 border-t border-border">
 					<div className="text-center">
 						<div className="text-2xl sm:text-3xl font-bold text-primary">
 							{allAlgorithms.length}
 						</div>
 						<div className="text-xs sm:text-sm text-muted-foreground">Algorithms</div>
+					</div>
+					<div className="text-center">
+						<div className="text-2xl sm:text-3xl font-bold text-violet-400">
+							{allConcepts.length}
+						</div>
+						<div className="text-xs sm:text-sm text-muted-foreground">Concepts</div>
 					</div>
 					<div className="text-center">
 						<div className="text-2xl sm:text-3xl font-bold text-primary">
