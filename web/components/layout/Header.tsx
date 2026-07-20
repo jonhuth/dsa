@@ -3,6 +3,8 @@
 import { Code2, Search } from "lucide-react";
 import Link from "next/link";
 import { useEffect, useState } from "react";
+import { MobileNav } from "./MobileNav";
+import { sectionLinks } from "./nav-links";
 import { SearchDialog } from "./SearchDialog";
 
 export function Header() {
@@ -23,7 +25,7 @@ export function Header() {
 	return (
 		<>
 			<header className="sticky top-0 z-50 w-full border-b border-border bg-background/95 backdrop-blur supports-[backdrop-filter]:bg-background/60">
-				<div className="container flex h-16 items-center justify-between gap-4 px-4 max-w-7xl mx-auto">
+				<div className="container flex h-16 items-center justify-between gap-2 sm:gap-4 px-4 max-w-7xl mx-auto">
 					{/* Logo */}
 					<Link
 						href="/"
@@ -37,27 +39,25 @@ export function Header() {
 						</span>
 					</Link>
 
-					{/* Section nav — the only in-UI entry point to each section */}
+					{/* Section nav — the only in-UI entry point to each section.
+					    Below md the same links live in the MobileNav dropdown. */}
 					<nav className="hidden items-center gap-1 md:flex shrink-0">
-						<Link
-							href="/algorithms"
-							className="px-3 py-2 text-sm text-muted-foreground rounded-lg hover:bg-accent hover:text-foreground transition-colors"
-						>
-							Algorithms
-						</Link>
-						<Link
-							href="/information-theory"
-							className="px-3 py-2 text-sm text-muted-foreground rounded-lg hover:bg-accent hover:text-foreground transition-colors"
-						>
-							Information Theory
-						</Link>
+						{sectionLinks.map(({ href, label }) => (
+							<Link
+								key={href}
+								href={href}
+								className="px-3 py-2 text-sm text-muted-foreground rounded-lg hover:bg-accent hover:text-foreground transition-colors"
+							>
+								{label}
+							</Link>
+						))}
 					</nav>
 
 					{/* Centered Search Button */}
 					<button
 						type="button"
 						onClick={() => setSearchOpen(true)}
-						className="flex items-center gap-2 px-3 sm:px-4 py-2 text-sm text-muted-foreground border border-border rounded-lg hover:bg-accent transition-colors flex-1 max-w-md mx-auto touch-manipulation"
+						className="flex items-center gap-2 px-3 sm:px-4 py-2 text-sm text-muted-foreground border border-border rounded-lg hover:bg-accent transition-colors flex-1 min-w-0 max-w-md mx-auto touch-manipulation"
 					>
 						<Search className="w-4 h-4 shrink-0" />
 						<span className="flex-1 text-left truncate">Search algorithms &amp; concepts...</span>
@@ -77,6 +77,9 @@ export function Header() {
 						<Code2 className="w-4 h-4" />
 						<span className="hidden lg:inline">GitHub</span>
 					</a>
+
+					{/* Section menu — mobile only; the md+ nav above covers larger screens */}
+					<MobileNav />
 				</div>
 			</header>
 
