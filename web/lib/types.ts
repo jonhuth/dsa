@@ -141,3 +141,41 @@ export interface CategoryMetadata {
 	icon?: string;
 	algorithmCount: number;
 }
+
+// ==================== CONCEPTS ====================
+//
+// Concepts are interactive *explainers*, not algorithms: Shannon entropy is a
+// quantity you reason about, not a procedure you run. They deliberately have no
+// Big-O and no Easy/Medium/Hard grade, and they live in their own collection so
+// they never inflate the algorithm count or leak into algorithm-shaped UI.
+
+export type ConceptCollection = "information_theory";
+
+export interface ConceptMetadata {
+	id: string; // URL-friendly slug (e.g., 'entropy')
+	name: string; // Display name (e.g., 'Shannon Entropy')
+	collection: ConceptCollection;
+
+	// Tags for search and linking
+	tags: string[];
+
+	description: string; // Brief description (1-2 sentences)
+
+	/**
+	 * Unit or nature of the quantity this concept measures — "bits",
+	 * "incomputable". Purely a display label; it is NOT a complexity bound and
+	 * must not be rendered as one.
+	 */
+	unit?: string;
+
+	path: string; // URL path (e.g., '/information-theory/entropy')
+}
+
+export interface ConceptCollectionMetadata {
+	id: ConceptCollection;
+	name: string;
+	description: string;
+	icon?: string;
+	path: string;
+	conceptCount: number;
+}
