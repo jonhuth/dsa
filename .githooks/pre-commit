@@ -6,15 +6,28 @@ echo "🔍 Running pre-commit checks..."
 GIT_COMMON=$(git rev-parse --git-common-dir)
 MAIN_ROOT=$(dirname "$GIT_COMMON")
 
-# Check bun.lock is in sync (BLOCKING)
-echo "  📦 Checking bun.lock is up to date..."
-bun install --frozen-lockfile --dry-run --cwd "$MAIN_ROOT" 2>/dev/null
-if [ $? -ne 0 ]; then
-  echo ""
-  echo "❌ bun.lock is out of sync with package.json."
-  echo "   Run 'bun install', then re-stage bun.lock."
-  exit 1
-fi
+# Check every bun.lock is in sync (BLOCKING).
+#
+# This checks ALL lockfiles, not just the root one. web/bun.lock drifted once and
+# went unnoticed for months because only the root was checked: a plain local
+# `bun install` happily updates the lockfile in memory, but Railway sets CI=true,
+# which makes bun default to --frozen-lockfile — so the drift only ever surfaced
+# as a failed deploy, never locally.
+echo "  📦 Checking bun.lock files are up to date..."
+LOCK_FAIL=0
+while IFS= read -r lock; do
+  dir=$(dirname "$lock")
+  rel=${dir#"$MAIN_ROOT"/}
+  [ "$dir" = "$MAIN_ROOT" ] && rel="."
+  if ! out=$(bun install --frozen-lockfile --dry-run --cwd "$dir" 2>&1); then
+    echo ""
+    echo "❌ $rel/bun.lock is out of sync with $rel/package.json."
+    echo "   $(echo "$out" | grep -i 'error' | head -1)"
+    echo "   Run 'bun install' in $rel/, then re-stage $rel/bun.lock."
+    LOCK_FAIL=1
+  fi
+done < <(find "$MAIN_ROOT" -name bun.lock -not -path '*/node_modules/*' -not -path '*/.next/*')
+[ "$LOCK_FAIL" -ne 0 ] && exit 1
 
 # TypeScript check (BLOCKING) — tsconfig lives in web/
 echo "  📝 TypeScript type check..."
