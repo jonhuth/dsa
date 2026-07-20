@@ -70,6 +70,8 @@ jobs:
       
       - name: Test API
         run: bun run test:api
-      
-      # Web unit tests skipped - no unit tests exist yet
+
+      - name: Test web (unit)
+        run: bun run test:web
+
       # E2E tests run separately via test:e2e
