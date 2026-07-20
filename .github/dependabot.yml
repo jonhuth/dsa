@@ -1,5 +1,23 @@
 version: 2
 updates:
+  # Root workspace (bun.lock at the repo root). Previously unmanaged, so root
+  # devDependencies never got bumped and root lockfile drift had no upstream fix.
+  - package-ecosystem: "npm"
+    directory: "/"
+    schedule:
+      interval: "weekly"
+      day: "monday"
+      time: "13:00"
+      timezone: "Etc/UTC"
+    open-pull-requests-limit: 3
+    cooldown:
+      default-days: 5
+      semver-major-days: 14
+    groups:
+      root-minor-patch:
+        patterns: ["*"]
+        update-types: ["minor", "patch"]
+
   - package-ecosystem: "npm"
     directory: "/web"
     schedule:
