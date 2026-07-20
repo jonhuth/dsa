@@ -84,7 +84,12 @@ export function perplexity(p: number[], base = 2): number {
 /** Round for display without trailing float noise. */
 export function fmt(x: number, digits = 3): string {
 	if (!Number.isFinite(x)) return x > 0 ? "∞" : "−∞";
-	return x.toFixed(digits).replace(/\.?0+$/, "") || "0";
+	const s = x.toFixed(digits);
+	// Strip trailing zeros only after the decimal point. The old /\.?0+$/ made
+	// the point optional, so at digits=0 (no point in the output) it ate the
+	// number's own trailing zeros — rendering 100 as "1". Guarding on "." keeps
+	// whole numbers intact.
+	return s.includes(".") ? s.replace(/\.?0+$/, "") || "0" : s;
 }
 
 // ── Joint distributions & mutual information ──────────────────────────────

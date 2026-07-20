@@ -582,28 +582,15 @@ describe("fmt", () => {
 		expect(fmt(20, 2)).toBe("20");
 	});
 
-	// ── KNOWN BUG — characterization tests, NOT desired behavior ──────────
-	//
-	// fmt() strips trailing zeros with /\.?0+$/, where the decimal point is
-	// OPTIONAL. At digits >= 1 the point is always present so the regex is
-	// anchored correctly, but at digits = 0 toFixed() emits no decimal point
-	// and the regex happily eats the number's own trailing zeros.
-	//
-	// This is live in the UI: app/information-theory/entropy/page.tsx and
-	// app/information-theory/max-entropy/page.tsx both render
-	//   `fraction of maximum entropy: {fmt((h / hMax) * 100, 0)}%`
-	// so a true 100% displays as "1%" and 50% displays as "5%".
-	//
-	// The fix is to only strip zeros when a "." is present, e.g.
-	//   .replace(/\.\d*?0+$/, (m) => m.replace(/0+$/, "")).replace(/\.$/, "")
-	// Left unfixed here deliberately: this PR is tests-only, and the bug is
-	// reported rather than silently patched. These assertions pin the current
-	// behavior so the fix shows up as a deliberate, reviewable test change.
-	it("BUG: mangles whole numbers when digits = 0 (should be '100', '50', '20')", () => {
-		expect(fmt(100, 0)).toBe("1");
-		expect(fmt(50, 0)).toBe("5");
-		expect(fmt(20, 0)).toBe("2");
-		expect(fmt(1000, 0)).toBe("1");
+	// Regression: fmt() used /\.?0+$/ with an OPTIONAL decimal point, so at
+	// digits = 0 (where toFixed emits no point) it ate the number's own trailing
+	// zeros — a true 100% rendered as "1%" in the entropy/max-entropy/kolmogorov
+	// exhibits. Fixed to strip zeros only when a "." is present.
+	it("keeps whole numbers intact when digits = 0", () => {
+		expect(fmt(100, 0)).toBe("100");
+		expect(fmt(50, 0)).toBe("50");
+		expect(fmt(20, 0)).toBe("20");
+		expect(fmt(1000, 0)).toBe("1000");
 	});
 
 	it("digits = 0 is correct only when the value has no trailing zero", () => {
