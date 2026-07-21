@@ -17,6 +17,13 @@ CMD ["bun", "dev"]
 
 # Production build
 FROM base AS builder
+# next.config.ts bakes the /api rewrite destination from NEXT_PUBLIC_API_URL at
+# BUILD time (Next writes it into .next/routes-manifest.json; `next start` never
+# re-reads it). Without this ARG the build can't see the Railway service var and
+# bakes the http://localhost:5000 fallback, so the proxy 500s in production.
+# Railway passes service variables to Docker builds as --build-arg.
+ARG NEXT_PUBLIC_API_URL
+ENV NEXT_PUBLIC_API_URL=${NEXT_PUBLIC_API_URL}
 RUN bun run build
 
 # Production runtime
