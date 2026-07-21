@@ -1,11 +1,15 @@
+# SUPERSEDED. This service's Root Directory is the repo root (see the top-level
+# ./railway.toml and api/Dockerfile for why — the app imports the repo-root
+# `algorithms/` package). Railway reads config from the root directory, so the
+# authoritative config is ./railway.toml, not this file. Kept only to avoid a
+# stale nixpacks build if the Root Directory is ever reverted to api/, which
+# would not work anyway (algorithms/ is outside the api/ build context).
 [build]
-builder = "nixpacks"
+builder = "dockerfile"
+dockerfilePath = "Dockerfile"
 
 [deploy]
 healthcheckPath = "/health"
-healthcheckTimeout = 60
+healthcheckTimeout = 100
 restartPolicyType = "ON_FAILURE"
 restartPolicyMaxRetries = 3
-
-[service]
-internalPort = 5000
