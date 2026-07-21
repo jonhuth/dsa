@@ -22,7 +22,16 @@ class AlgorithmRegistry:
         # TODO: Auto-discover from algorithms directory
         import importlib.util
 
-        # Import BST from the file, not the directory
+        # algorithms/trees/ has both bst.py and a bst/ package, so a normal
+        # `from algorithms.trees.bst import BST` resolves to the package. Load
+        # the file explicitly instead. Derive its path from the installed
+        # `algorithms` package rather than counting ".parent" hops from
+        # __file__: the hop count only matched the local-dev tree layout and
+        # resolved to /algorithms in the container, crashing startup.
+        import algorithms
+
+        algorithms_dir = Path(algorithms.__file__).resolve().parent
+
         from algorithms.graphs.bfs import BFS
         from algorithms.graphs.dfs import DFS
         from algorithms.graphs.dijkstra import Dijkstra
@@ -37,7 +46,7 @@ class AlgorithmRegistry:
 
         spec = importlib.util.spec_from_file_location(
             "bst_viz",
-            str(Path(__file__).parent.parent.parent.parent / "algorithms" / "trees" / "bst.py"),
+            str(algorithms_dir / "trees" / "bst.py"),
         )
         bst_module = importlib.util.module_from_spec(spec)
         spec.loader.exec_module(bst_module)
