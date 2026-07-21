@@ -30,5 +30,9 @@ ENV FLASK_APP=app.main
 
 EXPOSE 5000
 
-# Bind the port Railway provides; fall back to 5000 for local runs.
-CMD ["sh", "-c", "uv run flask --app app.main run --host=0.0.0.0 --port=${PORT:-5000}"]
+# Bind IPv6 (::) so the service is reachable over Railway's private network,
+# which is IPv6-only — this service has no public domain and is called only by
+# dsa-web via the Next.js /api rewrite. On Linux `::` is dual-stack, so the
+# Railway healthcheck (and local IPv4 runs) still connect. Port falls back to
+# 5000 when PORT is unset.
+CMD ["sh", "-c", "uv run flask --app app.main run --host=:: --port=${PORT:-5000}"]
