@@ -1,0 +1,3 @@
+# Next.js public/ dir. Kept in git because web/Dockerfile does
+# `COPY --from=builder /app/public ./public`, which fails the Docker build if
+# this directory is absent. Drop static assets served at the site root here.
